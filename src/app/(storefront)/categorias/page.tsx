@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { CategoryCard } from "@/components/storefront/CategoryCard";
-import type { CategoryWithProductCount } from "@/types/database";
+import type { Category, CategoryWithProductCount } from "@/types/database";
 
 export const metadata: Metadata = {
   title: "Catálogo | HGourmet",
@@ -9,22 +9,27 @@ export const metadata: Metadata = {
     "Explora nuestras categorías de insumos gourmet: chocolate, harinas, moldes, sprinkles y más.",
 };
 
-export default async function CategoriasPage() {
-  const supabase = await createClient();
+interface CategoryWithProducts extends Category {
+  products: { count: number }[];
+}
 
-  const { data: categories } = await supabase
+async function fetchCategoriesWithCount(): Promise<CategoryWithProductCount[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
     .from("categories")
     .select("*, products(count)")
     .eq("is_active", true)
     .order("display_order", { ascending: true });
 
-  const categoriesWithCount: CategoryWithProductCount[] = (
-    categories ?? []
-  ).map((cat) => ({
+  const categories = (data as CategoryWithProducts[] | null) ?? [];
+  return categories.map((cat) => ({
     ...cat,
-    product_count:
-      (cat.products as unknown as { count: number }[])?.[0]?.count ?? 0,
+    product_count: cat.products?.[0]?.count ?? 0,
   }));
+}
+
+export default async function CategoriasPage() {
+  const categoriesWithCount = await fetchCategoriesWithCount();
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-8">

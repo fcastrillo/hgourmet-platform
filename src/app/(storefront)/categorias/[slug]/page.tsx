@@ -3,22 +3,41 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { ProductCard } from "@/components/storefront/ProductCard";
+import type { Category, Product } from "@/types/database";
 
 interface CategoryDetailPageProps {
   params: Promise<{ slug: string }>;
+}
+
+async function fetchActiveCategory(slug: string): Promise<Category | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("slug", slug)
+    .eq("is_active", true)
+    .single();
+
+  return data as Category | null;
+}
+
+async function fetchVisibleProducts(categoryId: string): Promise<Product[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("products")
+    .select("*")
+    .eq("category_id", categoryId)
+    .eq("is_visible", true)
+    .order("name", { ascending: true });
+
+  return (data as Product[] | null) ?? [];
 }
 
 export async function generateMetadata({
   params,
 }: CategoryDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createClient();
-  const { data: category } = await supabase
-    .from("categories")
-    .select("name, description")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
+  const category = await fetchActiveCategory(slug);
 
   if (!category) {
     return { title: "Categoría no encontrada | HGourmet" };
@@ -36,27 +55,13 @@ export default async function CategoryDetailPage({
   params,
 }: CategoryDetailPageProps) {
   const { slug } = await params;
-  const supabase = await createClient();
-
-  const { data: category } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
+  const category = await fetchActiveCategory(slug);
 
   if (!category) {
     notFound();
   }
 
-  const { data: products } = await supabase
-    .from("products")
-    .select("*")
-    .eq("category_id", category.id)
-    .eq("is_visible", true)
-    .order("name", { ascending: true });
-
-  const visibleProducts = products ?? [];
+  const visibleProducts = await fetchVisibleProducts(category.id);
   const productLabel =
     visibleProducts.length === 1 ? "producto" : "productos";
 
