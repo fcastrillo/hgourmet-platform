@@ -186,6 +186,13 @@
 - **Decision:** Include an optional `sku` field in the products table from day one.
 - **Consequences:** No immediate cost. Enables smooth migration when POS integration is built. SKU uniqueness enforced at DB level.
 
+### ADR-005: Typed Data-Fetching Helpers for Supabase Queries
+
+- **Context:** Supabase's TypeScript types resolve to `never` when chaining multiple `.eq()` filters on the same query (e.g., `.eq("slug", slug).eq("is_active", true).single()`). This breaks type inference in Server Components and prevents the build from compiling under strict TypeScript.
+- **Decision:** Wrap all Supabase queries in typed helper functions (e.g., `fetchActiveCategory(slug): Promise<Category | null>`) that use explicit type assertions (`as T | null`) on the query result. Each Server Component page imports these helpers instead of inlining Supabase queries.
+- **Consequences:** Slightly more boilerplate per page, but ensures type safety across all Server Components. Centralizes data access logic, making it easier to add caching or error handling later. All future stories must follow this pattern.
+- **Origin:** HU-1.1 (discovered during implementation of Tasks 7 and 10)
+
 ---
 
 ## Server/Client Strategy
