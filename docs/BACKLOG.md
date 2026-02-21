@@ -8,39 +8,68 @@
 
 ---
 
-## Epic: hgourmet-platform MVP
+## Epic: HGourmet — Tienda Virtual MVP
 
-> [One-line description of the overall epic / product goal]
-
----
-
-### FEAT-1: [Feature Name]
-
-- **Hypothesis:** Si entregamos [capacidad], entonces [resultado] para [usuario], medido por [KPI]
-- **Status:** Pending
-- **Stories:**
-  - [ ] HU-1.1: [Story title]
-  - [ ] HU-1.2: [Story title]
-  - [ ] HU-1.3: [Story title]
+> Trasladar la experiencia de compra de HGourmet a un canal digital que reduzca la dependencia del local físico, mantenga el volumen de ventas y posicione la marca como tienda gourmet de confianza en Mérida.
 
 ---
 
-### FEAT-2: [Feature Name]
+### FEAT-1: Catálogo Digital de Productos
 
-- **Hypothesis:** Si entregamos [capacidad], entonces [resultado] para [usuario], medido por [KPI]
-- **Status:** Pending
+> Estimate: L (rollup) | 4 stories: 2×M + 2×S, esfuerzo total ~5–7 días.
+
+- **Hypothesis:** Si entregamos un catálogo digital navegable por categorías con fichas de producto completas (imagen, precio, disponibilidad), entonces los clientes de HGourmet podrán consultar productos de forma autónoma sin visitar la tienda física ni preguntar por WhatsApp, medido por ≥500 usuarios únicos y ≥300 productos publicados en el primer mes.
+- **Status:** In Progress
+- **Priority:** High
 - **Stories:**
-  - [ ] HU-2.1: [Story title]
-  - [ ] HU-2.2: [Story title]
+  - [ ] HU-1.1: Navegación por categorías de productos (High)
+    > Estimate: M | Story fundacional: setup DB (migración, RLS, índices), Supabase client, 2 páginas, ProductCard reutilizable, responsive grid, empty states. ~2–3 días.
+  - [ ] HU-1.2: Ficha de detalle de producto (High)
+    > Estimate: S | 1 página de detalle con generateMetadata (SEO/OG), breadcrumb, CTA WhatsApp. Reutiliza infraestructura de HU-1.1. ~4–8 horas.
+  - [ ] HU-1.3: Búsqueda y filtrado de productos (Medium)
+    > Estimate: M | Barra de búsqueda CC con debounce, filtro por categoría, coordinación de estados, decisión ilike vs full-text search. ~1–2 días.
+  - [ ] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" (Medium)
+    > Estimate: S | 2 secciones con componente genérico, queries filtradas por is_featured/is_seasonal, reutiliza ProductCard. ~3–6 horas.
 
 ---
 
-### FEAT-3: [Feature Name]
+### FEAT-2: Panel de Administración
 
-- **Hypothesis:** Si entregamos [capacidad], entonces [resultado] para [usuario], medido por [KPI]
+- **Hypothesis:** Si entregamos un panel de administración intuitivo con gestión de productos y carga CSV, entonces las dueñas podrán mantener el catálogo actualizado de forma autónoma (sin soporte técnico) con una capacitación de ≤2 horas, medido por la capacidad de agregar/editar/ocultar productos sin asistencia externa.
 - **Status:** Pending
+- **Priority:** High
 - **Stories:**
-  - [ ] HU-3.1: [Story title]
+  - [ ] HU-2.1: Autenticación de administradoras
+  - [ ] HU-2.2: CRUD de productos desde el panel
+  - [ ] HU-2.3: Importación masiva de productos vía CSV
+  - [ ] HU-2.4: Gestión de categorías
+  - [ ] HU-2.5: Gestión de banners rotativos
+  - [ ] HU-2.6: Gestión de marcas/proveedores
+
+---
+
+### FEAT-3: Canal de Comunicación y Conversión WhatsApp
+
+- **Hypothesis:** Si entregamos un canal de comunicación integrado con WhatsApp y redes sociales desde cada punto del catálogo, entonces los clientes podrán pasar de la consulta al pedido en un solo clic, medido por ≥50 pedidos confirmados vía WhatsApp originados desde la web en el primer mes.
+- **Status:** Pending
+- **Priority:** High
+- **Stories:**
+  - [ ] HU-3.1: Botón fijo de WhatsApp en todo el sitio
+  - [ ] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto
+  - [ ] HU-3.3: Página de contacto (WhatsApp, redes, horarios, mapa)
+
+---
+
+### FEAT-4: Contenido y Marketing Digital
+
+- **Hypothesis:** Si entregamos herramientas de contenido (banners, recetas, boletín), entonces HGourmet podrá atraer tráfico recurrente y construir una base de suscriptores para comunicación directa, medido por ≥100 suscriptores al boletín y ≥80% de feedback positivo en el primer trimestre.
+- **Status:** Pending
+- **Priority:** Medium
+- **Stories:**
+  - [ ] HU-4.1: Página principal con banners rotativos y secciones destacadas
+  - [ ] HU-4.2: Registro al boletín informativo
+  - [ ] HU-4.3: Sección de recetas y tips
+  - [ ] HU-4.4: Sección de marcas HGourmet (logos de proveedores)
 
 ---
 

@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: "Poppins", sans-serif;
+  --font-body: "Nunito", sans-serif;
+
+  --color-primary: #6B4226;
+  --color-secondary: #F5E6D3;
+  --color-background: #FAF3EB;
+  --color-accent: #C9A84C;
+  --color-text: #3D2B1F;
+  --color-white: #FFFFFF;
+  --color-error: #DC2626;
+  --color-success: #16A34A;
+  --color-muted: #9CA3AF;
+}
