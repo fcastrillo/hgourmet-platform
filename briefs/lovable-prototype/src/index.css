@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 33% 94%;
+    --foreground: 20 32% 26%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 32% 26%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 32% 26%;
+
+    --primary: 35 38% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 33% 85%;
+    --secondary-foreground: 20 32% 26%;
+
+    --muted: 30 20% 90%;
+    --muted-foreground: 20 15% 50%;
+
+    --accent: 0 33% 85%;
+    --accent-foreground: 20 32% 26%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 30 20% 85%;
+    --input: 30 20% 85%;
+    --ring: 35 38% 60%;
+
+    --radius: 0.75rem;
+
+    --gold: 35 38% 60%;
+    --gold-foreground: 0 0% 100%;
+    --chocolate: 20 32% 26%;
+    --chocolate-foreground: 30 33% 94%;
+    --rose: 0 33% 85%;
+    --beige: 30 33% 94%;
+    --whatsapp: 142 70% 40%;
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 20 32% 10%;
+    --foreground: 30 33% 94%;
+    --card: 20 32% 14%;
+    --card-foreground: 30 33% 94%;
+    --popover: 20 32% 14%;
+    --popover-foreground: 30 33% 94%;
+    --primary: 35 38% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 20% 25%;
+    --secondary-foreground: 30 33% 94%;
+    --muted: 20 20% 18%;
+    --muted-foreground: 30 15% 60%;
+    --accent: 0 20% 25%;
+    --accent-foreground: 30 33% 94%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 20% 22%;
+    --input: 20 20% 22%;
+    --ring: 35 38% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
