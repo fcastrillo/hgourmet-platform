@@ -75,7 +75,9 @@
 ## Completion
 
 - **Date:** [filled at close]
-- **Duration:** [filled at close]
+- **Estimated Duration:** [copied from Context]
+- **Actual Duration:** [computed from git: first `feat(HU-N.M)` commit to closing commit]
+- **Variance:** [over/under estimate and ratio, e.g. "3x faster than estimated"]
 - **Files modified:** [filled at close]
 - **Tests added:** [filled at close]
 

@@ -42,6 +42,12 @@ Compare the **original plan** in `current_objective.md` against what actually ha
    - Read `current_objective.md` (planned tasks, files, and estimates).
    - Run `git log --oneline` from the first commit of this objective to HEAD.
    - Identify all files modified via `git diff --stat` against the commit before the objective started.
+   - **Compute actual duration** from git timestamps:
+     ```bash
+     git log --format="%ai %s" --grep="HU-N.M" --reverse
+     ```
+     Calculate elapsed time from the first `feat(HU-N.M)` commit to the last.
+     Compare against the estimate in `current_objective.md` Context section.
 
 2. **Identify deviations:**
    - **Added:** Tasks or files that were NOT in the original plan but were implemented.
@@ -77,7 +83,9 @@ Compare the **original plan** in `current_objective.md` against what actually ha
    ```markdown
    ## Completion
    - **Date:** YYYY-MM-DD
-   - **Duration:** [estimated total time]
+   - **Estimated Duration:** [from Context section]
+   - **Actual Duration:** [computed from git timestamps: first to last feat(HU-N.M) commit]
+   - **Variance:** [comparison, e.g. "Estimated M (~2-3 days), actual ~2h — ~12x faster with AI assistance"]
    - **Files modified:** [list]
    - **Tests added:** [count]
 
