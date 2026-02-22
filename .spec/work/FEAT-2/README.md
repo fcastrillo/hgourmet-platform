@@ -20,6 +20,7 @@
 | HU-2.4 | Gestión de categorías | Medium |
 | HU-2.5 | Gestión de banners rotativos | Medium |
 | HU-2.6 | Gestión de marcas/proveedores | Low |
+| HU-2.7 | Icon buttons y toggle inline en CategoryTable | Low |
 
 ---
 
