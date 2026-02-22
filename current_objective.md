@@ -43,10 +43,11 @@
 
 ## Implementation Plan
 
-### Task 1: Typed data-fetching helpers para productos (~30 min)
+### Task 1: Typed data-fetching helpers para productos (~30 min) ✅
 
 - **Type:** `[SC]` / lib
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Commit:** `c275981`
 - **Files:**
   - `src/lib/supabase/queries/products.ts` *(crear)* — helpers `fetchProductBySlug(slug)`, `fetchProductWithCategory(slug)`
 - **Details:**
@@ -55,10 +56,11 @@
   - Retornar `null` si no existe → la page llama `notFound()`
 - **Verification:** `npx tsc --noEmit` sin errores
 
-### Task 2: Configurar remotePatterns para Supabase Storage (~15 min)
+### Task 2: Configurar remotePatterns para Supabase Storage (~15 min) ✅
 
 - **Type:** Config
-- **Cycle:** IMPLEMENT → REFACTOR
+- **Cycle:** IMPLEMENT ✅ → REFACTOR ✅
+- **Note:** Ya estaba configurado desde HU-1.1 — no requirió cambios ✅
 - **Files:**
   - `next.config.ts` *(modificar)* — agregar `remotePatterns` para el dominio de Supabase Storage
 - **Details:**
@@ -67,10 +69,11 @@
   - Fallback para imágenes null: usar placeholder local o gradient CSS
 - **Verification:** `npm run build` sin warnings de Image domain
 
-### Task 3: Componente Breadcrumb `[SC]` (~20 min)
+### Task 3: Componente Breadcrumb `[SC]` (~20 min) ✅
 
 - **Type:** `[SC]` Server Component
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Commit:** `c275981`
 - **Files:**
   - `src/components/storefront/Breadcrumb.tsx` *(crear)*
 - **Details:**
@@ -80,10 +83,11 @@
   - Estilos alineados con la paleta del proyecto
 - **Verification:** Renderiza correctamente en Vitest (snapshot o assert text)
 
-### Task 4: Componente WhatsAppCTA `[CC]` (~20 min)
+### Task 4: Componente WhatsAppCTA `[CC]` (~20 min) ✅
 
 - **Type:** `[CC]` Client Component
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Commit:** `c275981`
 - **Files:**
   - `src/components/storefront/WhatsAppCTA.tsx` *(crear)*
 - **Details:**
@@ -94,10 +98,11 @@
   - Abrir en `_blank` con `rel="noopener noreferrer"`
 - **Verification:** Test verifica href generado y estado disabled cuando `isAvailable=false`
 
-### Task 5: Página de detalle `/productos/[slug]` con generateMetadata `[SC]` (~45 min)
+### Task 5: Página de detalle `/productos/[slug]` con generateMetadata `[SC]` (~45 min) ✅
 
 - **Type:** `[SC]` Server Component — crítico para SEO
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Commit:** `c275981`
 - **Files:**
   - `src/app/(storefront)/productos/[slug]/page.tsx` *(crear)*
   - `src/app/(storefront)/productos/[slug]/not-found.tsx` *(crear)*
@@ -115,10 +120,11 @@
   - Si `fetchProductBySlug` retorna `null` → `notFound()`
 - **Verification:** `npm run dev` + acceso manual a `/productos/[slug-real]`
 
-### Task 6: Tests de integración para HU-1.2 (~45 min)
+### Task 6: Tests de integración para HU-1.2 (~45 min) ✅
 
 - **Type:** `[TEST]`
-- **Cycle:** TEST → REFACTOR
+- **Cycle:** TEST ✅ → REFACTOR ✅
+- **Commit:** `c275981` | Tests: 64/64 passing (10 suites)
 - **Files:**
   - `src/tests/integration/hu-1.2-scenarios.test.tsx` *(crear)*
   - `src/tests/integration/ProductDetail.test.tsx` *(crear)*
@@ -133,10 +139,7 @@
   - `Breadcrumb.test.tsx`: ítems renderizados, último sin href, `aria-current="page"`
 - **Verification:** `npx vitest run` — 100% passing, sin errores TS
 
-### Task 7: Validación end-to-end (~20 min)
-
-- **Type:** `[TEST]` manual + build check
-- **Cycle:** TEST → REFACTOR
+### Task 7: Validación end-to-end (~20 min) — ⏳ PENDIENTE (manual)
 - **Files:** ninguno (solo ejecución)
 - **Details:**
   - `npm run build` — sin errores TypeScript ni Next.js

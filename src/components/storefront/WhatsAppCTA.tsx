@@ -35,7 +35,8 @@ export function WhatsAppCTA({ productName, isAvailable }: WhatsAppCTAProps) {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-6 py-3 font-semibold text-white shadow-sm transition-all hover:bg-[#1ebe5d] hover:shadow-md active:scale-95"
+                className="flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3 font-semibold shadow-sm transition-all hover:shadow-md active:scale-95"
+                style={{ backgroundColor: "#25D366", color: "#ffffff" }}
                 aria-label={`Pide ${productName} por WhatsApp`}
             >
                 <WhatsAppIcon />

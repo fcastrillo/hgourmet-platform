@@ -26,7 +26,7 @@ export async function generateMetadata({
         `Descubre ${product.name} en HGourmet — Insumos Gourmet para Repostería en Mérida.`;
 
     return {
-        title: `${product.name} | HGourmet`,
+        title: product.name,
         description,
         openGraph: {
             title: `${product.name} | HGourmet`,
