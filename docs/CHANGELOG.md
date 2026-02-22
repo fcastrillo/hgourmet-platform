@@ -19,6 +19,22 @@
 
 ---
 
+## [2026-02-22] — HU-2.1: Autenticación de administradoras
+
+**Feature:** FEAT-2 — Panel de Administración
+**Benefit:** Las administradoras de HGourmet pueden acceder de forma segura al panel de gestión mediante Magic Link (Email OTP), sin necesidad de recordar contraseñas. Las rutas `/admin/*` están protegidas y el storefront público permanece accesible sin autenticación.
+**Changes:**
+- Middleware de Next.js para refresh de sesión Supabase en cada request y protección de rutas `/admin/*`
+- Página de login con formulario de email y flujo de Magic Link (`signInWithOtp`)
+- Route handler `/auth/callback` para intercambio de código OTP por sesión
+- Admin layout con sidebar de navegación (Dashboard, Productos, Categorías, Banners, Marcas) y botón de cerrar sesión
+- Dashboard placeholder con tarjetas de secciones futuras
+- Server Action `signOut` para invalidar sesión
+- ADR-008: Email OTP (Magic Link) for Admin Authentication
+**Tests:** 10 nuevos tests (1 suite: hu-2.1-scenarios) — total acumulado: 103
+
+---
+
 ## [2026-02-21] — HU-1.4: Sección "Lo más vendido" y "Productos de temporada"
 
 **Feature:** FEAT-1 — Catálogo Digital de Productos

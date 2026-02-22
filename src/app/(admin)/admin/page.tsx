@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
     <div>
       <div className="mb-8">
         <h1 className="font-heading text-2xl font-bold text-text">
-          Bienvenida{user?.email ? `, ${user.email}` : ""}
+          Hola{user?.email ? `, ${user.email}` : ""}
         </h1>
         <p className="mt-1 text-sm text-muted">
           Panel de administración de HGourmet
