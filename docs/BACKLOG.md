@@ -51,8 +51,8 @@
     > Estimate: Pending | CRUD de banners con upload de imagen a `banner-images`, reordenamiento, toggle activo/inactivo, integración con carrusel del storefront. ~1–2 días.
   - [ ] HU-2.6: Gestión de marcas/proveedores (Low)
     > Estimate: Pending | CRUD de marcas con upload de logo a `brand-logos`, reordenamiento, toggle activo/inactivo. ~0.5–1 día.
-  - [ ] HU-2.7: Icon buttons y toggle inline en CategoryTable (Low)
-    > Estimate: XS | Reemplazar botones de texto por icon buttons con tooltip, agregar toggle de visibilidad inline (activar/desactivar sin modal), ajustar tests. ~30 min.
+  - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable (Low) ✅ (2026-02-22)
+    > Estimate: XS | Reemplazar botones de texto por icon buttons con tooltip, agregar toggle de visibilidad inline (activar/desactivar sin modal), ajustar tests. ~30 min. Establece el estándar UI para futuras tablas admin (ADR-009).
 
 ---
 
@@ -92,3 +92,4 @@
 - [x] **FEAT-1: Catálogo Digital de Productos** ✅ (2026-02-21) — 4/4 stories delivered
 - [x] HU-2.1: Autenticación de administradoras ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2
+- [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2

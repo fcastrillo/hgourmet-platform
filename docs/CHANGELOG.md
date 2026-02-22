@@ -19,6 +19,21 @@
 
 ---
 
+## [2026-02-22] — HU-2.7: Icon buttons y toggle inline en CategoryTable
+
+**Feature:** FEAT-2 — Panel de Administración
+**Benefit:** Las administradoras pueden activar/desactivar categorías con un solo clic directamente desde la tabla, sin abrir modales. Los botones de acción compactos (iconos con tooltip) reducen el espacio visual y agilizan la gestión. Este patrón se convierte en el estándar UI para todas las tablas de administración futuras (ADR-009).
+**Changes:**
+- Server Action `toggleCategoryActive` para cambio inline de `is_active` sin pasar por el formulario completo
+- Icon buttons con Heroicons outline (pencil, eye/eye-slash, trash) y tooltip nativo (`title`) en tabla desktop
+- Toggle inline con actualización optimista (`useTransition` + `activeOverrides` state) — feedback visual inmediato sin esperar respuesta del servidor
+- Mobile: icon buttons con label visible y targets de toque de 44px
+- Accesibilidad: `aria-label` en todos los botones de acción (Editar, Activar/Desactivar, Eliminar)
+- ADR-009: Admin Table UI Standard — establece convenciones para futuras tablas
+**Tests:** 12 nuevos tests (total 32 en suite hu-2.4-scenarios) — total acumulado: 137
+
+---
+
 ## [2026-02-22] — HU-2.4: Gestión de categorías
 
 **Feature:** FEAT-2 — Panel de Administración

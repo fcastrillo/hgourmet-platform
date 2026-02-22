@@ -45,6 +45,11 @@
 
 ## Technical Notes
 
-- **Components:** Brand list `[SC]`, Brand form `[CC]`, Reorder controls `[CC]`, Brand CRUD actions `[SA]`
+- **Components:** Brand list `[SC]`, Brand table `[CC]`, Brand form `[CC]`, Brand CRUD actions `[SA]`, `toggleBrandActive` `[SA]`
 - **Storage:** Bucket `brand-logos` para logos de marcas
 - **Display order:** Asignar `MAX(display_order) + 1` al crear
+- **UI Standard (ADR-009):** Seguir el patrón establecido en HU-2.7:
+  - Columna Acciones con icon buttons (pencil, eye/eye-slash, trash) + tooltip nativo
+  - Toggle inline de `is_active` con server action dedicada y actualización optimista
+  - Mobile: icon buttons con label visible y `min-h-[44px]`
+  - Aria-labels: `aria-label="Editar"`, `aria-label="Activar"/"Desactivar"`, `aria-label="Eliminar"`

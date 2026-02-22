@@ -45,7 +45,12 @@
 
 ## Technical Notes
 
-- **Components:** Banner list `[SC]`, Banner form `[CC]`, Reorder controls `[CC]`, Banner CRUD actions `[SA]`
+- **Components:** Banner list `[SC]`, Banner table `[CC]`, Banner form `[CC]`, Banner CRUD actions `[SA]`, `toggleBannerActive` `[SA]`
 - **Storage:** Bucket `banner-images` para imágenes de banners
 - **Display order:** Asignar `MAX(display_order) + 1` al crear
 - **Carousel:** Integración con el componente carousel `[CC]` existente en storefront
+- **UI Standard (ADR-009):** Seguir el patrón establecido en HU-2.7:
+  - Columna Acciones con icon buttons (pencil, eye/eye-slash, trash) + tooltip nativo
+  - Toggle inline de `is_active` con server action dedicada y actualización optimista
+  - Mobile: icon buttons con label visible y `min-h-[44px]`
+  - Aria-labels: `aria-label="Editar"`, `aria-label="Activar"/"Desactivar"`, `aria-label="Eliminar"`

@@ -210,6 +210,19 @@
 - **Consequences:** Login depends on email delivery speed (typically 5-30 seconds). If SMTP fails or emails land in spam, admins cannot log in. Mitigated by: (a) low volume makes delivery reliable, (b) admins can be trained to check spam on first use, (c) Supabase SMTP works well for low-volume auth emails. No password reset UI needed. Future customer auth (Fase 2+) can use a different method (password, social) — Supabase supports multiple auth methods simultaneously.
 - **Origin:** FEAT-2 (architectural decision before HU-2.1 implementation)
 
+### ADR-009: Admin Table UI Standard (Icon Buttons, Inline Toggle, Optimistic Updates)
+
+- **Context:** HU-2.4 used text buttons ("Editar", "Eliminar") and a static badge for active/inactive state, requiring a modal to toggle visibility. This pattern was functional but verbose — the user requested a more compact, agile UI as the standard for all admin management tables.
+- **Decision:** All admin CRUD tables (categories, banners, brands, products) must follow this UI pattern:
+  1. **Action column:** 3 icon buttons (Heroicons outline SVGs) instead of text buttons: pencil (edit), eye/eye-slash (toggle visibility), trash (delete).
+  2. **Native tooltips:** Each icon button uses the `title` attribute for hover tooltip and `aria-label` for accessibility.
+  3. **Inline toggle:** The eye/eye-slash icon toggles `is_active` (or equivalent boolean) directly via a dedicated server action (e.g., `toggleCategoryActive`), without opening a modal.
+  4. **Optimistic UI:** Use `activeOverrides` state (Record) + `useTransition` to reflect the toggle change instantly in the badge and icon, before the server responds. Clear the override after the server action completes.
+  5. **Mobile:** Icon buttons with visible text labels and `min-h-[44px]` touch targets.
+  6. **Aria-labels:** `aria-label="Editar"`, `aria-label="Activar"/"Desactivar"`, `aria-label="Eliminar"` — tests should query by `aria-label`, not by text content.
+- **Consequences:** Consistent UX across all admin tables. Faster interaction for admins (one-click toggle vs. open modal → toggle → save → close). Slightly more complex component state management (optimistic overrides), but the pattern is well-tested and reusable. All future admin tables (HU-2.2, HU-2.5, HU-2.6) must follow this standard.
+- **Origin:** HU-2.7 (established as the new admin UI standard)
+
 ### ADR-007: Client-Side Data Fetching for Interactive Features
 
 - **Context:** HU-1.3 requires real-time search with 300ms debounce. Server Components cannot handle interactive state or real-time user input. The project had a browser Supabase client (`src/lib/supabase/client.ts`) created in HU-1.1 but never used — all queries were server-side.
