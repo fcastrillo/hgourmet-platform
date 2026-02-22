@@ -19,6 +19,7 @@ Commands live in `.spec/commands/` and are also available as slash commands in `
 | `apply` | `.spec/commands/apply.md` | Implement with TDD |
 | `finish-objective` | `.spec/commands/finish-objective.md` | Close and archive |
 | `validate` | `.spec/commands/validate.md` | Run poka-yoke validation |
+| `upgrade` | `.spec/commands/upgrade.md` | Version check + post-upgrade reconciliation |
 
 When a command is invoked, **read the corresponding file in `.spec/commands/` in full and follow its instructions exactly**.
 

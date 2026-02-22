@@ -26,6 +26,7 @@ The user triggers workflow steps by referencing command files with `@`:
 | `@apply` | `.spec/commands/apply.md` | Implement with TDD |
 | `@finish-objective` | `.spec/commands/finish-objective.md` | Close, analyze deviations, and archive |
 | `@validate` | `.spec/commands/validate.md` | Run poka-yoke validation |
+| `@upgrade` | `.spec/commands/upgrade.md` | Version check + post-upgrade reconciliation |
 
 When the user references a command file, **read it in full and follow its instructions exactly**.
 

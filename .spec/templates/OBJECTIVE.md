@@ -5,6 +5,7 @@
 - **Feature:** FEAT-N — [Feature Name]
 - **Story:** Como [rol], quiero [acción], para poder [resultado]
 - **Spec Level:** [Minimal | Lite | Standard | Full]
+- **TDD Mode:** [strict | flexible | off — from .spec/config.md]
 - **Estimated Duration:** [total time estimate]
 
 ## Acceptance Criteria (BDD)
@@ -32,14 +33,14 @@
 ### Task 1: [Description] (~XX min)
 
 - **Type:** [SC] | [CC] | [SA] | [DB] | [TEST]
-- **Cycle:** RED → GREEN → REFACTOR
+- **Cycle:** [strict: RED → GREEN → REFACTOR | flexible: IMPLEMENT → TEST → REFACTOR | off: IMPLEMENT → REFACTOR]
 - **Files:** [list of files to create/modify]
 - **Verification:** [specific command to validate]
 
 ### Task 2: [Description] (~XX min)
 
 - **Type:** [SC] | [CC] | [SA] | [DB] | [TEST]
-- **Cycle:** RED → GREEN → REFACTOR
+- **Cycle:** [per tdd_mode in .spec/config.md]
 - **Files:** [list of files to create/modify]
 - **Verification:** [specific command to validate]
 
@@ -62,7 +63,7 @@
 
 ## Definition of Done
 
-- [ ] All BDD criteria have passing tests
+- [ ] All BDD criteria covered (passing tests if `tdd_mode` is `strict` or `flexible`; documented if `off`)
 - [ ] No TypeScript errors
 - [ ] RLS policies tested (if applicable)
 - [ ] Manual testing checklist verified

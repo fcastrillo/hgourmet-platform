@@ -20,6 +20,24 @@
 
 ---
 
+## Testing Strategy
+
+| Setting | Value | Options |
+|:--------|:------|:--------|
+| **tdd_mode** | `strict` | `strict` / `flexible` / `off` |
+
+- **`strict`** (default): RED phase is mandatory before GREEN. Tests must be written
+  *before* implementation code. Cycle markers: `RED → GREEN → REFACTOR`.
+- **`flexible`**: Tests are required but may be written *after* the implementation code.
+  Useful for UI-heavy work or when the API surface is uncertain.
+  Cycle markers: `IMPLEMENT → TEST → REFACTOR`.
+  Post-condition remains: all BDD criteria must have passing tests.
+- **`off`**: No automated test requirement. Only for spikes, prototypes, or projects
+  without testing infrastructure. Generated code is marked with `// WARNING: No test contract`.
+  Post-condition changes to: BDD criteria documented but not automated.
+
+---
+
 ## IDE Compatibility
 
 | IDE | Entry Point | Commands |

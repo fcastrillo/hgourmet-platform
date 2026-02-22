@@ -64,7 +64,10 @@ Invoked automatically as Step 0 of `@start-objective`, or manually by the user a
 ### Plan (current_objective.md)
 
 - [ ] `Atomicity`: Tasks broken into steps under 60 minutes.
-- [ ] `TDD Cycle`: `RED → GREEN → REFACTOR` markers per technical task.
+- [ ] `Cycle Markers`: Markers per technical task matching `tdd_mode` from `.spec/config.md`:
+  - `strict`: `RED → GREEN → REFACTOR`
+  - `flexible`: `IMPLEMENT → TEST → REFACTOR`
+  - `off`: `IMPLEMENT → REFACTOR`
 - [ ] `Verification`: Specific command to validate each task.
 - [ ] `Manual Test`: Final interactive manual integration task.
 
@@ -80,6 +83,7 @@ Invoked automatically as Step 0 of `@start-objective`, or manually by the user a
 | **BDD** | `Entonces:` | **WARNING** | Acceptance criteria not testable. | Use Dado/Cuando/Entonces format. |
 | **Security** | `RLS` or `Policy` | **BLOCKER** | No security logic detected. | Define RLS policy in TECH_SPEC.md. |
 | **Hallucination** | References to non-existent files | **BLOCKER** | Plan references files not in the tree. | Create the files or fix the path. |
+| **TDD Off** | `tdd_mode: off` in `config.md` | **WARNING** | No automated test contract for this objective. | Consider switching to `flexible` or `strict` mode. |
 
 ---
 

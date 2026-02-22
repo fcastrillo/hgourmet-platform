@@ -15,7 +15,8 @@ The user invokes this command after the plan in `current_objective.md` has been 
 ## Pre-conditions
 
 1. Read `.spec/constitution.md` to load operating principles.
-2. Read `.spec/config.md` to determine `git_strategy` (trunk or feature).
+2. Read `.spec/config.md` to determine `git_strategy` (trunk or feature) and `tdd_mode`
+   (strict, flexible, or off).
 3. Read `current_objective.md` — it **must** contain a validated plan. If empty or missing,
    **STOP and instruct the user to run `@start-objective` first.**
 4. Read `docs/TECH_SPEC.md` for technical standards.
@@ -47,26 +48,56 @@ If `current_objective.md` includes a "Database Changes" section:
 2. Include RLS policies.
 3. Present the SQL to the user for review before proceeding.
 
-### Step 2: Execute Tasks in TDD Order
+### Step 2: Execute Tasks
 
-For each task in the implementation plan:
+For each task in the implementation plan, follow the cycle determined by `tdd_mode` in
+`.spec/config.md`:
 
-#### RED Phase
+#### When `tdd_mode = strict` (default)
+
+##### RED Phase
 1. Read the BDD criterion associated with this task.
 2. Translate it into a failing test:
    - Integration test for data/API logic.
    - Component test for UI behavior.
 3. Verify the test fails (it must fail — this confirms the test is meaningful).
 
-#### GREEN Phase
+##### GREEN Phase
 1. Write the **minimum** code to make the test pass.
 2. Follow the component classification from the plan (`[SC]`, `[CC]`, `[SA]`).
 3. Run the test — it must pass.
 
-#### REFACTOR Phase
+##### REFACTOR Phase
 1. Clean up code without changing behavior.
 2. Ensure naming conventions match `docs/TECH_SPEC.md` standards.
 3. Run all tests — they must still pass.
+
+#### When `tdd_mode = flexible`
+
+##### IMPLEMENT Phase
+1. Read the BDD criterion associated with this task.
+2. Write the implementation code following the component classification (`[SC]`, `[CC]`, `[SA]`).
+3. Handle edge cases, validation, and error states.
+
+##### TEST Phase
+1. Write tests that cover the BDD criterion (integration or component test).
+2. Run the tests — they must pass.
+
+##### REFACTOR Phase
+1. Clean up code without changing behavior.
+2. Ensure naming conventions match `docs/TECH_SPEC.md` standards.
+3. Run all tests — they must still pass.
+
+#### When `tdd_mode = off`
+
+##### IMPLEMENT Phase
+1. Read the BDD criterion associated with this task.
+2. Write the implementation code following the component classification (`[SC]`, `[CC]`, `[SA]`).
+3. Add `// WARNING: No test contract` as a comment in each new file.
+
+##### REFACTOR Phase
+1. Clean up code without changing behavior.
+2. Ensure naming conventions match `docs/TECH_SPEC.md` standards.
 
 ### Step 3: Commit and Update Progress
 
@@ -119,7 +150,9 @@ Next step: Run @finish-objective to archive and update the backlog.
 
 ## Post-conditions
 
-- All BDD criteria have associated passing tests.
+- **If `tdd_mode` is `strict` or `flexible`:** All BDD criteria have associated passing tests.
+- **If `tdd_mode` is `off`:** All BDD criteria are documented; generated files contain
+  `// WARNING: No test contract`.
 - No TypeScript/linter errors in modified files.
 - `current_objective.md` reflects all tasks as completed.
 - The user has verified the manual testing checklist.
@@ -129,7 +162,8 @@ Next step: Run @finish-objective to archive and update the backlog.
 
 ## Rules
 
-- **Never skip the RED phase.** A test must fail before you write implementation code.
+- **In `strict` mode: never skip the RED phase.** A test must fail before you write implementation code.
+- **In `flexible` mode: never skip the TEST phase.** Tests must exist before the task is marked done.
 - **Never modify files outside the plan** without explicit user approval.
 - **If a task takes longer than estimated**, pause and inform the user.
 - **If you discover a missing spec**, stop and suggest running `@validate`.

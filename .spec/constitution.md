@@ -112,6 +112,7 @@ Commands live in `.spec/commands/` (single source of truth) and are accessible f
 | **Implement** | `apply` | Plan + Criteria | Code + Tests |
 | **Close** | `finish-objective` | HU Checklist | Archive in `history/`, BACKLOG update, deviations |
 | **Validate** | `validate` | Target artifact | Validation report |
+| **Upgrade** | `upgrade` | — | Version check, config reconciliation, integrity report |
 
 ### Command Execution Rules
 
@@ -133,7 +134,16 @@ The testing approach for a solo developer is **"Test-as-Contract"**:
 - **BDD-Automation link:** When executing `@apply`, the instruction is:
   *"Translate each 'Dado que/Cuando/Entonces' criterion into a functional test that fails
   (Red Phase). Do not implement logic until the test exists."*
-- **TDD Cycle markers:** Every technical task in the plan must have `RED → GREEN → REFACTOR` markers.
+- **TDD Cycle markers:** Every technical task in the plan must have cycle markers matching the
+  `tdd_mode` setting in `.spec/config.md`:
+
+| `tdd_mode` | Cycle Markers | Test Requirement |
+|:-----------|:--------------|:-----------------|
+| `strict` (default) | `RED → GREEN → REFACTOR` | Tests first, then implementation |
+| `flexible` | `IMPLEMENT → TEST → REFACTOR` | Implementation first, then tests |
+| `off` | `IMPLEMENT → REFACTOR` | No automated tests; code marked `// WARNING: No test contract` |
+
+In all modes except `off`, the post-condition **"all BDD criteria have passing tests"** applies.
 
 ---
 

@@ -15,7 +15,8 @@ The user invokes this command to begin working on a specific User Story.
 ## Pre-conditions
 
 1. Read `.spec/constitution.md` to load operating principles.
-2. Read `.spec/config.md` to determine `git_strategy` (trunk or feature).
+2. Read `.spec/config.md` to determine `git_strategy` (trunk or feature) and `tdd_mode`
+   (strict, flexible, or off).
 3. Read `docs/BACKLOG.md` to confirm the HU exists and understand its Feature context.
 4. Read `.spec/work/FEAT-N/README.md` to understand the Benefit Hypothesis.
 5. Read `docs/TECH_SPEC.md` for technical constraints.
@@ -70,7 +71,7 @@ Create `current_objective.md` with this structure:
 
 ### Task 1: [Description] (~XX min)
 - **Type:** [SC] | [CC] | [SA] | [DB] | [TEST]
-- **Cycle:** RED → GREEN → REFACTOR
+- **Cycle:** [per tdd_mode — see table below]
 - **Files:** [list of files to create/modify]
 - **Verification:** [specific command to validate]
 
@@ -90,6 +91,14 @@ Create `current_objective.md` with this structure:
 - [ ] All changes committed with `feat(HU-N.M):` convention
 - [ ] Tag `HU-N.M` created
 ```
+
+#### Cycle Markers by `tdd_mode`
+
+| `tdd_mode` | Cycle Value |
+|:-----------|:------------|
+| `strict` | `RED → GREEN → REFACTOR` |
+| `flexible` | `IMPLEMENT → TEST → REFACTOR` |
+| `off` | `IMPLEMENT → REFACTOR` |
 
 ### Step 3: Git Branch Setup (feature mode only)
 
@@ -128,6 +137,6 @@ Present the plan summary and ask for approval before proceeding to `@apply`.
 
 - `current_objective.md` is populated with a validated, actionable plan.
 - Every task has a time estimate under 60 minutes.
-- Every task has a TDD cycle marker (`RED → GREEN → REFACTOR`).
+- Every task has cycle markers matching `tdd_mode` from `.spec/config.md`.
 - If `feature` mode: a `hu/N.M` branch exists and is checked out.
 - The user has approved the plan.
