@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
-import { CategoryCard } from "@/components/storefront/CategoryCard";
+import { SearchableProductCatalog } from "@/components/storefront/SearchableProductCatalog";
 import type { Category, CategoryWithProductCount } from "@/types/database";
 
 export const metadata: Metadata = {
@@ -38,17 +38,7 @@ export default async function CategoriasPage() {
         Explora nuestras categorías de insumos gourmet
       </p>
 
-      {categoriesWithCount.length === 0 ? (
-        <p className="mt-12 text-center text-muted">
-          No hay categorías disponibles por el momento.
-        </p>
-      ) : (
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {categoriesWithCount.map((category) => (
-            <CategoryCard key={category.id} category={category} />
-          ))}
-        </div>
-      )}
+      <SearchableProductCatalog categories={categoriesWithCount} />
     </section>
   );
 }
