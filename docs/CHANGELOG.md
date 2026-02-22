@@ -19,6 +19,22 @@
 
 ---
 
+## [2026-02-22] — HU-1.3: Búsqueda y filtrado de productos
+
+**Feature:** FEAT-1 — Catálogo Digital de Productos
+**Benefit:** Los clientes pueden buscar productos por nombre o descripción y filtrar por categoría directamente desde el catálogo, encontrando lo que necesitan en segundos sin navegar manualmente por todas las categorías.
+**Changes:**
+- Barra de búsqueda `[CC]` con debounce de 300ms en la página `/categorias`
+- Filtro por categoría con chips horizontales scrollables en mobile
+- Componente orquestador `SearchableProductCatalog` que combina búsqueda + filtro + grid de resultados
+- Query helper `searchProducts` usando browser Supabase client con `ilike` en name/description
+- Hook genérico `useDebounce` reutilizable
+- Estado "sin resultados" con mensaje amigable y enlaces a categorías
+- ADR-007: Client-Side Data Fetching for Interactive Features
+**Tests:** 19 nuevos tests (3 suites: SearchBar, CategoryFilter, hu-1.3-scenarios) — total acumulado: 83
+
+---
+
 ## [2026-02-21] — HU-1.2: Ficha de detalle de producto
 
 **Feature:** FEAT-1 — Catálogo Digital de Productos

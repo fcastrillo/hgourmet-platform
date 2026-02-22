@@ -1,7 +1,7 @@
 # Product Backlog
 
 > **Project:** hgourmet-platform
-> **Last updated:** 2026-02-21
+> **Last updated:** 2026-02-22
 >
 > This is the **Single Source of Truth** for the SAFe hierarchy.
 > Structure: Epic → Feature (FEAT-N) → User Story (HU-N.M)
@@ -26,7 +26,7 @@
     > Estimate: M | Story fundacional: setup DB (migración, RLS, índices), Supabase client, 2 páginas, ProductCard reutilizable, responsive grid, empty states. ~2–3 días.
   - [x] HU-1.2: Ficha de detalle de producto (High) ✅ (2026-02-21)
     > Estimate: S | 1 página de detalle con generateMetadata (SEO/OG), breadcrumb, CTA WhatsApp. Reutiliza infraestructura de HU-1.1. ~4–8 horas.
-  - [ ] HU-1.3: Búsqueda y filtrado de productos (Medium)
+  - [x] HU-1.3: Búsqueda y filtrado de productos (Medium) ✅ (2026-02-22)
     > Estimate: M | Barra de búsqueda CC con debounce, filtro por categoría, coordinación de estados, decisión ilike vs full-text search. ~1–2 días.
   - [ ] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" (Medium)
     > Estimate: S | 2 secciones con componente genérico, queries filtradas por is_featured/is_seasonal, reutiliza ProductCard. ~3–6 horas.
@@ -79,3 +79,4 @@
 
 - [x] HU-1.1: Navegación por categorías de productos ✅ (2026-02-21) — FEAT-1
 - [x] HU-1.2: Ficha de detalle de producto ✅ (2026-02-21) — FEAT-1
+- [x] HU-1.3: Búsqueda y filtrado de productos ✅ (2026-02-22) — FEAT-1

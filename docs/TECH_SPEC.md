@@ -200,6 +200,13 @@
 - **Consequences:** Slightly less concise JSX for components with third-party brand colors. However, guarantees correct rendering in all environments. Hover/active effects for these elements must use CSS transitions or `onMouseEnter`/`onMouseLeave` handlers.
 - **Origin:** HU-1.2 (discovered during manual validation of WhatsAppCTA component)
 
+### ADR-007: Client-Side Data Fetching for Interactive Features
+
+- **Context:** HU-1.3 requires real-time search with 300ms debounce. Server Components cannot handle interactive state or real-time user input. The project had a browser Supabase client (`src/lib/supabase/client.ts`) created in HU-1.1 but never used — all queries were server-side.
+- **Decision:** For features requiring real-time interactivity (search, filtering, live updates), use the **browser Supabase client** from Client Components. Apply the **Orchestrator Pattern**: the parent Server Component fetches initial/static data (SSR), passes it as props to a Client Component that conditionally activates client-side fetching only when the user interacts. Query helpers for client-side use live in separate files from server-side helpers (e.g., `queries/search.ts` uses browser client vs `queries/products.ts` uses server client).
+- **Consequences:** Clear separation between server and client data access. Initial page load remains fast (SSR). Client-side fetches only happen on user interaction. RLS policies apply equally to both clients (same anon key). Future interactive features (admin filters, live previews) should follow this same pattern.
+- **Origin:** HU-1.3 (discovered during implementation of search and category filter)
+
 ---
 
 ## Server/Client Strategy
