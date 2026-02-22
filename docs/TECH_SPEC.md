@@ -223,6 +223,18 @@
 - **Consequences:** Consistent UX across all admin tables. Faster interaction for admins (one-click toggle vs. open modal → toggle → save → close). Slightly more complex component state management (optimistic overrides), but the pattern is well-tested and reusable. All future admin tables (HU-2.2, HU-2.5, HU-2.6) must follow this standard.
 - **Origin:** HU-2.7 (established as the new admin UI standard)
 
+### ADR-010: React State-Driven Toggle Styling in Tailwind 4
+
+- **Context:** During HU-2.2 implementation, toggle switches in `ProductForm` using Tailwind's `peer-checked:` variant (a CSS-only pattern where a hidden checkbox input with class `peer` controls sibling styling) did not work in Tailwind 4. The `peer-checked:` utility classes were not generated correctly by Tailwind 4's JIT engine, resulting in visually unresponsive toggles despite correct HTML state.
+- **Decision:** All toggle/switch components must use React state (`checked` prop) with conditional Tailwind classes instead of CSS-only `peer`/`peer-checked:` selectors. Pattern:
+  ```tsx
+  <div className={checked ? "bg-primary" : "bg-gray-200"} />
+  <div className={checked ? "translate-x-5" : "translate-x-0"} />
+  ```
+  Do NOT use `peer` class on the input or `peer-checked:` on sibling elements.
+- **Consequences:** Slightly more JavaScript (React re-renders on toggle), but fully reliable across Tailwind versions. All future form components with toggles (HU-2.5 banners, HU-2.6 brands) must follow this pattern. Existing toggles in `CategoryTable` (ADR-009 optimistic toggle) already use React state and are unaffected.
+- **Origin:** HU-2.2 (discovered during implementation)
+
 ### ADR-007: Client-Side Data Fetching for Interactive Features
 
 - **Context:** HU-1.3 requires real-time search with 300ms debounce. Server Components cannot handle interactive state or real-time user input. The project had a browser Supabase client (`src/lib/supabase/client.ts`) created in HU-1.1 but never used — all queries were server-side.

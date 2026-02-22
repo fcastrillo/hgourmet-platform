@@ -19,6 +19,22 @@
 
 ---
 
+## [2026-02-22] — HU-2.2: CRUD de productos desde el panel
+
+**Feature:** FEAT-2 — Panel de Administración
+**Benefit:** Las administradoras pueden crear, editar, ocultar y eliminar productos del catálogo directamente desde el panel de administración, con upload de imágenes a Supabase Storage, slugs automáticos, paginación server-side y búsqueda. La gestión del catálogo es completamente autónoma sin soporte técnico.
+**Changes:**
+- Query helpers server-side: `fetchProductsAdmin` (paginados con búsqueda), `fetchProductsCountAdmin`, `fetchProductByIdAdmin`
+- 4 Server Actions: `createProduct` (slug auto + image upload), `updateProduct` (con reemplazo de imagen), `deleteProduct` (con limpieza de imagen), `toggleProductVisibility` (inline)
+- `ProductTable` [CC] con búsqueda debounced, paginación URL-driven, ADR-009 icon actions, toggle optimista de visibilidad
+- `ProductForm` [CC] con upload de imagen integrado (preview, validación tipo/tamaño), 4 toggles (available, visible, featured, seasonal), preview de slug
+- `DeleteProductDialog` [CC] con confirmación por nombre del producto
+- 3 páginas Server Component: lista (`/admin/productos`), crear (`/admin/productos/nuevo`), editar (`/admin/productos/[id]/editar`)
+- ADR-010: React state-driven toggle styling (Tailwind 4 `peer-checked` incompatibility fix)
+**Tests:** 29 nuevos tests (1 suite: hu-2.2-scenarios) — total acumulado: 164
+
+---
+
 ## [2026-02-22] — HU-2.7: Icon buttons y toggle inline en CategoryTable
 
 **Feature:** FEAT-2 — Panel de Administración

@@ -41,8 +41,8 @@
 - **Stories:**
   - [x] HU-2.1: Autenticación de administradoras (High) ✅ (2026-02-22)
     > Estimate: S | Login con Magic Link (Email OTP), middleware de protección `/admin/*`, sesión server-side con `@supabase/ssr`, admin layout con sidebar, logout. ~1–2 días.
-  - [ ] HU-2.2: CRUD de productos desde el panel (High)
-    > Estimate: Pending | Lista con paginación/búsqueda, formulario de creación/edición con upload de imagen a Supabase Storage, slug automático, toggles de visibilidad/featured/seasonal, eliminación con confirmación. ~3–4 días.
+  - [x] HU-2.2: CRUD de productos desde el panel (High) ✅ (2026-02-22)
+    > Estimate: M | Lista con paginación/búsqueda, formulario de creación/edición con upload de imagen a Supabase Storage, slug automático, toggles de visibilidad/featured/seasonal, eliminación con confirmación. ~3–4 días.
   - [ ] HU-2.3: Importación masiva de productos vía CSV (High)
     > Estimate: Pending | Sección de importación con template descargable, parsing client-side, previsualización, validación por fila, importación parcial, reporte de errores, idempotencia por SKU. ~2–3 días.
   - [x] HU-2.4: Gestión de categorías (Medium) ✅ (2026-02-22)
@@ -92,4 +92,5 @@
 - [x] **FEAT-1: Catálogo Digital de Productos** ✅ (2026-02-21) — 4/4 stories delivered
 - [x] HU-2.1: Autenticación de administradoras ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2
+- [x] HU-2.2: CRUD de productos desde el panel ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2
