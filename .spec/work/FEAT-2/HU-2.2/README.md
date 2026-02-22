@@ -54,7 +54,13 @@
 
 ## Technical Notes
 
-- **Components:** Product list `[SC]`, Product form `[CC]`, Product CRUD actions `[SA]`
+- **Components:** Product list page `[SC]`, Product table `[CC]`, Product form `[CC]`, Product CRUD actions `[SA]`, `toggleProductVisible` `[SA]`
 - **Storage:** Bucket `product-images` para imágenes de productos
 - **Slug generation:** Automática desde el nombre (slugify)
 - **RLS:** Authenticated users tienen full access (SELECT, INSERT, UPDATE, DELETE)
+- **UI Standard (ADR-009):** Seguir el patrón establecido en HU-2.7:
+  - Columna Acciones con icon buttons (pencil, eye/eye-slash, trash) + tooltip nativo
+  - Toggle inline de `is_visible` con server action dedicada y actualización optimista (el toggle principal de visibilidad pública)
+  - Los flags `is_featured` e `is_seasonal` permanecen en el formulario de edición (se cambian con menor frecuencia)
+  - Mobile: icon buttons con label visible y `min-h-[44px]`
+  - Aria-labels: `aria-label="Editar"`, `aria-label="Mostrar"/"Ocultar"`, `aria-label="Eliminar"`
