@@ -45,6 +45,10 @@ for the user to resolve it.**
 Read the User Story and its BDD criteria. Identify:
 
 - **Data changes:** Does this HU require new tables, columns, or RLS policies?
+- **Infrastructure prerequisites:** Does this HU require new Supabase Storage buckets,
+  new environment variables, new auth configuration, or other infrastructure that must
+  be set up before or during implementation? If yes, flag them explicitly in the
+  Implementation Plan and reference `docs/SETUP.md` as the target for documentation.
 - **Component classification:** For each new component, classify as:
   - `[SC]` Server Component
   - `[CC]` Client Component

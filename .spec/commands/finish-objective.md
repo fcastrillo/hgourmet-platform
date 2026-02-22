@@ -19,6 +19,7 @@ The user invokes this command after `@apply` has been completed and all tests pa
 3. Read `current_objective.md` — all tasks must be marked as completed.
 4. Read `docs/BACKLOG.md` to locate the Story being closed.
 5. Read `docs/CHANGELOG.md` to append the new entry.
+6. Read `docs/SETUP.md` to check if infrastructure sections need updating.
 
 ---
 
@@ -122,6 +123,24 @@ Add a new entry following the benefit-oriented format:
 **Tests:** [Number of tests added]
 ```
 
+### Step 5.5: Update `docs/SETUP.md` (if applicable)
+
+If the objective introduced **new infrastructure requirements**, update the corresponding
+section in `docs/SETUP.md`:
+
+| Change type | SETUP.md section to update |
+|:------------|:--------------------------|
+| New DB migration or table | Section 3 (Database) |
+| New RLS policy | Section 3.4 (RLS Policies) |
+| New environment variable | Section 1 (Environment Variables) |
+| New auth configuration | Section 4 (Authentication) |
+| New Storage bucket | Section 5 (Storage) |
+| New external service | Add new section or update Section 7 |
+
+Also update the **Quick Start Checklist** (Section 8) with any new required steps.
+
+If no infrastructure changes were introduced, skip this step.
+
 ### Step 6: Git — Closing Commit, Merge, and Tags
 
 1. **Stage and commit** all documentation changes (archive, BACKLOG, CHANGELOG, TECH_SPEC if ADR added):
@@ -190,6 +209,7 @@ Next step:
 | `docs/BACKLOG.md` | Story marked as completed |
 | `docs/CHANGELOG.md` | New benefit-oriented entry |
 | `docs/TECH_SPEC.md` | New ADR entry (only if architectural deviation escalated) |
+| `docs/SETUP.md` | Updated infrastructure sections (only if new infra requirements) |
 | `current_objective.md` | Reset to empty placeholder |
 
 ---
@@ -201,6 +221,7 @@ Next step:
 - Architectural deviations are escalated to ADRs in `docs/TECH_SPEC.md` (with user approval).
 - `docs/BACKLOG.md` reflects the current state of progress.
 - `docs/CHANGELOG.md` has a new entry tied to delivered value.
+- `docs/SETUP.md` is up to date with any new infrastructure requirements.
 - `current_objective.md` is clean and ready for the next objective.
 - All changes are committed, tagged (`HU-N.M`), and pushed to remote.
 - If the Feature is complete, it is also tagged (`FEAT-N`).
