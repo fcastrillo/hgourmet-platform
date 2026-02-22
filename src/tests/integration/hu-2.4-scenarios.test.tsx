@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { slugify } from "@/lib/slugify";
 import { CategoryTable } from "@/components/admin/CategoryTable";
@@ -13,12 +13,14 @@ const mockCreateCategory = vi.fn();
 const mockUpdateCategory = vi.fn();
 const mockDeleteCategory = vi.fn();
 const mockReorderCategories = vi.fn();
+const mockToggleCategoryActive = vi.fn();
 
 vi.mock("@/app/(admin)/admin/categorias/actions", () => ({
   createCategory: (...args: unknown[]) => mockCreateCategory(...args),
   updateCategory: (...args: unknown[]) => mockUpdateCategory(...args),
   deleteCategory: (...args: unknown[]) => mockDeleteCategory(...args),
   reorderCategories: (...args: unknown[]) => mockReorderCategories(...args),
+  toggleCategoryActive: (...args: unknown[]) => mockToggleCategoryActive(...args),
 }));
 
 const sampleCategories: CategoryWithProductCount[] = [
@@ -303,6 +305,167 @@ describe("HU-2.4 — Gestión de categorías", () => {
       expect(mockUpdateCategory.mock.calls[0][0]).toBe("cat-1");
       const formData = mockUpdateCategory.mock.calls[0][1] as FormData;
       expect(formData.get("name")).toBe("Chocolates Premium");
+    });
+  });
+});
+
+describe("HU-2.7 — Icon buttons y toggle inline en CategoryTable", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  describe("Escenario 1: Icon buttons en tabla desktop", () => {
+    it("muestra tres icon buttons (Editar, Desactivar, Eliminar) por fila en la tabla desktop", () => {
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+
+      const firstRow = rows[0] as HTMLElement;
+      expect(within(firstRow).getByRole("button", { name: "Editar" })).toBeInTheDocument();
+      expect(within(firstRow).getByRole("button", { name: "Desactivar" })).toBeInTheDocument();
+      expect(within(firstRow).getByRole("button", { name: "Eliminar" })).toBeInTheDocument();
+    });
+
+    it("muestra 'Activar' en lugar de 'Desactivar' para categorías inactivas", () => {
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+
+      const inactiveRow = rows[2] as HTMLElement;
+      expect(within(inactiveRow).getByRole("button", { name: "Activar" })).toBeInTheDocument();
+    });
+
+    it("los icon buttons tienen tooltip nativo (atributo title)", () => {
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+      const firstRow = rows[0] as HTMLElement;
+
+      expect(within(firstRow).getByTitle("Editar")).toBeInTheDocument();
+      expect(within(firstRow).getByTitle("Desactivar")).toBeInTheDocument();
+      expect(within(firstRow).getByTitle("Eliminar")).toBeInTheDocument();
+    });
+  });
+
+  describe("Escenario 2: Toggle desactivar categoría activa", () => {
+    it("llama a toggleCategoryActive(id, false) al hacer clic en Desactivar", async () => {
+      mockToggleCategoryActive.mockResolvedValueOnce({ success: true });
+      const user = userEvent.setup();
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+      const toggleBtn = within(rows[0] as HTMLElement).getByRole("button", { name: "Desactivar" });
+      await user.click(toggleBtn);
+
+      expect(mockToggleCategoryActive).toHaveBeenCalledWith("cat-1", false);
+    });
+
+    it("actualiza optimistamente el badge a 'Inactiva' al desactivar", async () => {
+      let resolveToggle!: (value: { success: boolean }) => void;
+      mockToggleCategoryActive.mockReturnValueOnce(
+        new Promise((resolve) => { resolveToggle = resolve; })
+      );
+      const user = userEvent.setup();
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+      const firstRow = rows[0] as HTMLElement;
+
+      const toggleBtn = within(firstRow).getByRole("button", { name: "Desactivar" });
+      await user.click(toggleBtn);
+
+      await waitFor(() => {
+        const badges = within(firstRow).getAllByText(/^(Activa|Inactiva)$/);
+        expect(badges.some((b) => b.textContent === "Inactiva")).toBe(true);
+      });
+
+      resolveToggle({ success: true });
+    });
+  });
+
+  describe("Escenario 3: Toggle activar categoría inactiva", () => {
+    it("llama a toggleCategoryActive(id, true) al hacer clic en Activar", async () => {
+      mockToggleCategoryActive.mockResolvedValueOnce({ success: true });
+      const user = userEvent.setup();
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+      const toggleBtn = within(rows[2] as HTMLElement).getByRole("button", { name: "Activar" });
+      await user.click(toggleBtn);
+
+      expect(mockToggleCategoryActive).toHaveBeenCalledWith("cat-3", true);
+    });
+
+    it("actualiza optimistamente el badge a 'Activa' al activar", async () => {
+      let resolveToggle!: (value: { success: boolean }) => void;
+      mockToggleCategoryActive.mockReturnValueOnce(
+        new Promise((resolve) => { resolveToggle = resolve; })
+      );
+      const user = userEvent.setup();
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+      const inactiveRow = rows[2] as HTMLElement;
+
+      const toggleBtn = within(inactiveRow).getByRole("button", { name: "Activar" });
+      await user.click(toggleBtn);
+
+      await waitFor(() => {
+        const badges = within(inactiveRow).getAllByText(/^(Activa|Inactiva)$/);
+        expect(badges.some((b) => b.textContent === "Activa")).toBe(true);
+      });
+
+      resolveToggle({ success: true });
+    });
+  });
+
+  describe("Escenario 4: Acciones en vista mobile", () => {
+    it("muestra botones con icono y label visible en cards mobile", () => {
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const mobileCards = document.querySelectorAll(".md\\:hidden > div");
+      const firstCard = mobileCards[0] as HTMLElement;
+
+      expect(within(firstCard).getByRole("button", { name: /editar/i })).toBeInTheDocument();
+      expect(within(firstCard).getByRole("button", { name: /desactivar/i })).toBeInTheDocument();
+      expect(within(firstCard).getByRole("button", { name: /eliminar/i })).toBeInTheDocument();
+
+      expect(within(firstCard).getByText("Editar")).toBeInTheDocument();
+      expect(within(firstCard).getByText("Desactivar")).toBeInTheDocument();
+      expect(within(firstCard).getByText("Eliminar")).toBeInTheDocument();
+    });
+  });
+
+  describe("Escenario 5: Tests de integración compatibles", () => {
+    it("los botones Editar usan aria-label y siguen abriendo el modal", async () => {
+      const user = userEvent.setup();
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+      const editBtn = within(rows[0] as HTMLElement).getByRole("button", { name: "Editar" });
+      await user.click(editBtn);
+
+      expect(screen.getByText("Editar categoría")).toBeInTheDocument();
+    });
+
+    it("los botones Eliminar usan aria-label y siguen abriendo el dialog", async () => {
+      const user = userEvent.setup();
+      render(<CategoryTable categories={sampleCategories} />);
+
+      const desktopTable = document.querySelector("table");
+      const rows = desktopTable!.querySelectorAll("tbody tr");
+      const deleteBtn = within(rows[0] as HTMLElement).getByRole("button", { name: "Eliminar" });
+      await user.click(deleteBtn);
+
+      expect(screen.getByText(/eliminar categoría/i, { selector: "h2" })).toBeInTheDocument();
     });
   });
 });

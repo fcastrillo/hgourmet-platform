@@ -118,6 +118,26 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
   return { success: true };
 }
 
+export async function toggleCategoryActive(
+  id: string,
+  isActive: boolean
+): Promise<ActionResult> {
+  const supabase = await createClient();
+
+  // @ts-expect-error — ADR-005: Supabase chained .update().eq() resolves param as never
+  const { error } = await supabase
+    .from("categories")
+    .update({ is_active: isActive })
+    .eq("id", id);
+
+  if (error) {
+    return { success: false, error: "Error al cambiar el estado de la categoría." };
+  }
+
+  revalidateCategoryPaths();
+  return { success: true };
+}
+
 export async function reorderCategories(
   orderedIds: string[]
 ): Promise<ActionResult> {
