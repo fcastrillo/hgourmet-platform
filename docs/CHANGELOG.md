@@ -19,6 +19,21 @@
 
 ---
 
+## [2026-02-21] — HU-1.2: Ficha de detalle de producto
+
+**Feature:** FEAT-1 — Catálogo Digital de Productos
+**Benefit:** Los clientes pueden ver la información completa de cualquier producto (imagen, precio, descripción, disponibilidad) y contactar directamente por WhatsApp con el nombre del producto pre-compuesto en el mensaje — todo desde una URL amigable e indexable por Google.
+**Changes:**
+- Página `/productos/[slug]` con Server Component, `generateMetadata` (SEO + Open Graph), y `generateStaticParams` omitido intencionalmente (SSR on-demand para catálogo dinámico)
+- Componente `Breadcrumb` [SC] accesible con `aria-current="page"` en el ítem activo
+- Componente `WhatsAppCTA` [CC] con mensaje pre-compuesto dinámico y estado `disabled` para productos agotados
+- Helper `fetchProductBySlug` con join a `categories` (ADR-005: typed assertion)
+- Página `not-found.tsx` con mensaje amigable y link al catálogo
+- ADR-006: colores de marca de terceros (WhatsApp, social) via `style` inline
+**Tests:** 28 nuevos tests (3 suites: `hu-1.2-scenarios`, `Breadcrumb`, `WhatsAppCTA`) — total acumulado: 64
+
+---
+
 ## [2026-02-21] — HU-1.1: Navegación por categorías de productos
 
 **Feature:** FEAT-1 — Catálogo Digital de Productos

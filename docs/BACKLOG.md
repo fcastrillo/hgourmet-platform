@@ -24,7 +24,7 @@
 - **Stories:**
   - [x] HU-1.1: Navegación por categorías de productos (High) ✅ (2026-02-21)
     > Estimate: M | Story fundacional: setup DB (migración, RLS, índices), Supabase client, 2 páginas, ProductCard reutilizable, responsive grid, empty states. ~2–3 días.
-  - [ ] HU-1.2: Ficha de detalle de producto (High)
+  - [x] HU-1.2: Ficha de detalle de producto (High) ✅ (2026-02-21)
     > Estimate: S | 1 página de detalle con generateMetadata (SEO/OG), breadcrumb, CTA WhatsApp. Reutiliza infraestructura de HU-1.1. ~4–8 horas.
   - [ ] HU-1.3: Búsqueda y filtrado de productos (Medium)
     > Estimate: M | Barra de búsqueda CC con debounce, filtro por categoría, coordinación de estados, decisión ilike vs full-text search. ~1–2 días.
@@ -78,3 +78,4 @@
 > Stories and Features move here when finished via `@finish-objective`.
 
 - [x] HU-1.1: Navegación por categorías de productos ✅ (2026-02-21) — FEAT-1
+- [x] HU-1.2: Ficha de detalle de producto ✅ (2026-02-21) — FEAT-1

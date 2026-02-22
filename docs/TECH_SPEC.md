@@ -193,6 +193,13 @@
 - **Consequences:** Slightly more boilerplate per page, but ensures type safety across all Server Components. Centralizes data access logic, making it easier to add caching or error handling later. All future stories must follow this pattern.
 - **Origin:** HU-1.1 (discovered during implementation of Tasks 7 and 10)
 
+### ADR-006: Inline Styles for Third-Party Brand Colors in Tailwind 4
+
+- **Context:** Tailwind 4 does not generate arbitrary value classes (e.g., `bg-[#25D366]`) that are not statically referenced in CSS at build time. This caused the WhatsApp CTA button to render with a white background (invisible text) in production.
+- **Decision:** Any component using a specific brand color not part of the project's design system (e.g., WhatsApp green `#25D366`, Facebook blue `#1877F2`) must use `style={{ backgroundColor: "...", color: "..." }}` inline props instead of Tailwind arbitrary value classes. Project-owned colors must be defined as CSS custom properties in `globals.css` and referenced as Tailwind tokens.
+- **Consequences:** Slightly less concise JSX for components with third-party brand colors. However, guarantees correct rendering in all environments. Hover/active effects for these elements must use CSS transitions or `onMouseEnter`/`onMouseLeave` handlers.
+- **Origin:** HU-1.2 (discovered during manual validation of WhatsAppCTA component)
+
 ---
 
 ## Server/Client Strategy
