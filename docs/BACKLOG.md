@@ -19,7 +19,7 @@
 > Estimate: L (rollup) | 4 stories: 2×M + 2×S, esfuerzo total ~5–7 días.
 
 - **Hypothesis:** Si entregamos un catálogo digital navegable por categorías con fichas de producto completas (imagen, precio, disponibilidad), entonces los clientes de HGourmet podrán consultar productos de forma autónoma sin visitar la tienda física ni preguntar por WhatsApp, medido por ≥500 usuarios únicos y ≥300 productos publicados en el primer mes.
-- **Status:** In Progress
+- **Status:** Delivered ✅ (2026-02-21)
 - **Priority:** High
 - **Stories:**
   - [x] HU-1.1: Navegación por categorías de productos (High) ✅ (2026-02-21)
@@ -28,7 +28,7 @@
     > Estimate: S | 1 página de detalle con generateMetadata (SEO/OG), breadcrumb, CTA WhatsApp. Reutiliza infraestructura de HU-1.1. ~4–8 horas.
   - [x] HU-1.3: Búsqueda y filtrado de productos (Medium) ✅ (2026-02-22)
     > Estimate: M | Barra de búsqueda CC con debounce, filtro por categoría, coordinación de estados, decisión ilike vs full-text search. ~1–2 días.
-  - [ ] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" (Medium)
+  - [x] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" (Medium) ✅ (2026-02-21)
     > Estimate: S | 2 secciones con componente genérico, queries filtradas por is_featured/is_seasonal, reutiliza ProductCard. ~3–6 horas.
 
 ---
@@ -80,3 +80,5 @@
 - [x] HU-1.1: Navegación por categorías de productos ✅ (2026-02-21) — FEAT-1
 - [x] HU-1.2: Ficha de detalle de producto ✅ (2026-02-21) — FEAT-1
 - [x] HU-1.3: Búsqueda y filtrado de productos ✅ (2026-02-22) — FEAT-1
+- [x] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" ✅ (2026-02-21) — FEAT-1
+- [x] **FEAT-1: Catálogo Digital de Productos** ✅ (2026-02-21) — 4/4 stories delivered

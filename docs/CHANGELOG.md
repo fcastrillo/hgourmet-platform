@@ -19,6 +19,27 @@
 
 ---
 
+## [2026-02-21] — HU-1.4: Sección "Lo más vendido" y "Productos de temporada"
+
+**Feature:** FEAT-1 — Catálogo Digital de Productos
+**Benefit:** Los clientes pueden descubrir rápidamente los productos más populares y las novedades estacionales desde la página principal, sin necesidad de buscar manualmente por categorías. Cada sección enlaza a una vista completa con todos los productos de ese tipo.
+**Changes:**
+- Componente genérico `ProductSection` [SC] reutilizable para ambas secciones (featured y seasonal), con lógica de ocultamiento cuando no hay productos
+- 4 query helpers server-side: `fetchFeaturedProducts`, `fetchSeasonalProducts` (limitadas para homepage) y variantes `fetchAll*` (sin límite para páginas "Ver todos")
+- Homepage integrado con secciones "Lo más vendido" y "Productos de temporada" con fetch concurrente via `Promise.all`
+- Páginas `/productos/destacados` y `/productos/temporada` con breadcrumb, SEO metadata y empty state
+- Grid responsive: 2 columnas mobile, 3 tablet, 4 desktop
+**Tests:** 10 nuevos tests (1 suite: hu-1.4-scenarios) — total acumulado: 93
+
+---
+
+## [2026-02-21] — FEAT-1: Catálogo Digital de Productos ✅
+
+**Benefit:** El catálogo completo de HGourmet está disponible en línea: navegación por categorías, fichas de producto con SEO, búsqueda con debounce, filtro por categoría, y secciones de productos destacados/temporada. 4/4 historias entregadas.
+**Total Tests:** 93 integration tests across 14 suites
+
+---
+
 ## [2026-02-22] — HU-1.3: Búsqueda y filtrado de productos
 
 **Feature:** FEAT-1 — Catálogo Digital de Productos
