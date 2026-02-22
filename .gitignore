@@ -28,3 +28,6 @@ coverage/
 !.cursor/
 !.claude/
 !.spec/
+
+# Cursor
+.cursor/plans/

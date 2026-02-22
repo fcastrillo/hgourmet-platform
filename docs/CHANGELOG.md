@@ -19,6 +19,23 @@
 
 ---
 
+## [2026-02-22] — HU-2.4: Gestión de categorías
+
+**Feature:** FEAT-2 — Panel de Administración
+**Benefit:** Las administradoras pueden crear, editar, reordenar y ocultar categorías del catálogo desde el panel, organizando la navegación del storefront sin intervención técnica. La protección FK impide eliminar categorías con productos asociados, evitando pérdida de datos accidental.
+**Changes:**
+- Utilidad `slugify()` reutilizable para generación automática de slugs URL-friendly
+- Queries admin server-side: `fetchAllCategoriesAdmin` (con conteo de productos), `fetchCategoryByIdAdmin`, `fetchMaxDisplayOrder`
+- 4 Server Actions: `createCategory` (slug auto + display_order MAX+1), `updateCategory`, `deleteCategory` (con validación FK), `reorderCategories`
+- Página `/admin/categorias` [SC] con tabla desktop + cards mobile responsive
+- `CategoryFormModal` [CC] con preview de slug en tiempo real y toggle is_active
+- `DeleteCategoryDialog` [CC] con protección FK: muestra conteo de productos y bloquea eliminación
+- Controles ▲/▼ para reordenamiento sin drag & drop (accesible y simple)
+- Dashboard actualizado: tarjeta de Categorías muestra "Gestionar →" en lugar de "Próximamente →"
+**Tests:** 22 nuevos tests (1 suite: hu-2.4-scenarios) — total acumulado: 125
+
+---
+
 ## [2026-02-22] — HU-2.1: Autenticación de administradoras
 
 **Feature:** FEAT-2 — Panel de Administración

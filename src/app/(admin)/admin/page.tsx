@@ -5,10 +5,10 @@ export default async function AdminDashboard() {
   const { data: { user } } = await supabase.auth.getUser();
 
   const cards = [
-    { title: "Productos", description: "Gestiona el catálogo de productos", href: "/admin/productos", count: null },
-    { title: "Categorías", description: "Organiza las categorías del catálogo", href: "/admin/categorias", count: null },
-    { title: "Banners", description: "Administra los banners promocionales", href: "/admin/banners", count: null },
-    { title: "Marcas", description: "Gestiona las marcas y proveedores", href: "/admin/marcas", count: null },
+    { title: "Productos", description: "Gestiona el catálogo de productos", href: "/admin/productos", ready: false },
+    { title: "Categorías", description: "Organiza las categorías del catálogo", href: "/admin/categorias", ready: true },
+    { title: "Banners", description: "Administra los banners promocionales", href: "/admin/banners", ready: false },
+    { title: "Marcas", description: "Gestiona las marcas y proveedores", href: "/admin/marcas", ready: false },
   ];
 
   return (
@@ -35,8 +35,8 @@ export default async function AdminDashboard() {
             <p className="mt-1 text-sm text-muted">
               {card.description}
             </p>
-            <p className="mt-4 text-xs font-medium text-primary">
-              Próximamente →
+            <p className={`mt-4 text-xs font-medium ${card.ready ? "text-primary" : "text-muted"}`}>
+              {card.ready ? "Gestionar →" : "Próximamente →"}
             </p>
           </a>
         ))}

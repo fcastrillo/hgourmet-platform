@@ -45,8 +45,8 @@
     > Estimate: Pending | Lista con paginación/búsqueda, formulario de creación/edición con upload de imagen a Supabase Storage, slug automático, toggles de visibilidad/featured/seasonal, eliminación con confirmación. ~3–4 días.
   - [ ] HU-2.3: Importación masiva de productos vía CSV (High)
     > Estimate: Pending | Sección de importación con template descargable, parsing client-side, previsualización, validación por fila, importación parcial, reporte de errores, idempotencia por SKU. ~2–3 días.
-  - [ ] HU-2.4: Gestión de categorías (Medium)
-    > Estimate: Pending | CRUD de categorías, reordenamiento (drag & drop o controles), slug automático, protección FK contra eliminación con productos asociados. ~1–2 días.
+  - [x] HU-2.4: Gestión de categorías (Medium) ✅ (2026-02-22)
+    > Estimate: S | CRUD de categorías, reordenamiento con controles ▲/▼, slug automático, protección FK contra eliminación con productos asociados. ~1 hora (AI-assisted).
   - [ ] HU-2.5: Gestión de banners rotativos (Medium)
     > Estimate: Pending | CRUD de banners con upload de imagen a `banner-images`, reordenamiento, toggle activo/inactivo, integración con carrusel del storefront. ~1–2 días.
   - [ ] HU-2.6: Gestión de marcas/proveedores (Low)
@@ -89,3 +89,4 @@
 - [x] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" ✅ (2026-02-21) — FEAT-1
 - [x] **FEAT-1: Catálogo Digital de Productos** ✅ (2026-02-21) — 4/4 stories delivered
 - [x] HU-2.1: Autenticación de administradoras ✅ (2026-02-22) — FEAT-2
+- [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2
