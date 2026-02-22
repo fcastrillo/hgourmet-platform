@@ -36,15 +36,21 @@
 ### FEAT-2: Panel de Administración
 
 - **Hypothesis:** Si entregamos un panel de administración intuitivo con gestión de productos y carga CSV, entonces las dueñas podrán mantener el catálogo actualizado de forma autónoma (sin soporte técnico) con una capacitación de ≤2 horas, medido por la capacidad de agregar/editar/ocultar productos sin asistencia externa.
-- **Status:** Pending
+- **Status:** In Progress
 - **Priority:** High
 - **Stories:**
-  - [ ] HU-2.1: Autenticación de administradoras
-  - [ ] HU-2.2: CRUD de productos desde el panel
-  - [ ] HU-2.3: Importación masiva de productos vía CSV
-  - [ ] HU-2.4: Gestión de categorías
-  - [ ] HU-2.5: Gestión de banners rotativos
-  - [ ] HU-2.6: Gestión de marcas/proveedores
+  - [ ] HU-2.1: Autenticación de administradoras (High)
+    > Estimate: Pending | Login con Supabase Auth (email+password), middleware de protección `/admin/*`, sesión server-side con `@supabase/ssr`, logout. ~1–2 días.
+  - [ ] HU-2.2: CRUD de productos desde el panel (High)
+    > Estimate: Pending | Lista con paginación/búsqueda, formulario de creación/edición con upload de imagen a Supabase Storage, slug automático, toggles de visibilidad/featured/seasonal, eliminación con confirmación. ~3–4 días.
+  - [ ] HU-2.3: Importación masiva de productos vía CSV (High)
+    > Estimate: Pending | Sección de importación con template descargable, parsing client-side, previsualización, validación por fila, importación parcial, reporte de errores, idempotencia por SKU. ~2–3 días.
+  - [ ] HU-2.4: Gestión de categorías (Medium)
+    > Estimate: Pending | CRUD de categorías, reordenamiento (drag & drop o controles), slug automático, protección FK contra eliminación con productos asociados. ~1–2 días.
+  - [ ] HU-2.5: Gestión de banners rotativos (Medium)
+    > Estimate: Pending | CRUD de banners con upload de imagen a `banner-images`, reordenamiento, toggle activo/inactivo, integración con carrusel del storefront. ~1–2 días.
+  - [ ] HU-2.6: Gestión de marcas/proveedores (Low)
+    > Estimate: Pending | CRUD de marcas con upload de logo a `brand-logos`, reordenamiento, toggle activo/inactivo. ~0.5–1 día.
 
 ---
 

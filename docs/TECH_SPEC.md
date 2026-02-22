@@ -119,12 +119,14 @@
 
 ## Authentication
 
-- **Method:** Email + Password (admin-only login)
-- **Provider:** Supabase Auth
+- **Method:** Email OTP / Magic Link (admin-only login)
+- **Provider:** Supabase Auth (`signInWithOtp`)
 - **Session management:** Server-side cookies via `@supabase/ssr`
 - **Protected routes:** `/admin/*` (all admin panel pages)
 - **Public routes:** All storefront pages (catalog, product detail, contact, recipes)
 - **Admin provisioning:** Manual account creation via Supabase dashboard (no self-registration)
+- **Flow:** Admin enters email → receives magic link via email → clicks link → session created → redirected to `/admin`
+- **No password reset flow needed:** OTP eliminates password management entirely
 
 ---
 
@@ -200,6 +202,14 @@
 - **Consequences:** Slightly less concise JSX for components with third-party brand colors. However, guarantees correct rendering in all environments. Hover/active effects for these elements must use CSS transitions or `onMouseEnter`/`onMouseLeave` handlers.
 - **Origin:** HU-1.2 (discovered during manual validation of WhatsAppCTA component)
 
+### ADR-008: Email OTP (Magic Link) for Admin Authentication
+
+- **Context:** The admin panel requires authentication for 1-2 non-technical users (store owners). Options considered: Email + Password, Email OTP / Magic Link, Phone OTP (SMS), and Email + Phone 2FA.
+- **Decision:** Use Supabase Auth's `signInWithOtp({ email })` (Magic Link) instead of Email + Password. The admin enters their email, receives a one-time login link, and clicking it creates a server-side session.
+- **Rationale:** (1) Zero password management burden for non-technical users — impossible to "forget the password". (2) Only 1-2 users, well within Supabase free tier email limits (4/hour). (3) Login is infrequent — session persists via cookies, so re-authentication is rare. (4) Eliminates the need to build a password reset flow. (5) Superior security — each login uses a single-use token, no static password to leak.
+- **Consequences:** Login depends on email delivery speed (typically 5-30 seconds). If SMTP fails or emails land in spam, admins cannot log in. Mitigated by: (a) low volume makes delivery reliable, (b) admins can be trained to check spam on first use, (c) Supabase SMTP works well for low-volume auth emails. No password reset UI needed. Future customer auth (Fase 2+) can use a different method (password, social) — Supabase supports multiple auth methods simultaneously.
+- **Origin:** FEAT-2 (architectural decision before HU-2.1 implementation)
+
 ### ADR-007: Client-Side Data Fetching for Interactive Features
 
 - **Context:** HU-1.3 requires real-time search with 300ms debounce. Server Components cannot handle interactive state or real-time user input. The project had a browser Supabase client (`src/lib/supabase/client.ts`) created in HU-1.1 but never used — all queries were server-side.
@@ -229,6 +239,7 @@
 | Search/filter bar | `[CC]` | Real-time input handling |
 | WhatsApp CTA button | `[CC]` | Dynamic message composition |
 | Newsletter form | `[CC]` | Form state + submission |
+| Admin login form | `[CC]` | Email input + OTP verification state |
 | Admin product form | `[CC]` | Complex form with image upload |
 | Admin CSV import | `[CC]` | File handling + progress feedback |
 | Product CRUD actions | `[SA]` | Server-side mutations |
