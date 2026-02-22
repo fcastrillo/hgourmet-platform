@@ -414,10 +414,18 @@ function ToggleField({
           type="checkbox"
           checked={checked}
           onChange={(e) => onChange(e.target.checked)}
-          className="peer sr-only"
+          className="sr-only"
         />
-        <div className="h-6 w-11 rounded-full bg-gray-200 transition-colors peer-checked:bg-primary peer-focus:ring-2 peer-focus:ring-primary/30" />
-        <div className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
+        <div
+          className={`h-6 w-11 rounded-full transition-colors ${
+            checked ? "bg-primary" : "bg-gray-200"
+          }`}
+        />
+        <div
+          className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${
+            checked ? "translate-x-5" : "translate-x-0"
+          }`}
+        />
       </div>
     </label>
   );
