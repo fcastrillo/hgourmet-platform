@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { SOCIAL_LINKS, STORE_INFO } from "@/lib/constants";
 
 export function Footer() {
@@ -9,7 +10,13 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-4 py-10">
         <div className="grid gap-8 md:grid-cols-3">
           <div>
-            <h3 className="font-heading text-lg font-bold">HGourmet</h3>
+            <Image
+              src="/images/logo.png"
+              alt="HGourmet"
+              width={180}
+              height={60}
+              className="h-15 w-auto brightness-0 invert"
+            />
             <p className="mt-2 text-sm text-white/80">
               {STORE_INFO.tagline}
             </p>

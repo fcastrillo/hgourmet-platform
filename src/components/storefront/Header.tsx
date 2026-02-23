@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Category } from "@/types/database";
 import { MobileNav } from "./MobileNav";
 
@@ -9,9 +10,16 @@ interface HeaderProps {
 export function Header({ categories }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 border-b border-secondary bg-white shadow-sm">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-        <Link href="/" className="font-heading text-2xl font-bold text-primary">
-          HGourmet
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+        <Link href="/" className="flex-shrink-0">
+          <Image
+            src="/images/logo.png"
+            alt="HGourmet"
+            width={120}
+            height={40}
+            className="h-10 w-auto"
+            priority
+          />
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex" aria-label="Categorías">

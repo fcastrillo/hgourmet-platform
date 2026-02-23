@@ -10,9 +10,9 @@ const mockCategories = [
 ];
 
 describe("Storefront Header", () => {
-  it("renders the store name", () => {
+  it("renders the store logo with accessible alt text", () => {
     render(<Header categories={mockCategories} />);
-    expect(screen.getByText("HGourmet")).toBeInTheDocument();
+    expect(screen.getByAltText("HGourmet")).toBeInTheDocument();
   });
 
   it("renders category navigation links for all active categories", () => {
@@ -43,9 +43,9 @@ describe("Storefront Header", () => {
 });
 
 describe("Storefront Footer", () => {
-  it("renders the store name and tagline", () => {
+  it("renders the store logo and tagline", () => {
     render(<Footer />);
-    expect(screen.getByText("HGourmet")).toBeInTheDocument();
+    expect(screen.getByAltText("HGourmet")).toBeInTheDocument();
     expect(screen.getByText(/insumos gourmet/i)).toBeInTheDocument();
   });
 

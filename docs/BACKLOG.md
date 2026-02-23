@@ -81,6 +81,13 @@
 
 ---
 
+### Chores (Technical / Visual)
+
+- [ ] CHORE-1: Sprint cosmético del storefront (Medium)
+  > Hero con imagen de fondo, logo real, nav reestructurado, sección categorías estilizada, polish general. ~3-4 horas.
+
+---
+
 ## Completed
 
 > Stories and Features move here when finished via `@finish-objective`.
