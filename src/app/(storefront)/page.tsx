@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import { HomepageHero } from "@/components/storefront/HomepageHero";
 import { BannerCarousel } from "@/components/storefront/BannerCarousel";
 import { ProductSection } from "@/components/storefront/ProductSection";
+import { BrandSection } from "@/components/storefront/BrandSection";
 import {
   fetchFeaturedProducts,
   fetchSeasonalProducts,
 } from "@/lib/supabase/queries/products";
 import { fetchActiveBanners } from "@/lib/supabase/queries/banners";
+import { fetchActiveBrands } from "@/lib/supabase/queries/brands";
 
 export const metadata: Metadata = {
   title: "HGourmet | Insumos Gourmet para Repostería en Mérida",
@@ -15,11 +17,12 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [featuredProducts, seasonalProducts, activeBanners] =
+  const [featuredProducts, seasonalProducts, activeBanners, activeBrands] =
     await Promise.all([
       fetchFeaturedProducts(),
       fetchSeasonalProducts(),
       fetchActiveBanners(),
+      fetchActiveBrands(),
     ]);
 
   return (
@@ -40,6 +43,7 @@ export default async function HomePage() {
           products={seasonalProducts}
           viewAllHref="/productos/temporada"
         />
+        <BrandSection brands={activeBrands} />
       </div>
     </>
   );
