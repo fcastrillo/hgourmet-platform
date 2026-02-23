@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { Filter, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import { products, categories, type Category } from "@/data/products";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 import { productImages } from "@/data/productImages";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,6 +19,17 @@ const Catalogo = () => {
   const [priceRange, setPriceRange] = useState([0, 500]);
   const [onlyInStock, setOnlyInStock] = useState(false);
   const [page, setPage] = useState(1);
+  const { addItem } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent, p: typeof products[0]) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({ id: p.id, name: p.name, price: p.price, image: productImages[p.id] });
+    toast("Producto agregado al carrito", {
+      duration: 2000,
+      style: { background: "hsl(var(--gold))", color: "#fff", border: "none" },
+    });
+  };
 
   useEffect(() => {
     const cat = searchParams.get("categoria");
@@ -152,11 +165,30 @@ const Catalogo = () => {
                       {p.inStock ? "En stock" : "Agotado"}
                     </span>
                   </div>
-                  <div className="p-4">
-                    <h3 className="font-medium text-sm mb-1 line-clamp-2 group-hover:text-gold transition-colors">
-                      {p.name}
-                    </h3>
-                    <p className="text-gold font-bold">${p.price.toFixed(2)} MXN</p>
+                  <div className="p-4 flex items-end justify-between gap-2">
+                    <div>
+                      <h3 className="font-medium text-sm mb-1 line-clamp-2 group-hover:text-gold transition-colors">
+                        {p.name}
+                      </h3>
+                      <p className="text-gold font-bold">${p.price.toFixed(2)} MXN</p>
+                    </div>
+                    {p.inStock ? (
+                      <button
+                        onClick={(e) => handleAddToCart(e, p)}
+                        className="shrink-0 p-2 rounded-full bg-gold text-gold-foreground hover:opacity-90 transition-opacity shadow-md"
+                        aria-label="Agregar al carrito"
+                      >
+                        <ShoppingCart size={16} />
+                      </button>
+                    ) : (
+                      <button
+                        disabled
+                        className="shrink-0 p-2 rounded-full bg-muted text-muted-foreground cursor-not-allowed"
+                        aria-label="Agotado"
+                      >
+                        <ShoppingCart size={16} />
+                      </button>
+                    )}
                   </div>
                 </Link>
               ))}

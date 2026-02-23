@@ -1,4 +1,5 @@
 export const WHATSAPP_NUMBER = "525550682072";
+//export const WHATSAPP_NUMBER = "529991978260";
 
 export const SOCIAL_LINKS = {
   whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,

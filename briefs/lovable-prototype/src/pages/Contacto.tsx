@@ -81,7 +81,7 @@ const Contacto = () => {
           {/* Social buttons */}
           <div className="flex flex-wrap gap-3">
             <a
-              href="https://wa.me/521XXXXXXXXXX"
+              href="https://wa.me/525533997230"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm bg-whatsapp text-card hover:opacity-90 transition-opacity"

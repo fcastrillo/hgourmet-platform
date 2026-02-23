@@ -1,10 +1,15 @@
+import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { MessageCircle, ChevronRight } from "lucide-react";
+import { MessageCircle, ChevronRight, ShoppingCart, Plus, Minus } from "lucide-react";
 import { getProduct, getRelatedProducts } from "@/data/products";
 import { productImages } from "@/data/productImages";
+import { useCart } from "@/contexts/CartContext";
+import { toast } from "sonner";
 
 const ProductDetail = () => {
   const { id } = useParams();
+  const { addItem } = useCart();
+  const [qty, setQty] = useState(1);
   const product = getProduct(Number(id));
 
   if (!product) {
@@ -18,7 +23,7 @@ const ProductDetail = () => {
 
   const related = getRelatedProducts(product);
   const whatsappMsg = encodeURIComponent(`Hola, me interesa ${product.name} - $${product.price.toFixed(2)} MXN`);
-  const whatsappUrl = `https://wa.me/521XXXXXXXXXX?text=${whatsappMsg}`;
+  const whatsappUrl = `https://wa.me/525533997230?text=${whatsappMsg}`;
 
   return (
     <div className="container py-8 md:py-12">
@@ -62,15 +67,55 @@ const ProductDetail = () => {
 
           <p className="text-3xl font-bold text-gold mb-8">${product.price.toFixed(2)} MXN</p>
 
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-whatsapp text-card font-semibold text-lg hover:opacity-90 transition-opacity shadow-lg w-full md:w-auto"
-          >
-            <MessageCircle size={22} fill="currentColor" />
-            Pedir por WhatsApp
-          </a>
+          {/* Quantity selector */}
+          {product.inStock && (
+            <div className="flex items-center gap-3 mb-6">
+              <span className="text-sm font-medium text-muted-foreground">Cantidad:</span>
+              <div className="flex items-center border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => setQty((q) => Math.max(1, q - 1))}
+                  className="p-2 hover:bg-muted transition-colors"
+                >
+                  <Minus size={16} />
+                </button>
+                <span className="w-10 text-center text-sm font-medium">{qty}</span>
+                <button
+                  onClick={() => setQty((q) => q + 1)}
+                  className="p-2 hover:bg-muted transition-colors"
+                >
+                  <Plus size={16} />
+                </button>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col md:flex-row gap-3">
+            <button
+              onClick={() => {
+                addItem({ id: product.id, name: product.name, price: product.price, image: productImages[product.id] }, qty);
+                toast("Producto agregado al carrito", {
+                  duration: 2000,
+                  style: { background: "hsl(var(--gold))", color: "#fff", border: "none" },
+                });
+                setQty(1);
+              }}
+              disabled={!product.inStock}
+              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-gold text-gold-foreground font-semibold text-lg hover:opacity-90 transition-opacity shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <ShoppingCart size={22} />
+              Agregar al carrito
+            </button>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2.5 px-8 py-4 rounded-xl bg-whatsapp text-card font-semibold text-lg hover:opacity-90 transition-opacity shadow-lg"
+            >
+              <MessageCircle size={22} fill="currentColor" />
+              Pedir por WhatsApp
+            </a>
+          </div>
         </div>
       </div>
 
