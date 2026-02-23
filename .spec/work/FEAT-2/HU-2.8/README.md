@@ -1,31 +1,31 @@
-# HU-2.8 — Gestión de recetas desde el panel
+# HU-2.8 — Gestion de recetas desde el panel
 
-> Workspace de implementación. Artefacto auxiliar del `current_objective.md`.
+> Workspace de implementacion. Artefacto auxiliar del `current_objective.md`.
 
 ## Design Decisions
 
-### Patrón de rutas
+### Patron de rutas
 Consistente con `marcas` y `banners`:
 ```
-/admin/recetas             → RecipesAdminPage [SC]  → RecipeTable [CC]
-/admin/recetas/nuevo       → NuevaRecetaPage [SC]   → RecipeForm [CC]
-/admin/recetas/[id]/editar → EditarRecetaPage [SC]  → RecipeForm [CC]
+/admin/recetas             -> RecipesAdminPage [SC]  -> RecipeTable [CC]
+/admin/recetas/nuevo       -> NuevaRecetaPage [SC]   -> RecipeForm [CC]
+/admin/recetas/[id]/editar -> EditarRecetaPage [SC]  -> RecipeForm [CC]
 ```
 
 ### DB delta
-La tabla `recipes` existe (visible en la aplicación corriente). Solo falta
+La tabla `recipes` existe (visible en la aplicacion corriente). Solo falta
 el campo `display_order` para habilitar reordenamiento en el panel admin.
-Migración: `supabase/migrations/004_recipes.sql`.
+Migracion: `supabase/migrations/004_recipes.sql`.
 
 ### Markdown
 Se usa `<textarea>` nativa (sin editor externo) para contenido Markdown.
-El storefront (HU-4.3) se encargará del renderizado. Este panel solo
+El storefront (HU-4.3) se encargara del renderizado. Este panel solo
 persiste el texto plano/Markdown como `content`.
 
 ### Slug auto-generado
-Función `toSlug(title)` en `src/lib/utils.ts` (o inline en actions.ts)
-convierte título → slug lowercase con guiones. Al editar, el slug no se
-regenera automáticamente para evitar cambiar URLs ya publicadas.
+Funcion `toSlug(title)` en `src/lib/utils.ts` (o inline en actions.ts)
+convierte titulo -> slug lowercase con guiones. Al editar, el slug no se
+regenera automaticamente para evitar cambiar URLs ya publicadas.
 
 ### ADR-009 compliance
 Tabla con icon buttons, optimistic toggle en `is_published`, reordenamiento

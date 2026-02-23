@@ -38,7 +38,7 @@
 ### FEAT-2: Panel de Administración
 
 - **Hypothesis:** Si entregamos un panel de administración intuitivo con gestión de productos y carga CSV, entonces las dueñas podrán mantener el catálogo actualizado de forma autónoma (sin soporte técnico) con una capacitación de ≤2 horas, medido por la capacidad de agregar/editar/ocultar productos sin asistencia externa.
-- **Status:** In Progress (6/8 stories delivered)
+- **Status:** In Progress (7/8 stories delivered)
 - **Priority:** High
 - **Stories:**
   - [x] HU-2.1: Autenticación de administradoras (High) ✅ (2026-02-22)
@@ -55,7 +55,7 @@
     > Estimate: S | CRUD de marcas con upload de logo a `brand-logos`, reordenamiento, toggle activo/inactivo, sección "Nuestras Marcas" en storefront. ~30 min (AI-assisted).
   - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable (Low) ✅ (2026-02-22)
     > Estimate: XS | Reemplazar botones de texto por icon buttons con tooltip, agregar toggle de visibilidad inline (activar/desactivar sin modal), ajustar tests. ~30 min. Establece el estándar UI para futuras tablas admin (ADR-009).
-  - [ ] HU-2.8: Gestión de recetas desde el panel (Medium)
+  - [x] HU-2.8: Gestión de recetas desde el panel (Medium) ✅ (2026-02-23)
     > Estimate: S (~4–8h) | CRUD de recetas con textarea/editor Markdown, upload de imagen de portada a `recipe-images`, toggle publicar/despublicar, tabla con reordenamiento. Sigue estándar ADR-009. Paired con HU-4.3 (storefront).
     - **Como:** administradora de HGourmet
     - **Quiero:** crear, editar, publicar/despublicar, reordenar y eliminar recetas desde el panel
@@ -195,6 +195,7 @@ Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir 
 - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.5: Gestión de banners rotativos ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.6: Gestión de marcas/proveedores ✅ (2026-02-22) — FEAT-2
+- [x] HU-2.8: Gestión de recetas desde el panel ✅ (2026-02-23) — FEAT-2
 - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto ✅ (2026-02-21) — FEAT-3
 - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
 - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)

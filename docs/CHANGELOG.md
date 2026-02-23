@@ -19,6 +19,21 @@
 
 ---
 
+## [2026-02-23] — HU-2.8: Gestión de recetas desde el panel
+
+**Feature:** FEAT-2 — Panel de Administración  
+**Benefit:** Las administradoras pueden gestionar recetas de forma autónoma (crear, editar, publicar/despublicar, reordenar y eliminar) con carga de imagen a Storage y validaciones, dejando listo el backend para que HU-4.3 consuma el contenido en el storefront.  
+**Changes:**
+- CRUD de recetas en `/admin/recetas` con páginas de crear y editar.
+- `RecipeTable` con estándar ADR-009 (icon buttons, toggle inline optimista, reordenamiento con controles).
+- `RecipeForm` con textarea Markdown, validación de campos obligatorios y upload de portada a `recipe-images`.
+- Server Actions y query helpers dedicados para `recipes`.
+- Migración `004_recipes.sql` con `display_order`, índices y políticas RLS.
+- Suite de integración `hu-2.8-scenarios` con cobertura BDD de flujo admin y edge cases.
+**Tests:** 27 nuevos tests (1 suite: `hu-2.8-scenarios`) — total acumulado: 240
+
+---
+
 ## [2026-02-23] — CHORE-1: Sprint Cosmético del Storefront
 
 **Type:** Chore (Visual Polish)

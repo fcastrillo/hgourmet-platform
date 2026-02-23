@@ -317,15 +317,15 @@ Apply the same policy structure as `product-images`:
 
 ### 5.5 How images work in the app
 
-- **Upload:** Admin creates/edits a product, banner, or brand → file is sent via FormData to a server action → server action uploads to the corresponding bucket with a UUID filename
-- **Display:** Public URL from `storage.getPublicUrl()` is stored in `products.image_url`, `banners.image_url`, or `brands.logo_url`
+- **Upload:** Admin creates/edits a product, banner, brand, or recipe → file is sent via FormData to a server action → server action uploads to the corresponding bucket with a UUID filename
+- **Display:** Public URL from `storage.getPublicUrl()` is stored in `products.image_url`, `banners.image_url`, `brands.logo_url`, or `recipes.image_url`
 - **Cleanup:** When an image is replaced or the record is deleted, the old image file is removed from storage
 
-### 5.6 Future buckets (not yet implemented)
+### 5.6 Buckets roadmap
 
 | Bucket | Story | Purpose |
 |:-------|:------|:--------|
-| `recipe-images` | HU-4.3 | Recipe cover images |
+| `recipe-images` | HU-2.8 / HU-4.3 | Recipe cover images (admin upload delivered in HU-2.8; storefront rendering in HU-4.3) |
 
 ---
 
