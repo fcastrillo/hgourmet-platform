@@ -4,6 +4,13 @@ import { useState } from "react";
 import Link from "next/link";
 import type { Category } from "@/types/database";
 
+const NAV_LINKS = [
+  { href: "/", label: "Inicio" },
+  { href: "/categorias", label: "Catálogo" },
+  { href: "/recetas", label: "Recetas" },
+  { href: "/contacto", label: "Contacto" },
+] as const;
+
 interface MobileNavProps {
   categories: Category[];
 }
@@ -40,23 +47,35 @@ export function MobileNav({ categories }: MobileNavProps) {
           aria-label="Menú móvil"
         >
           <div className="flex flex-col px-4 py-4">
-            <Link
-              href="/categorias"
-              onClick={() => setIsOpen(false)}
-              className="py-3 text-sm font-medium text-text transition-colors hover:text-primary"
-            >
-              Ver todo el catálogo
-            </Link>
-            {categories.map((category) => (
+            {NAV_LINKS.map((link) => (
               <Link
-                key={category.id}
-                href={`/categorias/${category.slug}`}
+                key={link.href}
+                href={link.href}
                 onClick={() => setIsOpen(false)}
-                className="border-t border-secondary/50 py-3 text-sm font-medium text-text transition-colors hover:text-primary"
+                className="border-b border-secondary/50 py-3 text-sm font-medium text-text transition-colors hover:text-primary last:border-b-0"
               >
-                {category.name}
+                {link.label}
               </Link>
             ))}
+
+            {categories.length > 0 && (
+              <>
+                <div className="my-2 border-t border-secondary" />
+                <p className="px-0 py-2 text-xs font-semibold uppercase tracking-wider text-muted">
+                  Categorías
+                </p>
+                {categories.map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/categorias/${category.slug}`}
+                    onClick={() => setIsOpen(false)}
+                    className="py-2 pl-2 text-sm text-text transition-colors hover:text-primary"
+                  >
+                    {category.name}
+                  </Link>
+                ))}
+              </>
+            )}
           </div>
         </nav>
       )}

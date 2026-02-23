@@ -126,9 +126,8 @@ describe("HU-1.1 — Navegación por categorías de productos", () => {
 
       render(<Header categories={headerCategories} />);
 
-      const nav = screen.getByRole("navigation", { name: /categorías/i });
       expect(
-        within(nav).queryByText("Temporada Navideña"),
+        screen.queryByText("Temporada Navideña"),
       ).not.toBeInTheDocument();
     });
 

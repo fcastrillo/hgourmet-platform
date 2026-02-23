@@ -15,30 +15,26 @@ describe("Storefront Header", () => {
     expect(screen.getByAltText("HGourmet")).toBeInTheDocument();
   });
 
-  it("renders category navigation links for all active categories", () => {
+  it("renders 4 main navigation links (Inicio, Catálogo, Recetas, Contacto)", () => {
     render(<Header categories={mockCategories} />);
-    const desktopNav = screen.getByRole("navigation", { name: /categorías/i });
-    expect(within(desktopNav).getByRole("link", { name: /chocolate/i })).toBeInTheDocument();
-    expect(within(desktopNav).getByRole("link", { name: /harinas/i })).toBeInTheDocument();
-    expect(within(desktopNav).getByRole("link", { name: /moldes/i })).toBeInTheDocument();
+    const mainNav = screen.getByRole("navigation", { name: /principal/i });
+    expect(within(mainNav).getByRole("link", { name: /inicio/i })).toHaveAttribute("href", "/");
+    expect(within(mainNav).getByRole("link", { name: /catálogo/i })).toHaveAttribute("href", "/categorias");
+    expect(within(mainNav).getByRole("link", { name: /recetas/i })).toHaveAttribute("href", "/recetas");
+    expect(within(mainNav).getByRole("link", { name: /contacto/i })).toHaveAttribute("href", "/contacto");
   });
 
-  it("links categories to /categorias/[slug]", () => {
+  it("renders search and user icon buttons", () => {
     render(<Header categories={mockCategories} />);
-    const desktopNav = screen.getByRole("navigation", { name: /categorías/i });
-    const chocolateLink = within(desktopNav).getByRole("link", { name: /chocolate/i });
-    expect(chocolateLink).toHaveAttribute("href", "/categorias/chocolate");
+    expect(screen.getByLabelText(/buscar productos/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/mi cuenta/i)).toBeInTheDocument();
   });
 
-  it("does not render inactive categories", () => {
-    const categoriesWithInactive = [
-      ...mockCategories,
-      { id: "4", name: "Temporada Navideña", slug: "temporada-navidena", description: null, display_order: 6, is_active: false, created_at: "" },
-    ];
-    const activeOnly = categoriesWithInactive.filter(c => c.is_active);
-    render(<Header categories={activeOnly} />);
-    const desktopNav = screen.getByRole("navigation", { name: /categorías/i });
-    expect(within(desktopNav).queryByRole("link", { name: /temporada navideña/i })).not.toBeInTheDocument();
+  it("does not render category links in the desktop nav", () => {
+    render(<Header categories={mockCategories} />);
+    const mainNav = screen.getByRole("navigation", { name: /principal/i });
+    expect(within(mainNav).queryByRole("link", { name: /chocolate/i })).not.toBeInTheDocument();
+    expect(within(mainNav).queryByRole("link", { name: /harinas/i })).not.toBeInTheDocument();
   });
 });
 
