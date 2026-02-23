@@ -336,8 +336,9 @@ Reserva 1 crédito para correcciones del tipo:
 | 4 | Backoffice layout + Dashboard + Productos | 1 principal + 1-2 ajustes |
 | 5 | Backoffice páginas restantes | 1 principal + 1 ajuste |
 | 6 | Carrito de compras + Registro de usuario (visual) | 2 principales + 1 ajuste |
+| 7 | Selector de temas (validación de paleta) | 1 principal + 1 ajuste |
 
-**Total estimado: 7-13 generaciones** (7 principales + correcciones)
+**Total estimado: 8-15 generaciones** (8 principales + correcciones)
 
 ---
 
@@ -356,3 +357,102 @@ Reserva 1 crédito para correcciones del tipo:
    (Prompt 6.2). No intentes fusionarlos en uno solo.
 8. **Si el carrito pierde estado al navegar**, pide: "Mueve el estado del carrito a un 
    CartContext en App.tsx para que persista entre páginas"
+
+---
+
+## DÍA 7 — Selector de Temas (para validación de paleta de colores)
+
+> **Nota:** Este día es opcional y se usa para que las dueñas comparen 3 paletas
+> de colores en el prototipo y elijan su favorita antes de implementarla en el proyecto real.
+> El selector se puede eliminar después de la decisión.
+
+### Prompt 7.1 (Selector de tema flotante)
+
+```
+Mantén todo lo que ya existe en el sitio público y el backoffice.
+Agrega un componente flotante de selección de tema en la esquina inferior izquierda
+(para no tapar el botón de WhatsApp que está en la esquina inferior derecha).
+
+SELECTOR DE TEMA:
+- Un botón circular con ícono de paleta (Palette de Lucide React) que al dar clic
+  expande un panel pequeño con 3 opciones de tema
+- Cada opción muestra un círculo con el color principal del tema y el nombre debajo
+- Al seleccionar un tema, TODAS las variables CSS del sitio cambian en tiempo real
+  (sin recargar página)
+- Guardar la selección en localStorage para que persista al navegar entre páginas
+- Mostrar un borde dorado en el tema actualmente seleccionado
+
+LOS 3 TEMAS (actualizar variables CSS en :root):
+
+Tema "Chocolate Clásico" (el que ya tiene el sitio):
+  --primary: #6B4226
+  --secondary: #F5E6D3
+  --background: #FAF3EB
+  --accent: #C9A84C
+  --foreground / --text: #3D2B1F
+
+Tema "Rosa Pastelero":
+  --primary: #8C5167
+  --secondary: #F8E5EB
+  --background: #FFF7F9
+  --accent: #C9A84C
+  --foreground / --text: #3D2B2F
+
+Tema "Terracota Moderno":
+  --primary: #9C5E3C
+  --secondary: #F0E4D7
+  --background: #FBF6F0
+  --accent: #B8860B
+  --foreground / --text: #352820
+
+IMPLEMENTACIÓN:
+- Usa CSS custom properties (variables CSS) a nivel de :root
+- Al cambiar tema, actualiza document.documentElement.style.setProperty()
+  para cada variable
+- Asegúrate de que header, footer, botones, tarjetas, badges y TODOS los
+  elementos del sitio respondan al cambio de tema
+- El tema por defecto es "Chocolate Clásico"
+- Si el sitio usa variables HSL (como hsl(var(--primary))), convierte los hex
+  a valores HSL y actualiza esas variables también
+
+ESTILO DEL SELECTOR:
+- Panel con fondo blanco, sombra suave, bordes redondeados
+- Los 3 círculos de color en fila horizontal
+- Un label debajo de cada círculo con el nombre del tema
+- Animación suave al abrir/cerrar el panel
+- En móvil: panel se posiciona arriba del botón, no al lado
+
+NO modifiques nada del contenido, solo agrega el selector de tema y el sistema
+de variables CSS.
+```
+
+### Prompt 7.2 (Corrección si los colores no se aplican a todo)
+```
+Algunos componentes no cambian de color al cambiar el tema. Revisa que TODOS
+los colores del sitio usen las variables CSS en vez de valores hexadecimales
+hardcodeados. Esto incluye:
+- Header y footer (fondos, textos, bordes)
+- Botones (primarios, secundarios, hover states)
+- Tarjetas de producto (bordes, fondos, badges)
+- Formularios (inputs, labels, placeholders)
+- Sidebar del backoffice
+- Textos de párrafos y títulos
+Reemplaza cualquier color hex hardcodeado por su variable CSS correspondiente.
+```
+
+### Después de la validación
+
+Una vez que las dueñas elijan el tema ganador, los valores de la paleta elegida
+se trasladan a `src/app/globals.css` del proyecto real. El cambio es mínimo:
+solo las 5 líneas de colores dentro del bloque `@theme {}`.
+
+Ejemplo si eligen "Rosa Pastelero":
+```css
+@theme {
+  --color-primary: #8C5167;
+  --color-secondary: #F8E5EB;
+  --color-background: #FFF7F9;
+  --color-accent: #C9A84C;
+  --color-text: #3D2B2F;
+}
+```
