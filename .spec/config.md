@@ -38,6 +38,27 @@
 
 ---
 
+## Model Routing (Cursor)
+
+> Cursor Pro has two separate usage pools: **Auto** (competitive token rates) and
+> **Frontier** ($20/month API credit for manually selected models like Claude Sonnet,
+> GPT-4o, Gemini Pro). Use both pools to maximize your subscription value.
+
+| Phase | Recommended Tier | Rationale |
+|:------|:-----------------|:----------|
+| `validate`, `finish-objective` | **Auto** | Read-only analysis of `.md` files; no code generation |
+| `estimate`, `start-feature` | **Auto** | Reasoning over docs, no code output |
+| `spec-init`, `start-objective` | **Auto / Frontier** | Complex synthesis; user choice based on quality needs |
+| `apply` | **Frontier** | Code generation + TDD demands maximum precision |
+
+- **Auto:** Leave the model selector on "Auto" in Cursor. Best for lightweight,
+  document-centric commands.
+- **Frontier:** Manually select a specific model (e.g., Claude Sonnet 4, GPT-4o)
+  in Cursor's model selector. Best for code-heavy commands where output quality
+  is critical. This consumes from your separate $20 API credit pool.
+
+---
+
 ## IDE Compatibility
 
 | IDE | Entry Point | Commands |

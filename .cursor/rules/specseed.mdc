@@ -40,6 +40,19 @@ When the user references a command file, **read it in full and follow its instru
 - **Test-as-Contract:** Write failing tests (RED) before implementation code (GREEN), then refactor.
 - **Git Strategy:** Read `.spec/config.md` to determine trunk or feature mode before any git operation.
 
+## Model Awareness (Cursor Billing Optimization)
+
+When executing any SpecSeed command, check the **Model Routing** table in `.spec/config.md`
+and display a brief hint to the user at the start of the command output:
+
+- If the recommended tier is **Auto** and the user appears to be on Auto, say nothing.
+- If the recommended tier is **Frontier** (e.g., `@apply`), display:
+  `> 💡 **Model hint:** This command benefits from a frontier model (Claude Sonnet, GPT-4o). Consider selecting one in the model picker to use your $20 API credit pool.`
+- If the recommended tier is **Auto / Frontier**, display:
+  `> 💡 **Model hint:** This command works well with Auto, but you can select a frontier model for higher quality output.`
+
+This helps the user consume both Cursor Pro usage pools instead of only Auto.
+
 ## Templates
 
 Reusable templates live in `.spec/templates/`. Copy and customize them when creating new artifacts:
@@ -47,3 +60,4 @@ Reusable templates live in `.spec/templates/`. Copy and customize them when crea
 - `FEATURE.md` — SAFe Feature with Benefit Hypothesis
 - `USER_STORY.md` — User Story with BDD criteria
 - `OBJECTIVE.md` — Implementation plan template (includes Deviations section)
+- `SETUP.md` — Infrastructure & configuration guide

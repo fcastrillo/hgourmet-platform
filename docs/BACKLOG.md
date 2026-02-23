@@ -137,7 +137,7 @@ Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir 
 ### Chores (Technical / Visual)
 
 - [x] CHORE-1: Sprint cosmético del storefront (Medium) ✅ (2026-02-23)
-  > Hero con imagen de fondo, logo real, nav reestructurado, sección categorías estilizada, polish general. ~10 min (AI-assisted).
+  > Estimate: S (~4h) | Hero con imagen de fondo, logo real, nav reestructurado, sección categorías estilizada, polish general. ~10 min (AI-assisted).
 
 - [ ] CHORE-2: Sprint de polish final pre-demo (Low)
   > Estimate: S (~4h) | Revisión visual integral post-funcionalidades. Ajustes tipográficos, spacing, responsive, empty states, loading states. Se ejecuta después de completar todos los tracks funcionales.

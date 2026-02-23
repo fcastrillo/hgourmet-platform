@@ -1,6 +1,9 @@
 # @apply
 
 > Execute the implementation plan from `current_objective.md` using TDD discipline.
+>
+> **Model Hint: Frontier** — Code generation + TDD demands maximum precision.
+> Select a frontier model (Claude Sonnet, GPT-4o) to use your API credit pool.
 
 ---
 

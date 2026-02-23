@@ -68,7 +68,8 @@ project/
 │   ├── PRD.md              # Product vision and root requirements
 │   ├── TECH_SPEC.md        # Stack, architecture and technical decisions (ADRs)
 │   ├── BACKLOG.md          # Single source of truth for SAFe hierarchy
-│   └── CHANGELOG.md        # Benefit-oriented change history
+│   ├── CHANGELOG.md        # Benefit-oriented change history
+│   └── SETUP.md            # Infrastructure prerequisites & configuration guide
 └── current_objective.md    # Active execution contract
 ```
 
@@ -81,6 +82,7 @@ project/
 | `docs/BACKLOG.md` | Hierarchical feature/story registry | Per Story |
 | `current_objective.md` | Active execution contract (1 HU at a time) | Per Objective |
 | `docs/CHANGELOG.md` | Delivered value history | Per Objective completion |
+| `docs/SETUP.md` | Infrastructure prerequisites & configuration | Per Objective (if infra changes) |
 | `.spec/config.md` | Project-level settings (git, IDE) | As needed |
 
 ---

@@ -1,6 +1,8 @@
 # @estimate
 
 > Analyze unestimated backlog items and assign T-shirt size estimates with rationale.
+>
+> **Model Hint: Auto** — Reasoning over documents, no code output.
 
 ---
 

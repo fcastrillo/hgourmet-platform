@@ -1,6 +1,8 @@
 # @start-feature
 
 > Initialize a new SAFe Feature with its Benefit Hypothesis and User Story breakdown.
+>
+> **Model Hint: Auto** — Reasoning over product docs, no code output.
 
 ---
 

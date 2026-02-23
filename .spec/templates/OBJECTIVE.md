@@ -55,6 +55,16 @@
 -- [SQL statements here]
 ```
 
+## Infrastructure Changes
+
+> Remove this section if no infrastructure changes are needed.
+
+- **New environment variables:** [list or "None"]
+- **New external services:** [list or "None"]
+- **New storage/buckets:** [list or "None"]
+- **New auth configuration:** [list or "None"]
+- **SETUP.md update required:** Yes / No
+
 ## Manual Testing Checklist
 
 - [ ] [Step 1: What to do and what to verify]

@@ -1,6 +1,9 @@
 # @spec-init
 
 > Bootstrap a new project by generating the foundational specification documents.
+>
+> **Model Hint: Auto / Frontier** — Complex synthesis of product and technical specs;
+> select a frontier model if you want higher quality initial documents.
 
 ---
 
@@ -61,7 +64,20 @@ Create the initial backlog structure with:
 - The Features identified in Step 2, each with a placeholder Benefit Hypothesis.
 - No User Stories yet (those come with `@start-feature`).
 
-### Step 5: Summary
+### Step 5: Initialize `docs/SETUP.md`
+
+Using the template in `.spec/templates/SETUP.md`, generate the initial setup guide with:
+
+- **Environment Variables:** Based on the stack chosen in Step 3 (e.g., database URL,
+  API keys, auth secrets). Pre-fill the known variables from the stack definition.
+- **External Services:** List the services identified in the stack (e.g., database provider,
+  auth provider, hosting platform).
+- **Quick Start Checklist:** Pre-fill with the basic dev setup steps for the chosen stack.
+
+Leave other sections (Database, Authentication, Storage) with template placeholders —
+they will be filled incrementally as User Stories introduce infrastructure requirements.
+
+### Step 6: Summary
 
 Present a summary to the user:
 
@@ -72,6 +88,7 @@ Documents generated:
   - docs/PRD.md (Vision + MVP Scope)
   - docs/TECH_SPEC.md (Stack + Data Model)
   - docs/BACKLOG.md (Initial Feature list)
+  - docs/SETUP.md (Infrastructure & configuration guide)
 
 Next step: Run @start-feature FEAT-1 to detail the first Feature.
 ```
@@ -85,11 +102,12 @@ Next step: Run @start-feature FEAT-1 to detail the first Feature.
 | `docs/PRD.md` | Product vision, users, scope, KPIs |
 | `docs/TECH_SPEC.md` | Stack, data model, auth, security |
 | `docs/BACKLOG.md` | Initial hierarchical backlog |
+| `docs/SETUP.md` | Infrastructure prerequisites & configuration guide |
 
 ---
 
 ## Post-conditions
 
-- All three documents pass the `@validate` schema for their respective levels.
+- All four documents pass the `@validate` schema for their respective levels.
 - No `[NEEDS CLARIFICATION]` tags remain in the generated documents.
 - The user has reviewed and approved the outputs before proceeding.

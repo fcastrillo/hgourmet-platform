@@ -1,6 +1,9 @@
 # @start-objective
 
 > Plan the implementation of a User Story by generating the execution contract.
+>
+> **Model Hint: Auto / Frontier** — Complex synthesis; select a frontier model
+> if you want higher quality planning output.
 
 ---
 
@@ -45,10 +48,10 @@ for the user to resolve it.**
 Read the User Story and its BDD criteria. Identify:
 
 - **Data changes:** Does this HU require new tables, columns, or RLS policies?
-- **Infrastructure prerequisites:** Does this HU require new Supabase Storage buckets,
-  new environment variables, new auth configuration, or other infrastructure that must
-  be set up before or during implementation? If yes, flag them explicitly in the
-  Implementation Plan and reference `docs/SETUP.md` as the target for documentation.
+- **Infrastructure prerequisites:** Does this HU require new infrastructure setup
+  (e.g., storage buckets, environment variables, auth configuration, external service
+  credentials, or cloud resources)? If yes, flag them explicitly in the Implementation
+  Plan and reference `docs/SETUP.md` as the target for documentation.
 - **Component classification:** For each new component, classify as:
   - `[SC]` Server Component
   - `[CC]` Client Component

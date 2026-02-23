@@ -39,3 +39,4 @@ Reusable templates live in `.spec/templates/`. Copy and customize them when crea
 - `FEATURE.md` — SAFe Feature with Benefit Hypothesis
 - `USER_STORY.md` — User Story with BDD criteria
 - `OBJECTIVE.md` — Implementation plan template
+- `SETUP.md` — Infrastructure & configuration guide

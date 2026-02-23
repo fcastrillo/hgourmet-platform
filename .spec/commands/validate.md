@@ -1,6 +1,8 @@
 # @validate
 
 > Run the SpecSeed Poka-Yoke validation schema against project artifacts.
+>
+> **Model Hint: Auto** — Lightweight read-only analysis of `.md` files.
 
 ---
 
@@ -30,6 +32,24 @@ Invoked automatically as Step 0 of `@start-objective`, or manually by the user a
 
 1. Read `.spec/constitution.md` to load operating principles.
 2. Read the target artifact(s) and their parent documents.
+
+---
+
+## Execution Strategy (Cursor Optimization)
+
+To conserve credits, delegate the bulk of validation work to a **fast subagent** using
+the Task tool. The main agent only synthesizes the final report.
+
+1. **Delegate:** Use the Task tool with `model: "fast"` and `subagent_type: "explore"` to
+   read all target artifacts and run the checklist checks below. The subagent prompt should
+   include the full checklist criteria and return a structured list of PASS/WARNING/BLOCKER
+   findings per artifact.
+2. **Synthesize:** The main agent receives the subagent findings and formats the final
+   Validation Report (see Report Format below).
+3. **Decide:** The main agent applies the Poka-Yoke rule (BLOCKER = no code files).
+
+This pattern keeps the expensive main-agent context focused on decision-making while
+the lightweight pattern-matching runs on a cheaper model.
 
 ---
 
@@ -83,6 +103,7 @@ Invoked automatically as Step 0 of `@start-objective`, or manually by the user a
 | **BDD** | `Entonces:` | **WARNING** | Acceptance criteria not testable. | Use Dado/Cuando/Entonces format. |
 | **Security** | `RLS` or `Policy` | **BLOCKER** | No security logic detected. | Define RLS policy in TECH_SPEC.md. |
 | **Hallucination** | References to non-existent files | **BLOCKER** | Plan references files not in the tree. | Create the files or fix the path. |
+| **Infrastructure** | Plan has infra tasks but `docs/SETUP.md` missing | **WARNING** | Infrastructure changes planned without SETUP.md. | Create `docs/SETUP.md` from `.spec/templates/SETUP.md`. |
 | **TDD Off** | `tdd_mode: off` in `config.md` | **WARNING** | No automated test contract for this objective. | Consider switching to `flexible` or `strict` mode. |
 
 ---

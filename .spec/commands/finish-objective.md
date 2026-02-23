@@ -1,6 +1,8 @@
 # @finish-objective
 
 > Close the current objective, archive the work, and update the backlog and changelog.
+>
+> **Model Hint: Auto** — Document analysis and git operations; no code generation.
 
 ---
 
@@ -20,6 +22,22 @@ The user invokes this command after `@apply` has been completed and all tests pa
 4. Read `docs/BACKLOG.md` to locate the Story being closed.
 5. Read `docs/CHANGELOG.md` to append the new entry.
 6. Read `docs/SETUP.md` to check if infrastructure sections need updating.
+
+---
+
+## Execution Strategy (Cursor Optimization)
+
+To conserve credits, delegate read-heavy subtasks to a **fast subagent** using the
+Task tool. The main agent handles git operations and user-facing decisions.
+
+- **Step 1 (Verify Completion):** Delegate to a fast subagent (`model: "fast"`,
+  `subagent_type: "explore"`) that reads `current_objective.md` and returns a
+  structured completion status (all tasks done? all BDD criteria covered?).
+- **Step 2 (Deviation Analysis):** Delegate the evidence-gathering portion (reading
+  `current_objective.md`, comparing planned vs actual files) to a fast subagent.
+  The main agent handles git commands and the final deviation classification.
+- **Steps 3-7 (Archive, BACKLOG, CHANGELOG, Git, Reset):** Main agent executes
+  directly — these involve writes and git operations.
 
 ---
 
@@ -130,14 +148,14 @@ section in `docs/SETUP.md`:
 
 | Change type | SETUP.md section to update |
 |:------------|:--------------------------|
-| New DB migration or table | Section 3 (Database) |
-| New RLS policy | Section 3.4 (RLS Policies) |
-| New environment variable | Section 1 (Environment Variables) |
-| New auth configuration | Section 4 (Authentication) |
-| New Storage bucket | Section 5 (Storage) |
-| New external service | Add new section or update Section 7 |
+| New database migration or schema change | Database section |
+| New security policy (RLS, RBAC, etc.) | Database or Authentication section |
+| New environment variable or secret | Environment Variables section |
+| New auth provider or configuration | Authentication section |
+| New storage bucket or file handling | Storage section |
+| New external service or API integration | External Services section |
 
-Also update the **Quick Start Checklist** (Section 8) with any new required steps.
+Also update the **Quick Start Checklist** with any new required steps.
 
 If no infrastructure changes were introduced, skip this step.
 
