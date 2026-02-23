@@ -19,6 +19,25 @@
 
 ---
 
+## [2026-02-22] — HU-2.6: Gestión de marcas/proveedores
+
+**Feature:** FEAT-2 — Panel de Administración
+**Benefit:** Las administradoras pueden gestionar la lista de marcas y proveedores desde el panel (crear, editar, reordenar, activar/desactivar, eliminar), con upload de logos a Supabase Storage. Las marcas activas se muestran automáticamente en la sección "Nuestras Marcas" de la homepage, con enlaces opcionales al sitio web de cada marca.
+**Changes:**
+- Migración SQL `003_brands.sql`: tabla `brands` con RLS (anon lee solo activas, auth acceso completo)
+- Storage bucket `brand-logos` con políticas de acceso (documentado en SETUP.md sección 5.4)
+- Query helpers: `fetchActiveBrands` (storefront), `fetchAllBrandsAdmin`, `fetchBrandByIdAdmin`, `fetchMaxBrandDisplayOrder` (admin)
+- 5 Server Actions: `createBrand` (con logo upload), `updateBrand` (con reemplazo de logo), `deleteBrand` (con limpieza de logo), `toggleBrandActive` (inline), `reorderBrands` (batch)
+- `BrandTable` [CC] con ADR-009 (icon buttons, optimistic toggle, responsive desktop/mobile)
+- `BrandForm` [CC] con upload de logo, preview, validación de nombre obligatorio, toggle is_active (ADR-010)
+- `DeleteBrandDialog` [CC] con confirmación por nombre
+- 3 páginas admin: lista (`/admin/marcas`), crear (`/admin/marcas/nuevo`), editar (`/admin/marcas/[id]/editar`)
+- `BrandSection` [SC] en homepage: grilla responsive de logos con fallback a nombre si no hay logo
+- Dashboard: cards de Marcas y Banners activadas (`ready: true`)
+**Tests:** 24 nuevos tests (1 suite: hu-2.6-scenarios) — total acumulado: 211
+
+---
+
 ## [2026-02-22] — HU-2.5: Gestión de banners rotativos
 
 **Feature:** FEAT-2 — Panel de Administración
