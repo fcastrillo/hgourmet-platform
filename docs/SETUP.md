@@ -286,17 +286,46 @@ Apply the same policy structure as `product-images`:
 | Target roles | authenticated |
 | USING expression | `(bucket_id = 'banner-images'::text)` |
 
-### 5.4 How images work in the app
+### 5.4 Create the `brand-logos` bucket (HU-2.6)
 
-- **Upload:** Admin creates/edits a product or banner → file is sent via FormData to a server action → server action uploads to the corresponding bucket with a UUID filename
-- **Display:** Public URL from `storage.getPublicUrl()` is stored in `products.image_url` or `banners.image_url`
+1. Go to **Storage** in the Supabase Dashboard
+2. Click **New Bucket**
+3. Name: `brand-logos`
+4. **Public bucket:** Yes
+5. File size limit: **5 MB**
+6. Allowed MIME types: `image/jpeg`, `image/png`, `image/webp`, `image/gif`
+
+Apply the same policy structure as `product-images`:
+
+**Policy 1: Public read access**
+
+| Setting | Value |
+|:--------|:------|
+| Name | `Public read access` |
+| Allowed operations | SELECT |
+| Target roles | anon, authenticated |
+| USING expression | `(bucket_id = 'brand-logos'::text)` |
+
+**Policy 2: Authenticated full access**
+
+| Setting | Value |
+|:--------|:------|
+| Name | `Authenticated full access` |
+| Allowed operations | INSERT, UPDATE, DELETE |
+| Target roles | authenticated |
+| USING expression | `(bucket_id = 'brand-logos'::text)` |
+
+### 5.5 How images work in the app
+
+- **Upload:** Admin creates/edits a product, banner, or brand → file is sent via FormData to a server action → server action uploads to the corresponding bucket with a UUID filename
+- **Display:** Public URL from `storage.getPublicUrl()` is stored in `products.image_url`, `banners.image_url`, or `brands.logo_url`
 - **Cleanup:** When an image is replaced or the record is deleted, the old image file is removed from storage
 
-### 5.5 Future buckets (not yet implemented)
+### 5.6 Future buckets (not yet implemented)
 
 | Bucket | Story | Purpose |
 |:-------|:------|:--------|
-| `brand-logos` | HU-2.6 | Brand/supplier logos |
+| `recipe-images` | HU-4.3 | Recipe cover images |
 
 ---
 

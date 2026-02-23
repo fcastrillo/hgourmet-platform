@@ -70,6 +70,35 @@ export interface Database {
           created_at?: string;
         };
       };
+      brands: {
+        Row: {
+          id: string;
+          name: string;
+          logo_url: string | null;
+          website_url: string | null;
+          display_order: number;
+          is_active: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          logo_url?: string | null;
+          website_url?: string | null;
+          display_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          logo_url?: string | null;
+          website_url?: string | null;
+          display_order?: number;
+          is_active?: boolean;
+          created_at?: string;
+        };
+      };
       products: {
         Row: {
           id: string;
@@ -128,6 +157,7 @@ export interface Database {
 }
 
 export type Banner = Database["public"]["Tables"]["banners"]["Row"];
+export type Brand = Database["public"]["Tables"]["brands"]["Row"];
 export type Category = Database["public"]["Tables"]["categories"]["Row"];
 export type Product = Database["public"]["Tables"]["products"]["Row"];
 

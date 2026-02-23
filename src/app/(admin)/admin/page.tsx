@@ -7,8 +7,8 @@ export default async function AdminDashboard() {
   const cards = [
     { title: "Productos", description: "Gestiona el catálogo de productos", href: "/admin/productos", ready: false },
     { title: "Categorías", description: "Organiza las categorías del catálogo", href: "/admin/categorias", ready: true },
-    { title: "Banners", description: "Administra los banners promocionales", href: "/admin/banners", ready: false },
-    { title: "Marcas", description: "Gestiona las marcas y proveedores", href: "/admin/marcas", ready: false },
+    { title: "Banners", description: "Administra los banners promocionales", href: "/admin/banners", ready: true },
+    { title: "Marcas", description: "Gestiona las marcas y proveedores", href: "/admin/marcas", ready: true },
   ];
 
   return (
