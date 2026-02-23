@@ -57,7 +57,7 @@ RLS policies enforce access control at the database level.
 |:--------|:---------|
 | Table Editor / SQL Editor | Database tables and migrations |
 | Authentication | Magic Link (OTP) provider, URL config |
-| Storage | `product-images` bucket |
+| Storage | `product-images`, `banner-images` buckets |
 | Settings → API | Project URL, anon key |
 
 ---
@@ -136,7 +136,28 @@ RLS is enabled on both tables. The migration creates 4 policies:
 
 A `BEFORE UPDATE` trigger on `products` automatically sets `updated_at = now()` on every update.
 
-### 3.6 Seed data (optional, for development)
+### 3.6 Banners migration (HU-2.5)
+
+Run in **SQL Editor**:
+
+```
+supabase/migrations/002_banners.sql
+```
+
+This creates:
+
+| Table | Purpose |
+|:------|:--------|
+| `banners` | Homepage carousel banners with `title`, `subtitle`, `image_url` (NOT NULL), `link_url`, `is_active`, `display_order` |
+
+**RLS Policies:**
+
+| Policy | Role | Operation | Condition |
+|:-------|:-----|:----------|:----------|
+| `banners_anon_select` | anon | SELECT | `is_active = true` (only active banners) |
+| `banners_auth_all` | authenticated | ALL | `true` (admin full access) |
+
+### 3.7 Seed data (optional, for development)
 
 ```
 supabase/seed.sql
@@ -236,17 +257,45 @@ After creating the bucket, add these policies under **Storage → Policies → N
 > **Note:** Supabase auto-populates the USING expression with the bucket filter when
 > you create policies through the Dashboard UI. If you see it pre-filled, just confirm it.
 
-### 5.3 How images work in the app
+### 5.3 Create the `banner-images` bucket (HU-2.5)
 
-- **Upload:** Admin creates/edits a product → file is sent via FormData to a server action → server action uploads to `product-images` bucket with a UUID filename
-- **Display:** Public URL from `storage.getPublicUrl()` is stored in `products.image_url`
-- **Cleanup:** When a product image is replaced or the product is deleted, the old image file is removed from storage
+1. Go to **Storage** in the Supabase Dashboard
+2. Click **New Bucket**
+3. Name: `banner-images`
+4. **Public bucket:** Yes
+5. File size limit: **5 MB**
+6. Allowed MIME types: `image/jpeg`, `image/png`, `image/webp`, `image/gif`
 
-### 5.4 Future buckets (not yet implemented)
+Apply the same policy structure as `product-images`:
+
+**Policy 1: Public read access**
+
+| Setting | Value |
+|:--------|:------|
+| Name | `Public read access` |
+| Allowed operations | SELECT |
+| Target roles | anon, authenticated |
+| USING expression | `(bucket_id = 'banner-images'::text)` |
+
+**Policy 2: Authenticated full access**
+
+| Setting | Value |
+|:--------|:------|
+| Name | `Authenticated full access` |
+| Allowed operations | INSERT, UPDATE, DELETE |
+| Target roles | authenticated |
+| USING expression | `(bucket_id = 'banner-images'::text)` |
+
+### 5.4 How images work in the app
+
+- **Upload:** Admin creates/edits a product or banner → file is sent via FormData to a server action → server action uploads to the corresponding bucket with a UUID filename
+- **Display:** Public URL from `storage.getPublicUrl()` is stored in `products.image_url` or `banners.image_url`
+- **Cleanup:** When an image is replaced or the record is deleted, the old image file is removed from storage
+
+### 5.5 Future buckets (not yet implemented)
 
 | Bucket | Story | Purpose |
 |:-------|:------|:--------|
-| `banner-images` | HU-2.5 | Rotary banners for homepage |
 | `brand-logos` | HU-2.6 | Brand/supplier logos |
 
 ---

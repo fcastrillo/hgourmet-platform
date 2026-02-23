@@ -38,6 +38,38 @@ export interface Database {
           created_at?: string;
         };
       };
+      banners: {
+        Row: {
+          id: string;
+          title: string | null;
+          subtitle: string | null;
+          image_url: string;
+          link_url: string | null;
+          is_active: boolean;
+          display_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          title?: string | null;
+          subtitle?: string | null;
+          image_url: string;
+          link_url?: string | null;
+          is_active?: boolean;
+          display_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string | null;
+          subtitle?: string | null;
+          image_url?: string;
+          link_url?: string | null;
+          is_active?: boolean;
+          display_order?: number;
+          created_at?: string;
+        };
+      };
       products: {
         Row: {
           id: string;
@@ -95,6 +127,7 @@ export interface Database {
   };
 }
 
+export type Banner = Database["public"]["Tables"]["banners"]["Row"];
 export type Category = Database["public"]["Tables"]["categories"]["Row"];
 export type Product = Database["public"]["Tables"]["products"]["Row"];
 
