@@ -1,46 +1,56 @@
-# HU-2.8 — Gestion de recetas desde el panel
+# HU-2.8: Gestión de recetas desde el panel
 
-> Workspace de implementacion. Artefacto auxiliar del `current_objective.md`.
+> **Feature:** FEAT-2 — Panel de Administración  
+> **Priority:** Medium  
+> **Spec Level:** Lite
 
-## Design Decisions
+## User Story
 
-### Patron de rutas
-Consistente con `marcas` y `banners`:
-```
-/admin/recetas             -> RecipesAdminPage [SC]  -> RecipeTable [CC]
-/admin/recetas/nuevo       -> NuevaRecetaPage [SC]   -> RecipeForm [CC]
-/admin/recetas/[id]/editar -> EditarRecetaPage [SC]  -> RecipeForm [CC]
-```
+- **Como:** administradora de HGourmet
+- **Quiero:** crear, editar, publicar/despublicar, reordenar y eliminar recetas desde el panel
+- **Para poder:** mantener la sección de recetas y tips actualizada sin depender de soporte técnico
 
-### DB delta
-La tabla `recipes` existe (visible en la aplicacion corriente). Solo falta
-el campo `display_order` para habilitar reordenamiento en el panel admin.
-Migracion: `supabase/migrations/004_recipes.sql`.
+---
 
-### Markdown
-Se usa `<textarea>` nativa (sin editor externo) para contenido Markdown.
-El storefront (HU-4.3) se encargara del renderizado. Este panel solo
-persiste el texto plano/Markdown como `content`.
+## Acceptance Criteria
 
-### Slug auto-generado
-Funcion `toSlug(title)` en `src/lib/utils.ts` (o inline en actions.ts)
-convierte titulo -> slug lowercase con guiones. Al editar, el slug no se
-regenera automaticamente para evitar cambiar URLs ya publicadas.
+1. La tabla de recetas muestra imagen miniatura, título, fecha y estado de publicación con acciones inline de editar, publicar/despublicar y eliminar (estándar ADR-009).
+2. El formulario de receta permite capturar título, contenido en Markdown, imagen de portada y estado de publicación.
+3. Al guardar una receta, el sistema genera o actualiza `slug` automáticamente a partir del título y persiste en `recipes`.
+4. La imagen de portada se carga en el bucket `recipe-images` y su URL se guarda en `image_url`.
+5. El toggle de estado permite publicar/despublicar sin modal, con feedback inmediato en la tabla.
+6. La tabla permite reordenar recetas por controles de subir/bajar.
+7. Validaciones mínimas: título y contenido obligatorios; si faltan, no se guarda el registro.
 
-### ADR-009 compliance
-Tabla con icon buttons, optimistic toggle en `is_published`, reordenamiento
-con `display_order`. Badge: "Visible" (is_published=true) / "Oculta".
+---
 
-## Files Created
-- `supabase/migrations/004_recipes.sql`
-- `src/types/database.ts` (add recipes table + Recipe type)
-- `src/lib/supabase/queries/admin-recipes.ts`
-- `src/app/(admin)/admin/recetas/actions.ts`
-- `src/components/admin/RecipeTable.tsx`
-- `src/components/admin/DeleteRecipeDialog.tsx`
-- `src/components/admin/RecipeForm.tsx`
-- `src/app/(admin)/admin/recetas/page.tsx`
-- `src/app/(admin)/admin/recetas/nuevo/page.tsx`
-- `src/app/(admin)/admin/recetas/[id]/editar/page.tsx`
-- `src/components/admin/AdminSidebar.tsx` (updated)
-- `src/tests/integration/hu-2.8-scenarios.test.tsx`
+## BDD Scenarios
+
+### Escenario 1: Crear receta desde panel admin
+
+> **Dado que** soy una administradora autenticada en `/admin/recetas`,  
+> **Cuando** completo título, contenido e imagen y presiono "Guardar",  
+> **Entonces** el sistema crea la receta, sube la imagen al bucket `recipe-images` y la muestra en la tabla con estado según el toggle.
+
+### Escenario 2: Despublicar receta inline
+
+> **Dado que** existe una receta publicada en la tabla,  
+> **Cuando** hago clic en el ícono de despublicar,  
+> **Entonces** el estado cambia a "Oculta" en la tabla sin abrir modal y la receta deja de estar disponible para el storefront público.
+
+### Escenario 3: Validación de campos obligatorios (error)
+
+> **Dado que** intento guardar una receta sin título o sin contenido,  
+> **Cuando** envío el formulario,  
+> **Entonces** el sistema muestra mensajes de validación, no crea/actualiza el registro y conserva los datos capturados para corregir.
+
+---
+
+## Technical Notes
+
+- **Routes:** `/admin/recetas`, `/admin/recetas/nuevo`, `/admin/recetas/[id]/editar`
+- **Components:** `RecipeTable` `[CC]`, `RecipeForm` `[CC]`, `DeleteRecipeDialog` `[CC]`
+- **Server Actions:** `createRecipe`, `updateRecipe`, `deleteRecipe`, `toggleRecipePublished`, `reorderRecipes` `[SA]`
+- **Queries:** `fetchAllRecipesAdmin`, `fetchRecipeByIdAdmin`, `fetchMaxRecipeDisplayOrder`
+- **Database:** `supabase/migrations/004_recipes.sql` (incluye `display_order` + índices + RLS)
+- **Dependency:** La visualización pública de recetas se implementa en `HU-4.3`.

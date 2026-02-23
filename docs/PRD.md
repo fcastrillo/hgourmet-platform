@@ -46,7 +46,6 @@ HGourmet es una tienda de insumos gourmet para repostería ubicada en Mérida, Y
 - Control manual de inventario (alta / baja / ocultar productos sin stock).
 - Banner rotativo editable en la página principal.
 - Sección de recetas y tips (alta / ocultar / editar).
-- Registro a boletín informativo (email).
 - Diseño responsivo (mobile-first).
 - Integración con redes sociales (Facebook e Instagram — enlaces, sin feed dinámico).
 
@@ -59,6 +58,7 @@ HGourmet es una tienda de insumos gourmet para repostería ubicada en Mérida, Y
 - WhatsApp Business API (se usa enlace directo).
 - Seguimiento de pedidos en la plataforma.
 - Sistema de cuentas de usuario para clientes.
+- Registro a boletín informativo (email) y gestión de suscriptores (se mueve a roadmap post-MVP).
 
 ---
 

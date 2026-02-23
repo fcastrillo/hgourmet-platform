@@ -42,7 +42,7 @@ describe("Storefront Footer", () => {
   it("renders the store logo and tagline", () => {
     render(<Footer />);
     expect(screen.getByAltText("HGourmet")).toBeInTheDocument();
-    expect(screen.getByText(/insumos gourmet/i)).toBeInTheDocument();
+    expect(screen.getByText(/proveedora de productos/i)).toBeInTheDocument();
   });
 
   it("renders social media links", () => {

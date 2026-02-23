@@ -57,27 +57,6 @@
     > Estimate: XS | Reemplazar botones de texto por icon buttons con tooltip, agregar toggle de visibilidad inline (activar/desactivar sin modal), ajustar tests. ~30 min. Establece el estándar UI para futuras tablas admin (ADR-009).
   - [x] HU-2.8: Gestión de recetas desde el panel (Medium) ✅ (2026-02-23)
     > Estimate: S (~4–8h) | CRUD de recetas con textarea/editor Markdown, upload de imagen de portada a `recipe-images`, toggle publicar/despublicar, tabla con reordenamiento. Sigue estándar ADR-009. Paired con HU-4.3 (storefront).
-    - **Como:** administradora de HGourmet
-    - **Quiero:** crear, editar, publicar/despublicar, reordenar y eliminar recetas desde el panel
-    - **Para poder:** mantener la sección de recetas y tips actualizada sin depender de soporte técnico
-    - **Criterios de aceptación:**
-      1. La tabla de recetas muestra imagen miniatura, título, fecha y estado de publicación, con acciones inline de editar, publicar/despublicar y eliminar (estándar ADR-009).
-      2. El formulario de receta permite capturar título, contenido en Markdown (o texto enriquecido), imagen de portada y estado de publicación.
-      3. Al guardar una receta, se genera o actualiza el `slug` automáticamente a partir del título y se persiste en la tabla `recipes`.
-      4. La imagen de portada se carga en el bucket `recipe-images` y su URL se guarda en `image_url`.
-      5. El toggle de estado permite publicar/despublicar sin abrir modal, con feedback inmediato en la tabla.
-      6. La tabla permite reordenar recetas por controles de subir/bajar y mantener consistencia visual en el panel.
-      7. Las validaciones mínimas exigen título y contenido obligatorios; si faltan, no se guarda el registro.
-    - **BDD:**
-      - **Dado que** soy una administradora autenticada en `/admin/recetas`,
-        **Cuando** completo título, contenido e imagen y presiono "Guardar",
-        **Entonces** el sistema crea la receta, sube la imagen al bucket `recipe-images` y la muestra en la tabla con estado según el toggle.
-      - **Dado que** existe una receta publicada en la tabla,
-        **Cuando** hago clic en el ícono de despublicar,
-        **Entonces** el estado cambia a "Oculta" en la tabla sin abrir modal y la receta deja de estar disponible para el storefront público.
-      - **Dado que** intento guardar una receta sin título o sin contenido (escenario de error),
-        **Cuando** envío el formulario,
-        **Entonces** el sistema muestra mensajes de validación, no crea/actualiza el registro y conserva los datos capturados para corregir.
 
 ---
 
@@ -106,19 +85,14 @@
 
 ### FEAT-4: Contenido y Marketing Digital
 
-> Estimate: M (rollup) | 4 stories: 1×M + 2×S + 1×delivered, esfuerzo total ~2–3 días.
+> Estimate: S-M (rollup) | 3 stories: 1×M + 1×XS + 1×delivered, esfuerzo total ~1–2 días.
 
-- **Hypothesis:** Si entregamos herramientas de contenido (banners, recetas, boletín), entonces HGourmet podrá atraer tráfico recurrente y construir una base de suscriptores para comunicación directa, medido por ≥100 suscriptores al boletín y ≥80% de feedback positivo en el primer trimestre.
+- **Hypothesis:** Si entregamos herramientas de contenido de alto valor para el storefront (homepage optimizada y recetas/tips), entonces HGourmet podrá atraer tráfico recurrente y reforzar recordación de marca, medido por ≥80% de feedback positivo del contenido y mayor recurrencia de visitas en el primer trimestre.
 - **Status:** Partially Delivered (HU-4.1 y HU-4.4 parcialmente entregados)
 - **Priority:** Medium
 - **Stories:**
   - [~] HU-4.1: Página principal con banners rotativos y secciones destacadas (High) ~Parcial
     > Estimate: XS (~1h) | Homepage ya implementada con: `HomepageHero`, `BannerCarousel`, `CategoryShowcase`, `ProductSection` (destacados + temporada), `BrandSection`. Pendiente: validar paridad visual con prototipo Lovable, agregar sección "Por qué elegirnos" (3 cards) si aplica. Revisión final post-funcionalidades.
-  - [ ] HU-4.2: Registro al boletín informativo (Medium)
-    > Estimate: S (~4h) | Migración SQL para tabla `newsletter_subscribers` (ya definida en TECH_SPEC). Formulario en Footer [CC] con validación de email. Server Action `subscribeNewsletter` con insert + manejo de duplicados. Página admin `/admin/boletin` con lista de suscriptores y exportar CSV. RLS: anon INSERT only, authenticated full access.
-    - **Como:** Visitante del sitio
-    - **Quiero:** registrar mi email para recibir ofertas y novedades
-    - **Para poder:** estar al tanto de nuevos productos y promociones sin visitar la tienda
   - [ ] HU-4.3: Sección de recetas y tips (Medium)
     > Estimate: M (~1–2 días) | Migración SQL para tabla `recipes` (ya definida en TECH_SPEC). Rutas storefront: `/recetas` (grid de cards) + `/recetas/[slug]` (detalle con imagen, ingredientes, pasos, tip). Componentes: `RecipeCard` [SC], `RecipePage` [SC]. SEO con `generateMetadata`. Paired con HU-2.8 (admin CRUD). Referencia: prototipo Lovable `Recetas.tsx` + `RecetaDetail.tsx`.
     - **Como:** Cliente de HGourmet
@@ -165,11 +139,11 @@ Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir 
 
 ---
 
-### FEAT-5: Carrito de Compras y Checkout WhatsApp (Future — Out of MVP Pre-Cart)
+### FEAT-5: Carrito de Compras, Checkout WhatsApp y Newsletter (Roadmap — Out of MVP)
 
 > **Status:** Backlog (siguiente fase, post-MVP funcional)
 
-- **Hypothesis:** Si entregamos un carrito de compras con checkout vía WhatsApp (mensaje pre-formateado con el pedido completo), entonces los clientes podrán armar pedidos de múltiples productos antes de contactar, medido por un aumento de ≥30% en el valor promedio del pedido respecto a pedidos de producto individual.
+- **Hypothesis:** Si entregamos un carrito de compras con checkout vía WhatsApp y captura de newsletter, entonces los clientes podrán armar pedidos más completos y mantenerse en contacto con promociones, medido por un aumento de ≥30% en ticket promedio y crecimiento sostenido de suscriptores.
 - **Priority:** High (next phase)
 - **Stories (draft):**
   - [ ] HU-5.1: Carrito de compras en el storefront
@@ -178,24 +152,30 @@ Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir 
     > Botón "Enviar pedido por WhatsApp" que genera mensaje con lista de productos, cantidades, precios y total.
   - [ ] HU-5.3: Persistencia del carrito (localStorage)
     > El carrito sobrevive al cierre del navegador. Limpieza automática después de N días.
+  - [ ] HU-5.4: Registro al boletín informativo + gestión admin
+    > Captura de email en Footer [CC] con validación y deduplicación. Server Action de suscripción y vista admin `/admin/boletin` con exportación CSV para campañas.
 
 ---
 
 ## Completed
 
 > Stories and Features move here when finished via `@finish-objective`.
-
-- [x] HU-1.1: Navegación por categorías de productos ✅ (2026-02-21) — FEAT-1
-- [x] HU-1.2: Ficha de detalle de producto ✅ (2026-02-21) — FEAT-1
-- [x] HU-1.3: Búsqueda y filtrado de productos ✅ (2026-02-22) — FEAT-1
-- [x] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" ✅ (2026-02-21) — FEAT-1
-- [x] HU-2.1: Autenticación de administradoras ✅ (2026-02-22) — FEAT-2
-- [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2
-- [x] HU-2.2: CRUD de productos desde el panel ✅ (2026-02-22) — FEAT-2
-- [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2
-- [x] HU-2.5: Gestión de banners rotativos ✅ (2026-02-22) — FEAT-2
-- [x] HU-2.6: Gestión de marcas/proveedores ✅ (2026-02-22) — FEAT-2
-- [x] HU-2.8: Gestión de recetas desde el panel ✅ (2026-02-23) — FEAT-2
-- [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto ✅ (2026-02-21) — FEAT-3
-- [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
-- [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)
+- FEAT-1
+  - [x] HU-1.1: Navegación por categorías de productos ✅ (2026-02-21) — FEAT-1
+  - [x] HU-1.2: Ficha de detalle de producto ✅ (2026-02-21) — FEAT-1
+  - [x] HU-1.3: Búsqueda y filtrado de productos ✅ (2026-02-22) — FEAT-1
+  - [x] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" ✅ (2026-02-21) — FEAT-1
+- FEAT-2
+  - [x] HU-2.1: Autenticación de administradoras ✅ (2026-02-22) — FEAT-2
+  - [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2
+  - [x] HU-2.2: CRUD de productos desde el panel ✅ (2026-02-22) — FEAT-2
+  - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2
+  - [x] HU-2.5: Gestión de banners rotativos ✅ (2026-02-22) — FEAT-2
+  - [x] HU-2.6: Gestión de marcas/proveedores ✅ (2026-02-22) — FEAT-2
+  - [x] HU-2.8: Gestión de recetas desde el panel ✅ (2026-02-23) — FEAT-2
+- FEAT-3
+  - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto ✅ (2026-02-21)
+- FEAT-4
+  - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
+- Chores (Technical / Visual)
+  - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)
