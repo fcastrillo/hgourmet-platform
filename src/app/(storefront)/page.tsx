@@ -44,11 +44,13 @@ export default async function HomePage() {
         <CategoryShowcase categories={categoriesWithCount} />
         <ProductSection
           title="Lo más vendido"
+          accentWord="vendido"
           products={featuredProducts}
           viewAllHref="/productos/destacados"
         />
         <ProductSection
           title="Productos de temporada"
+          accentWord="temporada"
           products={seasonalProducts}
           viewAllHref="/productos/temporada"
         />

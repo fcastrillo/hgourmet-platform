@@ -31,12 +31,22 @@ export function Footer() {
             </h4>
             <ul className="mt-3 space-y-2">
               <li>
-                <Link href="/categorias" className="text-sm text-white/80 hover:text-white">
+                <Link href="/" className="text-sm text-white/80 transition-colors hover:text-white">
+                  Inicio
+                </Link>
+              </li>
+              <li>
+                <Link href="/categorias" className="text-sm text-white/80 transition-colors hover:text-white">
                   Catálogo
                 </Link>
               </li>
               <li>
-                <Link href="/contacto" className="text-sm text-white/80 hover:text-white">
+                <Link href="/recetas" className="text-sm text-white/80 transition-colors hover:text-white">
+                  Recetas
+                </Link>
+              </li>
+              <li>
+                <Link href="/contacto" className="text-sm text-white/80 transition-colors hover:text-white">
                   Contacto
                 </Link>
               </li>
@@ -54,7 +64,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="WhatsApp"
-                  className="text-sm text-white/80 hover:text-white"
+                  className="text-sm text-white/80 transition-colors hover:text-white"
                 >
                   WhatsApp
                 </a>
@@ -65,7 +75,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Instagram"
-                  className="text-sm text-white/80 hover:text-white"
+                  className="text-sm text-white/80 transition-colors hover:text-white"
                 >
                   Instagram
                 </a>
@@ -76,7 +86,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Facebook"
-                  className="text-sm text-white/80 hover:text-white"
+                  className="text-sm text-white/80 transition-colors hover:text-white"
                 >
                   Facebook
                 </a>
