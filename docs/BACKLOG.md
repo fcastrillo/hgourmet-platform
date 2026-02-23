@@ -47,8 +47,8 @@
     > Estimate: Pending | Sección de importación con template descargable, parsing client-side, previsualización, validación por fila, importación parcial, reporte de errores, idempotencia por SKU. ~2–3 días.
   - [x] HU-2.4: Gestión de categorías (Medium) ✅ (2026-02-22)
     > Estimate: S | CRUD de categorías, reordenamiento con controles ▲/▼, slug automático, protección FK contra eliminación con productos asociados. ~1 hora (AI-assisted).
-  - [ ] HU-2.5: Gestión de banners rotativos (Medium)
-    > Estimate: Pending | CRUD de banners con upload de imagen a `banner-images`, reordenamiento, toggle activo/inactivo, integración con carrusel del storefront. ~1–2 días.
+  - [x] HU-2.5: Gestión de banners rotativos (Medium) ✅ (2026-02-22)
+    > Estimate: M | CRUD de banners con upload de imagen a `banner-images`, reordenamiento, toggle activo/inactivo, integración con carrusel del storefront. ~4h (AI-assisted).
   - [ ] HU-2.6: Gestión de marcas/proveedores (Low)
     > Estimate: Pending | CRUD de marcas con upload de logo a `brand-logos`, reordenamiento, toggle activo/inactivo. ~0.5–1 día.
   - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable (Low) ✅ (2026-02-22)
@@ -94,3 +94,4 @@
 - [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.2: CRUD de productos desde el panel ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2
+- [x] HU-2.5: Gestión de banners rotativos ✅ (2026-02-22) — FEAT-2

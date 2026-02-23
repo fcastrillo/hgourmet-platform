@@ -19,6 +19,25 @@
 
 ---
 
+## [2026-02-22] — HU-2.5: Gestión de banners rotativos
+
+**Feature:** FEAT-2 — Panel de Administración
+**Benefit:** Las administradoras pueden crear, editar, reordenar y activar/desactivar banners promocionales desde el panel. La página principal muestra un carrusel interactivo con auto-play y navegación por puntos que se alimenta de los banners activos, eliminando la necesidad de soporte técnico para mantener la portada actualizada con promociones y novedades.
+**Changes:**
+- Migración SQL `002_banners.sql`: tabla `banners` con RLS (anon lee solo activos, auth acceso completo)
+- Storage bucket `banner-images` con políticas de acceso
+- Query helpers: `fetchActiveBanners` (storefront), `fetchAllBannersAdmin`, `fetchBannerByIdAdmin`, `fetchMaxBannerDisplayOrder` (admin)
+- 5 Server Actions: `createBanner` (con image upload), `updateBanner` (con reemplazo de imagen), `deleteBanner` (con limpieza de imagen), `toggleBannerActive` (inline), `reorderBanners` (batch)
+- `BannerTable` [CC] con ADR-009 (icon buttons, optimistic toggle, responsive desktop/mobile)
+- `BannerForm` [CC] con upload de imagen, preview, validación, toggle is_active (ADR-010)
+- `DeleteBannerDialog` [CC] con confirmación por título
+- 3 páginas admin: lista (`/admin/banners`), crear (`/admin/banners/nuevo`), editar (`/admin/banners/[id]/editar`)
+- `BannerCarousel` [CC] con auto-play, dot navigation, pause on hover, link wrapping
+- Integración en homepage: carrusel si hay banners activos, fallback a `HomepageHero` si no
+**Tests:** 23 nuevos tests (1 suite: hu-2.5-scenarios) — total acumulado: 187
+
+---
+
 ## [2026-02-22] — HU-2.2: CRUD de productos desde el panel
 
 **Feature:** FEAT-2 — Panel de Administración
