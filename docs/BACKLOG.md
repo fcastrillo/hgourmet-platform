@@ -57,6 +57,27 @@
     > Estimate: XS | Reemplazar botones de texto por icon buttons con tooltip, agregar toggle de visibilidad inline (activar/desactivar sin modal), ajustar tests. ~30 min. Establece el estándar UI para futuras tablas admin (ADR-009).
   - [ ] HU-2.8: Gestión de recetas desde el panel (Medium)
     > Estimate: S (~4–8h) | CRUD de recetas con textarea/editor Markdown, upload de imagen de portada a `recipe-images`, toggle publicar/despublicar, tabla con reordenamiento. Sigue estándar ADR-009. Paired con HU-4.3 (storefront).
+    - **Como:** administradora de HGourmet
+    - **Quiero:** crear, editar, publicar/despublicar, reordenar y eliminar recetas desde el panel
+    - **Para poder:** mantener la sección de recetas y tips actualizada sin depender de soporte técnico
+    - **Criterios de aceptación:**
+      1. La tabla de recetas muestra imagen miniatura, título, fecha y estado de publicación, con acciones inline de editar, publicar/despublicar y eliminar (estándar ADR-009).
+      2. El formulario de receta permite capturar título, contenido en Markdown (o texto enriquecido), imagen de portada y estado de publicación.
+      3. Al guardar una receta, se genera o actualiza el `slug` automáticamente a partir del título y se persiste en la tabla `recipes`.
+      4. La imagen de portada se carga en el bucket `recipe-images` y su URL se guarda en `image_url`.
+      5. El toggle de estado permite publicar/despublicar sin abrir modal, con feedback inmediato en la tabla.
+      6. La tabla permite reordenar recetas por controles de subir/bajar y mantener consistencia visual en el panel.
+      7. Las validaciones mínimas exigen título y contenido obligatorios; si faltan, no se guarda el registro.
+    - **BDD:**
+      - **Dado que** soy una administradora autenticada en `/admin/recetas`,
+        **Cuando** completo título, contenido e imagen y presiono "Guardar",
+        **Entonces** el sistema crea la receta, sube la imagen al bucket `recipe-images` y la muestra en la tabla con estado según el toggle.
+      - **Dado que** existe una receta publicada en la tabla,
+        **Cuando** hago clic en el ícono de despublicar,
+        **Entonces** el estado cambia a "Oculta" en la tabla sin abrir modal y la receta deja de estar disponible para el storefront público.
+      - **Dado que** intento guardar una receta sin título o sin contenido (escenario de error),
+        **Cuando** envío el formulario,
+        **Entonces** el sistema muestra mensajes de validación, no crea/actualiza el registro y conserva los datos capturados para corregir.
 
 ---
 
@@ -114,7 +135,7 @@
   > Estimate: XS (~30 min) | Instalar `cloudflared`, crear script `npm run tunnel` para exponer `localhost:3000` en URL pública temporal. Documentar en README. No requiere spec ni objetivo formal — es un chore de infraestructura.
 
 - [ ] ENABLER-2: Schema Evolution + Curación de Categorías (High)
-  > Estimate: S (~4h) | Migración SQL: agregar `image_url text` a `categories`, agregar `barcode text` y `sat_code text` a `products`. Crear las 7 categorías curadas en Supabase (reemplazando las 6 del prototipo). Crear documento de mapeo `dept+cat CSV → categoría curada` en `.spec/work/FEAT-1/category-mapping.md`. Actualizar `TECH_SPEC.md` con nuevos campos y ADR-003 revisado.
+  > Estimate: S (~4h) | Migración SQL: agregar `image_url text` a `categories`, agregar `barcode text` y `sat_code text` a `products`. Crear las 7 categorías curadas en Supabase (reemplazando las 6 del prototipo). Documentar mapeo `dept+cat CSV → categoría curada` en el workspace de FEAT-1 cuando se ejecute este enabler. Actualizar `TECH_SPEC.md` con nuevos campos y ADR-003 revisado.
 
 #### Decisión: 7 Categorías Curadas (2026-02-23)
 

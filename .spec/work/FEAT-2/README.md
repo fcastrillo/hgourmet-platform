@@ -21,6 +21,7 @@
 | HU-2.5 | Gestión de banners rotativos | Medium |
 | HU-2.6 | Gestión de marcas/proveedores | Low |
 | HU-2.7 | Icon buttons y toggle inline en CategoryTable | Low |
+| HU-2.8 | Gestión de recetas desde el panel | Medium |
 
 ---
 
@@ -220,3 +221,35 @@
 > **Dado que** intento crear una marca sin nombre (escenario de error),
 > **Cuando** envío el formulario,
 > **Entonces** el sistema muestra un mensaje de validación "El nombre es obligatorio" y no crea el registro.
+
+---
+
+### HU-2.8: Gestión de recetas desde el panel
+
+- **Como:** administradora de HGourmet
+- **Quiero:** crear, editar, publicar/despublicar, reordenar y eliminar recetas desde el panel
+- **Para poder:** mantener la sección de recetas y tips actualizada sin depender de soporte técnico
+
+**Criterios de aceptación:**
+
+1. La tabla de recetas muestra imagen miniatura, título, fecha y estado de publicación, con acciones inline de editar, publicar/despublicar y eliminar (estándar ADR-009).
+2. El formulario de receta permite capturar título, contenido en Markdown (o texto enriquecido), imagen de portada y estado de publicación.
+3. Al guardar una receta, el sistema genera o actualiza el `slug` automáticamente a partir del título y lo persiste en la tabla `recipes`.
+4. La imagen de portada se carga en el bucket `recipe-images` y su URL se guarda en `image_url`.
+5. El toggle de estado permite publicar/despublicar sin abrir modal, con feedback inmediato en la tabla.
+6. La tabla permite reordenar recetas por controles de subir/bajar y mantener consistencia visual en el panel.
+7. Las validaciones mínimas exigen título y contenido obligatorios; si faltan, no se guarda el registro.
+
+**BDD:**
+
+> **Dado que** soy una administradora autenticada en `/admin/recetas`,
+> **Cuando** completo título, contenido e imagen y presiono "Guardar",
+> **Entonces** el sistema crea la receta, sube la imagen al bucket `recipe-images` y la muestra en la tabla con estado según el toggle.
+
+> **Dado que** existe una receta publicada en la tabla,
+> **Cuando** hago clic en el ícono de despublicar,
+> **Entonces** el estado cambia a "Oculta" en la tabla sin abrir modal y la receta deja de estar disponible para el storefront público.
+
+> **Dado que** intento guardar una receta sin título o sin contenido (escenario de error),
+> **Cuando** envío el formulario,
+> **Entonces** el sistema muestra mensajes de validación, no crea/actualiza el registro y conserva los datos capturados para corregir.

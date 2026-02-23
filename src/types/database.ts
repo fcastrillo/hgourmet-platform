@@ -99,6 +99,41 @@ export interface Database {
           created_at?: string;
         };
       };
+      recipes: {
+        Row: {
+          id: string;
+          title: string;
+          slug: string;
+          content: string;
+          image_url: string | null;
+          is_published: boolean;
+          display_order: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          title: string;
+          slug: string;
+          content: string;
+          image_url?: string | null;
+          is_published?: boolean;
+          display_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          slug?: string;
+          content?: string;
+          image_url?: string | null;
+          is_published?: boolean;
+          display_order?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
       products: {
         Row: {
           id: string;
@@ -160,6 +195,7 @@ export type Banner = Database["public"]["Tables"]["banners"]["Row"];
 export type Brand = Database["public"]["Tables"]["brands"]["Row"];
 export type Category = Database["public"]["Tables"]["categories"]["Row"];
 export type Product = Database["public"]["Tables"]["products"]["Row"];
+export type Recipe = Database["public"]["Tables"]["recipes"]["Row"];
 
 export type CategoryWithProductCount = Category & {
   product_count: number;
