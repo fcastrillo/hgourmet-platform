@@ -19,6 +19,24 @@
 
 ---
 
+## [2026-02-23] — CHORE-1: Sprint Cosmético del Storefront
+
+**Type:** Chore (Visual Polish)
+**Benefit:** El storefront de HGourmet tiene ahora una presencia visual profesional: logo real de marca, hero inmersivo con imagen de repostería, navegación limpia (4 links + iconos), sección "Nuestras Categorías" decorativa, y títulos con palabra accent destacada. El hero es permanente (identidad de marca) y los banners se posicionan debajo como contenido promocional.
+**Changes:**
+- Logo real (`next/image`) en header (~40px) y footer (~60px, filtro invert para fondo oscuro)
+- Hero full-bleed con imagen de fondo, overlay oscuro, logo monograma, copy aspiracional y CTA accent
+- Nav desktop reestructurado: 4 links fijos (Inicio, Catálogo, Recetas, Contacto) + iconos búsqueda/usuario
+- MobileNav reestructurado: 4 links principales + sub-sección categorías
+- Componente `CategoryShowcase` con cards decorativas (emoji, nombre, conteo, hover effects)
+- Query helper `fetchCategoriesWithCount` extraído a módulo reutilizable
+- `ProductSection` con prop `accentWord` para títulos con palabra destacada en color primary
+- Footer ampliado: logo, 4 links de navegación, transiciones consistentes
+- Hero siempre visible + BannerCarousel como sección secundaria (ya no either/or)
+**Tests:** 213 passing (0 new, 7 updated) — total acumulado: 213
+
+---
+
 ## [2026-02-22] — HU-2.6: Gestión de marcas/proveedores
 
 **Feature:** FEAT-2 — Panel de Administración

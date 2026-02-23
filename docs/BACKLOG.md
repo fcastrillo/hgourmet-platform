@@ -1,7 +1,7 @@
 # Product Backlog
 
 > **Project:** hgourmet-platform
-> **Last updated:** 2026-02-22
+> **Last updated:** 2026-02-23
 >
 > This is the **Single Source of Truth** for the SAFe hierarchy.
 > Structure: Epic → Feature (FEAT-N) → User Story (HU-N.M)
@@ -30,6 +30,8 @@
     > Estimate: M | Barra de búsqueda CC con debounce, filtro por categoría, coordinación de estados, decisión ilike vs full-text search. ~1–2 días.
   - [x] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" (Medium) ✅ (2026-02-21)
     > Estimate: S | 2 secciones con componente genérico, queries filtradas por is_featured/is_seasonal, reutiliza ProductCard. ~3–6 horas.
+  - [ ] HU-1.5: Categorías con imagen administrable y visual homologado (Medium)
+    > Estimate: Pending | Agregar `image_url` a tabla categories, upload en admin form (HU-2.4 extension), unificar visualización entre CategoryShowcase (homepage) y CategoryCard (catálogo).
 
 ---
 
@@ -53,6 +55,8 @@
     > Estimate: S | CRUD de marcas con upload de logo a `brand-logos`, reordenamiento, toggle activo/inactivo, sección "Nuestras Marcas" en storefront. ~30 min (AI-assisted).
   - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable (Low) ✅ (2026-02-22)
     > Estimate: XS | Reemplazar botones de texto por icon buttons con tooltip, agregar toggle de visibilidad inline (activar/desactivar sin modal), ajustar tests. ~30 min. Establece el estándar UI para futuras tablas admin (ADR-009).
+  - [ ] HU-2.8: Gestión de recetas desde el panel (Medium)
+    > Estimate: Pending | CRUD de recetas con editor de contenido, upload de imagen de portada, toggle publicar/despublicar. Paired con HU-4.3 (storefront).
 
 ---
 
@@ -83,8 +87,8 @@
 
 ### Chores (Technical / Visual)
 
-- [ ] CHORE-1: Sprint cosmético del storefront (Medium)
-  > Hero con imagen de fondo, logo real, nav reestructurado, sección categorías estilizada, polish general. ~3-4 horas.
+- [x] CHORE-1: Sprint cosmético del storefront (Medium) ✅ (2026-02-23)
+  > Hero con imagen de fondo, logo real, nav reestructurado, sección categorías estilizada, polish general. ~10 min (AI-assisted).
 
 ---
 
@@ -103,3 +107,4 @@
 - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.5: Gestión de banners rotativos ✅ (2026-02-22) — FEAT-2
 - [x] HU-2.6: Gestión de marcas/proveedores ✅ (2026-02-22) — FEAT-2
+- [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)
