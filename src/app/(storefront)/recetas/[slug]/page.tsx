@@ -86,9 +86,11 @@ export default async function RecetaDetailPage({
                     key={j}
                     className="flex items-start gap-2.5 text-sm md:text-base"
                   >
-                    {/* CheckCircle icon */}
+                    {/* CheckCircle icon — h-4/w-4 (ADR-006: no arbitrary px in Tailwind 4) */}
                     <svg
-                      className="mt-0.5 h-[17px] w-[17px] shrink-0 text-primary"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                      width={16}
+                      height={16}
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={2}
@@ -140,9 +142,11 @@ export default async function RecetaDetailPage({
               key={i}
               className="mb-8 flex gap-3 rounded-xl border border-primary/30 bg-primary/10 p-5"
             >
-              {/* Lightbulb icon */}
+              {/* Lightbulb icon — h-5/w-5 (ADR-006: no arbitrary px in Tailwind 4) */}
               <svg
-                className="mt-0.5 h-[22px] w-[22px] shrink-0 text-primary"
+                className="mt-0.5 h-5 w-5 shrink-0 text-primary"
+                width={20}
+                height={20}
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
