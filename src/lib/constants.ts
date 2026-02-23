@@ -1,14 +1,14 @@
-export const WHATSAPP_NUMBER = "529991234567";
+export const WHATSAPP_NUMBER = "525550682072";
 
 export const SOCIAL_LINKS = {
   whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,
-  facebook: "https://facebook.com/hgourmet",
+  facebook: "https://facebook.com/hgourmetoficial",
   instagram: "https://instagram.com/hgourmet",
 } as const;
 
 export const STORE_INFO = {
   name: "HGourmet",
-  tagline: "Insumos Gourmet para Repostería",
+  tagline: "Empresa proveedora de productos para repostería y pastería",
   city: "Mérida, Yucatán",
   phone: WHATSAPP_NUMBER,
 } as const;
