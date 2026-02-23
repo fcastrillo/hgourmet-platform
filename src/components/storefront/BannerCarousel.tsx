@@ -34,8 +34,8 @@ export function BannerCarousel({ banners }: BannerCarouselProps) {
   const currentBanner = banners[currentIndex];
 
   const slideContent = (
-    <div className="relative w-full overflow-hidden">
-      <div className="relative aspect-[3/1] w-full sm:aspect-[4/1]">
+    <div className="relative w-full overflow-hidden rounded-xl">
+      <div className="relative aspect-[2.5/1] w-full sm:aspect-[3.5/1]">
         <img
           src={currentBanner.image_url}
           alt={currentBanner.title ?? "Banner promocional"}
@@ -64,7 +64,7 @@ export function BannerCarousel({ banners }: BannerCarouselProps) {
 
   return (
     <section
-      className="relative"
+      className="relative mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

@@ -35,10 +35,9 @@ export default async function HomePage() {
 
   return (
     <>
-      {activeBanners.length > 0 ? (
+      <HomepageHero />
+      {activeBanners.length > 0 && (
         <BannerCarousel banners={activeBanners} />
-      ) : (
-        <HomepageHero />
       )}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <CategoryShowcase categories={categoriesWithCount} />
