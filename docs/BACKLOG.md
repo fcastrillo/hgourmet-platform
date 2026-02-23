@@ -93,7 +93,7 @@
 - **Stories:**
   - [~] HU-4.1: Página principal con banners rotativos y secciones destacadas (High) ~Parcial
     > Estimate: XS (~1h) | Homepage ya implementada con: `HomepageHero`, `BannerCarousel`, `CategoryShowcase`, `ProductSection` (destacados + temporada), `BrandSection`. Pendiente: validar paridad visual con prototipo Lovable, agregar sección "Por qué elegirnos" (3 cards) si aplica. Revisión final post-funcionalidades.
-  - [ ] HU-4.3: Sección de recetas y tips (Medium)
+  - [x] HU-4.3: Sección de recetas y tips (Medium) ✅ (2026-02-23)
     > Estimate: M (~1–2 días) | Migración SQL para tabla `recipes` (ya definida en TECH_SPEC). Rutas storefront: `/recetas` (grid de cards) + `/recetas/[slug]` (detalle con imagen, ingredientes, pasos, tip). Componentes: `RecipeCard` [SC], `RecipePage` [SC]. SEO con `generateMetadata`. Paired con HU-2.8 (admin CRUD). Referencia: prototipo Lovable `Recetas.tsx` + `RecetaDetail.tsx`.
     - **Como:** Cliente de HGourmet
     - **Quiero:** ver recetas y tips de repostería

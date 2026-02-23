@@ -19,6 +19,23 @@
 
 ---
 
+## [2026-02-23] — HU-4.3: Sección de recetas y tips
+
+**Feature:** FEAT-4 — Contenido y Marketing Digital
+**Benefit:** Los clientes de HGourmet pueden explorar un catálogo de recetas de repostería con ingredientes, pasos numerados y tips, todo desde el storefront público. El contenido publicado por las administradoras en el panel admin aparece inmediatamente en `/recetas` con paridad visual ≥90% respecto al prototipo de diseño.
+**Changes:**
+- Página `/recetas` con grid responsive (1/2/3 columnas) de `RecipeCard` con imagen `aspect-video`, excerpt y CTA dorado.
+- Página `/recetas/[slug]` con hero panorámico, breadcrumb, ingredientes con ícono checkmark, pasos numerados en círculo dorado y card "Tip HGourmet" con fondo/borde dorado.
+- `RecipeCard` [SC] con hover suave (sombra + escala imagen + color título).
+- `not-found.tsx` para slugs inválidos o recetas despublicadas.
+- Parser de Markdown (`recipe-parser.ts`) que extrae `## Ingredientes`, `## Preparación` y `## Tip HGourmet` con fallback seguro para contenido no estructurado.
+- Query helpers tipados (`fetchPublishedRecipes`, `fetchPublishedRecipeBySlug`) siguiendo ADR-005.
+- SEO completo: `generateMetadata` con Open Graph en el detalle.
+- ADR-011: SVG Size Safety (atributos nativos `width`/`height` como doble seguro en Tailwind 4).
+**Tests:** 17 nuevos tests (suite `hu-4.3-scenarios`) — total acumulado: 257
+
+---
+
 ## [2026-02-23] — HU-2.8: Gestión de recetas desde el panel
 
 **Feature:** FEAT-2 — Panel de Administración  
