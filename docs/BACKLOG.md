@@ -62,44 +62,35 @@
 
 ### FEAT-3: Canal de Comunicación y Conversión WhatsApp
 
-> Estimate: M (rollup) | 3 stories: 2×S + 1×XS, esfuerzo total ~1–2 días.
+> Estimate: M (rollup) | 3 stories: 2×S + 1×XS; esfuerzo total ~1–2 días por UI cross-page + validaciones + paridad visual.
 
 - **Hypothesis:** Si entregamos un canal de comunicación integrado con WhatsApp y redes sociales desde cada punto del catálogo, entonces los clientes podrán pasar de la consulta al pedido en un solo clic, medido por ≥50 pedidos confirmados vía WhatsApp originados desde la web en el primer mes.
-- **Status:** Partially Delivered (HU-3.2 CTA ya existe en ficha de producto)
+- **Status:** In Progress (2/3 stories delivered; HU-3.1 y HU-3.2 completadas, pendiente HU-3.3)
 - **Priority:** High
 - **Stories:**
-  - [ ] HU-3.1: Botón fijo de WhatsApp en todo el sitio (High)
-    > Estimate: XS (~1–2h) | Componente `WhatsAppFloatingButton` [CC] posicionado bottom-right fijo. Usa `SOCIAL_LINKS.whatsapp` de `constants.ts`. Icono WhatsApp con animación sutil. Se agrega al layout del storefront. Referencia: prototipo Lovable `WhatsAppButton.tsx`.
-    - **Como:** Cliente navegando el sitio
-    - **Quiero:** ver un botón flotante de WhatsApp siempre visible
-    - **Para poder:** contactar a HGourmet desde cualquier página con un solo clic
+  - [x] HU-3.1: Botón fijo de WhatsApp en todo el sitio (High) ✅ (2026-02-23)
+    > Estimate: XS | Componente flotante global en layout storefront con deep link `wa.me`, fallback por configuración inválida y ajuste visual; cambio acotado sin lógica de datos nueva.
   - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto (High) ✅ (2026-02-21)
-    > Estimate: S | Componente `WhatsAppCTA` [CC] con deep link `wa.me/{number}?text={message}` incluyendo nombre y precio del producto. Ya implementado en ficha de producto. Usa ADR-002 (WhatsApp Link en vez de API). Entregado como parte de HU-1.2.
+    > Estimate: S | CTA contextual por producto con composición segura de mensaje y manejo de datos incompletos; requiere coordinación de UI + formato de enlace dinámico.
   - [ ] HU-3.3: Página de contacto (Medium)
-    > Estimate: S (~4–8h) | Ruta `/contacto`. Información de la tienda (dirección, teléfono, email, horario). Botones de redes sociales (WhatsApp, Facebook, Instagram). Mapa de ubicación (placeholder o Google Maps embed). Formulario de contacto con validación (nombre, email, mensaje). Server Action placeholder (toast de confirmación; integración Resend en iteración futura).
-    - **Como:** Cliente o visitante del sitio
-    - **Quiero:** ver la información de contacto de HGourmet y poder enviar un mensaje
-    - **Para poder:** comunicarme con la tienda o visitarla físicamente
+    > Estimate: S | Nueva ruta `/contacto` con layout completo, enlaces sociales, mapa placeholder y formulario con validaciones/estados; sin integración externa obligatoria en esta iteración.
 
 ---
 
 ### FEAT-4: Contenido y Marketing Digital
 
-> Estimate: S-M (rollup) | 3 stories: 1×M + 1×XS + 1×delivered, esfuerzo total ~1–2 días.
+> Estimate: M (rollup) | 3 stories: 1×M + 1×S + 1×XS; esfuerzo total ~1–2 días por nuevas rutas de contenido + cierre visual de homepage.
 
 - **Hypothesis:** Si entregamos herramientas de contenido de alto valor para el storefront (homepage optimizada y recetas/tips), entonces HGourmet podrá atraer tráfico recurrente y reforzar recordación de marca, medido por ≥80% de feedback positivo del contenido y mayor recurrencia de visitas en el primer trimestre.
 - **Status:** Partially Delivered (HU-4.1 y HU-4.4 parcialmente entregados)
 - **Priority:** Medium
 - **Stories:**
   - [~] HU-4.1: Página principal con banners rotativos y secciones destacadas (High) ~Parcial
-    > Estimate: XS (~1h) | Homepage ya implementada con: `HomepageHero`, `BannerCarousel`, `CategoryShowcase`, `ProductSection` (destacados + temporada), `BrandSection`. Pendiente: validar paridad visual con prototipo Lovable, agregar sección "Por qué elegirnos" (3 cards) si aplica. Revisión final post-funcionalidades.
+    > Estimate: XS | Cierre visual sobre base ya implementada (paridad Lovable, ajustes de jerarquía y bloques de confianza) sin cambios de datos ni integraciones nuevas.
   - [x] HU-4.3: Sección de recetas y tips (Medium) ✅ (2026-02-23)
-    > Estimate: M (~1–2 días) | Migración SQL para tabla `recipes` (ya definida en TECH_SPEC). Rutas storefront: `/recetas` (grid de cards) + `/recetas/[slug]` (detalle con imagen, ingredientes, pasos, tip). Componentes: `RecipeCard` [SC], `RecipePage` [SC]. SEO con `generateMetadata`. Paired con HU-2.8 (admin CRUD). Referencia: prototipo Lovable `Recetas.tsx` + `RecetaDetail.tsx`.
-    - **Como:** Cliente de HGourmet
-    - **Quiero:** ver recetas y tips de repostería
-    - **Para poder:** inspirarme con ideas y aprender técnicas usando los productos de la tienda
+    > Estimate: M | Implementa nuevas rutas (`/recetas`, `/recetas/[slug]`), render SEO-friendly, manejo de estados de no disponible y dependencia de contenido administrable.
   - [x] HU-4.4: Sección de marcas HGourmet (logos de proveedores) (Low) ✅ (2026-02-22)
-    > Estimate: S | `BrandSection` [SC] en homepage con logos de marcas/proveedores. CRUD admin ya entregado como HU-2.6. Entregado como parte de HU-2.6 + CHORE-1.
+    > Estimate: S | Integración de sección pública de marcas activas con orden configurable desde admin; alcance acotado a homepage y estado vacío.
 
 ---
 
@@ -174,8 +165,10 @@ Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir 
   - [x] HU-2.6: Gestión de marcas/proveedores ✅ (2026-02-22) — FEAT-2
   - [x] HU-2.8: Gestión de recetas desde el panel ✅ (2026-02-23) — FEAT-2
 - FEAT-3
+  - [x] HU-3.1: Botón fijo de WhatsApp en todo el sitio ✅ (2026-02-23)
   - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto ✅ (2026-02-21)
 - FEAT-4
-  - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
+  - [x] HU-4.3: Sección de marcas HGourmet ✅ (2026-02-23) — FEAT-4
+  - [x] HU-4.4: Sección de recetas y tips ✅ (2026-02-22) — FEAT-4
 - Chores (Technical / Visual)
   - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)

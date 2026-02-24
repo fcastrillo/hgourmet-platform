@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-02-23] — HU-3.1: Botón fijo de WhatsApp en todo el sitio
+
+**Feature:** FEAT-3 — Canal de Comunicación y Conversión WhatsApp
+**Benefit:** Los clientes pueden contactar a HGourmet desde cualquier ruta pública del storefront con un clic, sin fricción de navegación. Esto reduce abandono en la intención de compra y acelera el paso de consulta a pedido por WhatsApp.
+**Changes:**
+- Nuevo componente `WhatsAppFloatingButton` [CC] con posición fija global (`bottom-right`), deep link `wa.me`, accesibilidad (`aria-label`) y apertura segura (`target="_blank"` + `rel="noopener noreferrer"`).
+- Integración del botón flotante en `src/app/(storefront)/layout.tsx` para presencia persistente en todo el storefront.
+- Fallback seguro por configuración inválida de `SOCIAL_LINKS.whatsapp` (la UI no se rompe y el botón no se renderiza).
+- Estilo de color de marca WhatsApp aplicado con `style` inline (alineado con ADR-006) y SVG con atributos nativos `width`/`height` (alineado con ADR-011).
+**Tests:** 11 nuevos tests (9 en `whatsapp-floating-button.test.tsx` + 2 en `storefront-layout.test.tsx`) — total acumulado: 268
+
+---
+
 ## [2026-02-23] — HU-4.3: Sección de recetas y tips
 
 **Feature:** FEAT-4 — Contenido y Marketing Digital
