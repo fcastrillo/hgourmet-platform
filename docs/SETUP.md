@@ -57,7 +57,7 @@ RLS policies enforce access control at the database level.
 |:--------|:---------|
 | Table Editor / SQL Editor | Database tables and migrations |
 | Authentication | Magic Link (OTP) provider, URL config |
-| Storage | `product-images`, `banner-images` buckets |
+| Storage | `product-images`, `banner-images`, `brand-logos`, `recipe-images`, `category-images` buckets |
 | Settings → API | Project URL, anon key |
 
 ---
@@ -66,10 +66,14 @@ RLS policies enforce access control at the database level.
 
 ### 3.1 Run the migration
 
-Go to **SQL Editor** in the Supabase Dashboard and execute:
+Go to **SQL Editor** in the Supabase Dashboard and execute in order:
 
 ```
 supabase/migrations/001_categories_and_products.sql
+supabase/migrations/002_banners.sql
+supabase/migrations/003_brands.sql
+supabase/migrations/004_recipes.sql
+supabase/migrations/005_enabler2_schema_evolution.sql
 ```
 
 This creates:
@@ -165,6 +169,24 @@ supabase/seed.sql
 
 Inserts 6 categories (1 inactive) and 15 products with various combinations of
 `is_featured`, `is_seasonal`, `is_available`, `is_visible` for testing all states.
+
+### 3.8 ENABLER-2 migration (schema evolution + staging)
+
+`005_enabler2_schema_evolution.sql` adds:
+
+- Domain fields:
+  - `categories.image_url` (for HU-1.5 category image management)
+  - `products.barcode`, `products.sat_code` (for HU-2.3 CSV import)
+- Staging tables:
+  - `import_batches`
+  - `product_import_raw`
+  - `category_mapping_rules`
+  - `product_import_issues`
+- RLS policies:
+  - Admin-only full access (`authenticated`) for staging tables
+  - Public read (`anon`) only for active mapping rules (`category_mapping_rules`)
+- Seeded mapping rules:
+  - `v1` rules with priority system (10 dept-base, 20 category override, 30 exact dept+cat)
 
 ---
 
@@ -325,6 +347,7 @@ Apply the same policy structure as `product-images`:
 
 | Bucket | Story | Purpose |
 |:-------|:------|:--------|
+| `category-images` | ENABLER-2 / HU-1.5 | Category card/showcase images managed from admin |
 | `recipe-images` | HU-2.8 / HU-4.3 | Recipe cover images (admin upload delivered in HU-2.8; storefront rendering in HU-4.3) |
 
 ---
@@ -398,7 +421,7 @@ npm run dev
 ### Supabase configuration checklist
 
 - [ ] Create Supabase project and copy URL + anon key to `.env.local`
-- [ ] **Database:** Run `supabase/migrations/001_categories_and_products.sql` in SQL Editor
+- [ ] **Database:** Run migrations `001` → `005` in SQL Editor (including `005_enabler2_schema_evolution.sql`)
 - [ ] **Database (optional):** Run `supabase/seed.sql` for test data
 - [ ] **Auth:** Enable Email provider with Magic Link
 - [ ] **Auth:** Set Site URL to `http://localhost:3000` (dev) / production URL
@@ -406,6 +429,7 @@ npm run dev
 - [ ] **Auth:** Add production callback URL to Redirect URLs
 - [ ] **Auth:** Create at least one admin user via Dashboard → Authentication → Users
 - [ ] **Storage:** Create `product-images` bucket (public, 5 MB limit)
+- [ ] **Storage:** Create `category-images` bucket (public, 5 MB limit)
 - [ ] **Storage:** Add `Public read access` policy (SELECT, anon + authenticated)
 - [ ] **Storage:** Add `Authenticated full access` policy (INSERT/UPDATE/DELETE, authenticated)
 
