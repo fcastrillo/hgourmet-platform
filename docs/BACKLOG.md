@@ -38,14 +38,14 @@
 ### FEAT-2: Panel de Administración
 
 - **Hypothesis:** Si entregamos un panel de administración intuitivo con gestión de productos y carga CSV, entonces las dueñas podrán mantener el catálogo actualizado de forma autónoma (sin soporte técnico) con una capacitación de ≤2 horas, medido por la capacidad de agregar/editar/ocultar productos sin asistencia externa.
-- **Status:** In Progress (7/8 stories delivered)
+- **Status:** Delivered (8/8 stories delivered)
 - **Priority:** High
 - **Stories:**
   - [x] HU-2.1: Autenticación de administradoras (High) ✅ (2026-02-22)
     > Estimate: S | Login con Magic Link (Email OTP), middleware de protección `/admin/*`, sesión server-side con `@supabase/ssr`, admin layout con sidebar, logout. ~1–2 días.
   - [x] HU-2.2: CRUD de productos desde el panel (High) ✅ (2026-02-22)
     > Estimate: M | Lista con paginación/búsqueda, formulario de creación/edición con upload de imagen a Supabase Storage, slug automático, toggles de visibilidad/featured/seasonal, eliminación con confirmación. ~3–4 días.
-  - [ ] HU-2.3: Importación masiva de productos vía CSV (High)
+  - [x] HU-2.3: Importación masiva de productos vía CSV (High) ✅ (2026-02-23)
     > Estimate: L (~2–3 días) | Parser client-side con mapeo `departamento+categoría CSV → categoría curada` (7 categorías). Limpieza de precios formato `$1,135.00` → `numeric`. Validación por fila con reporte de errores (duplicados SKU, precios inválidos, categoría no mapeada). Preview antes de importar. Upsert idempotente por SKU (`clave1`). Template descargable. Inventario real: 3,382 productos en 18 departamentos. Depende de ENABLER-2. Ver ADR-003 actualizado.
   - [x] HU-2.4: Gestión de categorías (Medium) ✅ (2026-02-22)
     > Estimate: S | CRUD de categorías, reordenamiento con controles ▲/▼, slug automático, protección FK contra eliminación con productos asociados. ~1 hora (AI-assisted).
@@ -156,6 +156,7 @@ Para evitar sobrecargar el backlog, el detalle operativo vive en `.spec/work/ENA
   - [x] HU-2.1: Autenticación de administradoras ✅ (2026-02-22) — FEAT-2
   - [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2
   - [x] HU-2.2: CRUD de productos desde el panel ✅ (2026-02-22) — FEAT-2
+  - [x] HU-2.3: Importación masiva de productos vía CSV ✅ (2026-02-23) — FEAT-2
   - [x] HU-2.7: Icon buttons y toggle inline en CategoryTable ✅ (2026-02-22) — FEAT-2
   - [x] HU-2.5: Gestión de banners rotativos ✅ (2026-02-22) — FEAT-2
   - [x] HU-2.6: Gestión de marcas/proveedores ✅ (2026-02-22) — FEAT-2

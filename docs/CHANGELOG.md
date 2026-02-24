@@ -19,6 +19,20 @@
 
 ---
 
+## [2026-02-23] — HU-2.3: Importación masiva de productos vía CSV
+
+**Feature:** FEAT-2 — Panel de Administración
+**Benefit:** Las administradoras pueden cargar catálogos de productos en bloque desde CSV con validación por fila, importación parcial resiliente e idempotencia por SKU, reduciendo drásticamente el esfuerzo manual para migrar y mantener inventario de alto volumen.
+**Changes:**
+- Nuevo flujo `/admin/productos/importar` con preview client-side, resumen de resultados y reporte de errores por fila.
+- Nuevo motor de importación modular en `src/lib/import/csv/` (parsing, normalización, mapeo por reglas versionadas, validación y upsert).
+- Server Action `importProductsCsv` con pipeline completo: parse → map → validate → upsert → persistencia de auditoría en staging (`import_batches`, `product_import_raw`, `product_import_issues`).
+- Integración de acceso rápido desde tabla de productos (`Importar CSV`) y template descargable para carga.
+- Mejoras de UX post-importación para evitar métricas confusas y mostrar de forma explícita filas omitidas.
+**Tests:** 51 nuevos tests de integración (`hu-2.3-scenarios.test.tsx`) + smoke de regresión HU-2.2 (80/80 passing en validación conjunta)
+
+---
+
 ## [2026-02-23] — ENABLER-2: Schema Evolution + Curación de Categorías
 
 **Feature:** ENABLERS — Technical / Infrastructure
