@@ -3,6 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/slugify";
+import { parseCsvText } from "@/lib/import/csv/parseCsv";
+import { validateRows } from "@/lib/import/csv/validators";
+import { upsertProducts } from "@/lib/import/csv/upsert";
+import { persistStagingBatch, loadMappingRules } from "@/lib/import/csv/staging";
+import type { ImportSummary } from "@/lib/import/csv/types";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -324,6 +329,149 @@ export async function deleteProduct(
 
   revalidateProductPaths();
   return { success: true };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HU-2.3: CSV Import Action
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Server Action: receives a CSV File from the import panel, parses + validates
+ * + upserts products, persists staging audit records, and returns a summary.
+ */
+export async function importProductsCsv(
+  formData: FormData,
+): Promise<{ success: true; summary: ImportSummary } | { success: false; error: string }> {
+  const file = formData.get("csv_file") as File | null;
+  if (!file || file.size === 0) {
+    return { success: false, error: "No se recibió ningún archivo CSV." };
+  }
+
+  const MAPPING_VERSION = "v1";
+  const csvText = await file.text();
+
+  // ── Step 1: Parse raw CSV ────────────────────────────────────────────────
+  const { validRows: parsedRows, issues: parseIssues } = parseCsvText(csvText);
+
+  const supabase = await createClient();
+
+  // ── Step 2: Load mapping rules from DB ──────────────────────────────────
+  let rules;
+  try {
+    rules = await loadMappingRules(supabase, MAPPING_VERSION);
+  } catch {
+    return { success: false, error: "Error al cargar las reglas de mapeo de categorías." };
+  }
+
+  // ── Step 3: Load curated categories (name → id) ─────────────────────────
+  const { data: categories, error: catError } = await supabase
+    .from("categories")
+    .select("id, name")
+    .eq("is_active", true);
+
+  if (catError) {
+    return { success: false, error: "Error al cargar las categorías del catálogo." };
+  }
+
+  const categoryIdsByName = new Map<string, string>(
+    (categories ?? []).map((c) => {
+      const cat = c as { id: string; name: string };
+      return [cat.name, cat.id];
+    }),
+  );
+
+  // ── Step 4: Load existing SKUs for duplicate detection ──────────────────
+  const skusInFile = parsedRows
+    .map((r) => r.data.sku)
+    .filter((s): s is string => s !== null);
+
+  const existingSkus = new Set<string>();
+  if (skusInFile.length > 0) {
+    const { data: existingSku } = await supabase
+      .from("products")
+      .select("sku")
+      .in("sku", skusInFile);
+
+    for (const row of existingSku ?? []) {
+      const r = row as { sku: string | null };
+      if (r.sku) existingSkus.add(r.sku);
+    }
+  }
+
+  // ── Step 5: Validate + resolve categories ───────────────────────────────
+  const { validatedRows, issues: allIssues } = validateRows({
+    parsedRows,
+    parseIssues,
+    rules,
+    existingSkus,
+    categoryIdsByName,
+  });
+
+  // ── Step 6: Upsert valid products ────────────────────────────────────────
+  let upsertResult = { created: 0, updated: 0, skipped: 0 };
+  if (validatedRows.length > 0) {
+    try {
+      upsertResult = await upsertProducts(supabase, validatedRows);
+    } catch {
+      return { success: false, error: "Error al importar productos a la base de datos." };
+    }
+  }
+
+  // ── Step 7: Persist staging audit ────────────────────────────────────────
+  const totalRows = parsedRows.length + parseIssues.filter((i) => i.code === "MISSING_FIELD" || i.code === "INVALID_PRICE").length;
+  const dupSkipCount = allIssues.filter((i) => i.code === "DUPLICATE_SKU").length;
+
+  let batchId = "";
+  try {
+    // Rebuild raw rows map from original parse (sourceRow → original cells)
+    // We send parsedRows payload as best-effort audit (normalized form)
+    const rawRows = parsedRows.map((r) => ({
+      sourceRow: r.sourceRow,
+      payload: r.data as unknown as Record<string, unknown>,
+    }));
+
+    batchId = await persistStagingBatch(supabase, {
+      filename: file.name,
+      fileHash: await computeFileHash(csvText),
+      mappingVersion: MAPPING_VERSION,
+      totalRows: totalRows + parsedRows.length - parsedRows.length, // all data rows
+      rawRows,
+      issues: allIssues,
+      rowsCreated: upsertResult.created,
+      rowsUpdated: upsertResult.updated,
+      rowsSkipped: dupSkipCount + upsertResult.skipped,
+      rowsErrored: allIssues.filter((i) => i.code !== "DUPLICATE_SKU").length,
+    });
+  } catch {
+    // Staging failure is non-fatal — products were already upserted
+    batchId = "staging-error";
+  }
+
+  revalidatePath("/admin/productos");
+  revalidatePath("/categorias", "layout");
+  revalidatePath("/");
+
+  const summary: ImportSummary = {
+    batchId,
+    totalRows: parsedRows.length + parseIssues.length,
+    created: upsertResult.created,
+    updated: upsertResult.updated,
+    skipped: dupSkipCount,
+    errored: allIssues.filter((i) => i.code !== "DUPLICATE_SKU").length,
+    issues: allIssues,
+  };
+
+  return { success: true, summary };
+}
+
+/** Lightweight hash using djb2 — avoids Web Crypto API complexity in server actions. */
+async function computeFileHash(text: string): Promise<string> {
+  let h = 5381;
+  for (let i = 0; i < text.length; i++) {
+    h = ((h << 5) + h) ^ text.charCodeAt(i);
+    h = h >>> 0; // keep unsigned 32-bit
+  }
+  return h.toString(16);
 }
 
 export async function toggleProductVisibility(

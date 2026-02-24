@@ -1,0 +1,4 @@
+nombre,descripcion,precio,departamento,categoria,clave1,clave2,codigo_sat,disponible,destacado,temporada
+"Chocolate Amargo 70%","Chocolate de cobertura de alta calidad","125.00","HGOURMET","chocolate","CHOC-001","7506000000000","21061000",true,false,false
+"Molde para pastel redondo 20cm","Molde desmontable antiadherente","89.50","Moldes","moldes","MOLD-045","","",true,false,false
+"Capacillo #6 paquete 100pz","Capacillo de papel para cupcake","35.00","Capacillos","capacillos","CAP-006","","",true,false,false
