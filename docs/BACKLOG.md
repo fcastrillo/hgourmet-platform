@@ -65,14 +65,14 @@
 > Estimate: M (rollup) | 3 stories: 2×S + 1×XS; esfuerzo total ~1–2 días por UI cross-page + validaciones + paridad visual.
 
 - **Hypothesis:** Si entregamos un canal de comunicación integrado con WhatsApp y redes sociales desde cada punto del catálogo, entonces los clientes podrán pasar de la consulta al pedido en un solo clic, medido por ≥50 pedidos confirmados vía WhatsApp originados desde la web en el primer mes.
-- **Status:** In Progress (2/3 stories delivered; HU-3.1 y HU-3.2 completadas, pendiente HU-3.3)
+- **Status:** Delivered (3/3 stories delivered) ✅ (2026-02-23)
 - **Priority:** High
 - **Stories:**
   - [x] HU-3.1: Botón fijo de WhatsApp en todo el sitio (High) ✅ (2026-02-23)
     > Estimate: XS | Componente flotante global en layout storefront con deep link `wa.me`, fallback por configuración inválida y ajuste visual; cambio acotado sin lógica de datos nueva.
   - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto (High) ✅ (2026-02-21)
     > Estimate: S | CTA contextual por producto con composición segura de mensaje y manejo de datos incompletos; requiere coordinación de UI + formato de enlace dinámico.
-  - [ ] HU-3.3: Página de contacto (Medium)
+  - [x] HU-3.3: Página de contacto (Medium) ✅ (2026-02-23)
     > Estimate: S | Nueva ruta `/contacto` con layout completo, enlaces sociales, mapa placeholder y formulario con validaciones/estados; sin integración externa obligatoria en esta iteración.
 
 ---
@@ -167,6 +167,7 @@ Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir 
 - FEAT-3
   - [x] HU-3.1: Botón fijo de WhatsApp en todo el sitio ✅ (2026-02-23)
   - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto ✅ (2026-02-21)
+  - [x] HU-3.3: Página de contacto ✅ (2026-02-23)
 - FEAT-4
   - [x] HU-4.3: Sección de marcas HGourmet ✅ (2026-02-23) — FEAT-4
   - [x] HU-4.4: Sección de recetas y tips ✅ (2026-02-22) — FEAT-4

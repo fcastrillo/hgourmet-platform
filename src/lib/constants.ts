@@ -4,7 +4,7 @@ export const WHATSAPP_NUMBER = "525550682072";
 export const SOCIAL_LINKS = {
   whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,
   facebook: "https://facebook.com/hgourmetoficial",
-  instagram: "https://instagram.com/hgourmet",
+  instagram: "https://instagram.com/hgourmet.mid",
 } as const;
 
 export const STORE_INFO = {

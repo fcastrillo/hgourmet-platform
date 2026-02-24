@@ -19,6 +19,20 @@
 
 ---
 
+## [2026-02-23] — HU-3.3: Página de contacto
+
+**Feature:** FEAT-3 — Canal de Comunicación y Conversión WhatsApp
+**Benefit:** Los clientes cuentan con un punto de contacto unificado y accesible para visitar la tienda o iniciar conversación por WhatsApp/redes sociales desde `/contacto`, reduciendo fricción en la comunicación omnicanal.
+**Changes:**
+- Nueva ruta `src/app/(storefront)/contacto/page.tsx` [SC] con jerarquía visual alineada al prototipo Lovable, bloque de información (dirección, teléfono, email, horario), mapa placeholder y enlaces sociales seguros.
+- Nuevo componente `src/components/storefront/ContactForm.tsx` [CC] con validación client-side de nombre/email/mensaje, mensajes de error por campo y estado de confirmación placeholder sin recarga abrupta.
+- `src/lib/constants.ts` actualizado con `STORE_INFO.hours` para centralizar datos de contacto.
+- Ajuste de configuración social: `SOCIAL_LINKS.instagram` actualizado a perfil oficial (`https://instagram.com/hgourmet.mid`).
+- Cumplimiento de ADR-006 para colores de marca de terceros vía `style` inline y ADR-011 para SVG con `width`/`height` nativos.
+**Tests:** 23 nuevos tests (`hu-3.3-scenarios.test.tsx`) — total acumulado: 291
+
+---
+
 ## [2026-02-23] — HU-3.1: Botón fijo de WhatsApp en todo el sitio
 
 **Feature:** FEAT-3 — Canal de Comunicación y Conversión WhatsApp
