@@ -7,9 +7,9 @@ import { CategoryNotFound } from "@/components/storefront/CategoryNotFound";
 import type { Category, CategoryWithProductCount, Product } from "@/types/database";
 
 const activeCategories: CategoryWithProductCount[] = [
-  { id: "c1", name: "Chocolate", slug: "chocolate", description: null, display_order: 1, is_active: true, created_at: "", product_count: 5 },
-  { id: "c2", name: "Harinas", slug: "harinas", description: null, display_order: 2, is_active: true, created_at: "", product_count: 3 },
-  { id: "c3", name: "Moldes", slug: "moldes", description: null, display_order: 3, is_active: true, created_at: "", product_count: 8 },
+  { id: "c1", name: "Chocolate", slug: "chocolate", description: null, image_url: null, display_order: 1, is_active: true, created_at: "", product_count: 5 },
+  { id: "c2", name: "Harinas", slug: "harinas", description: null, image_url: null, display_order: 2, is_active: true, created_at: "", product_count: 3 },
+  { id: "c3", name: "Moldes", slug: "moldes", description: null, image_url: null, display_order: 3, is_active: true, created_at: "", product_count: 8 },
 ];
 
 const inactiveCategory: Category = {
@@ -17,6 +17,7 @@ const inactiveCategory: Category = {
   name: "Temporada Navideña",
   slug: "temporada-navidena",
   description: null,
+  image_url: null,
   display_order: 10,
   is_active: false,
   created_at: "",

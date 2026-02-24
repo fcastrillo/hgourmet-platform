@@ -5,9 +5,9 @@ import { Footer } from "@/components/storefront/Footer";
 import { WhatsAppFloatingButton } from "@/components/storefront/WhatsAppFloatingButton";
 
 const mockCategories = [
-  { id: "1", name: "Chocolate", slug: "chocolate", description: null, display_order: 1, is_active: true, created_at: "" },
-  { id: "2", name: "Harinas", slug: "harinas", description: null, display_order: 2, is_active: true, created_at: "" },
-  { id: "3", name: "Moldes", slug: "moldes", description: null, display_order: 3, is_active: true, created_at: "" },
+  { id: "1", name: "Chocolate", slug: "chocolate", description: null, image_url: null, display_order: 1, is_active: true, created_at: "" },
+  { id: "2", name: "Harinas", slug: "harinas", description: null, image_url: null, display_order: 2, is_active: true, created_at: "" },
+  { id: "3", name: "Moldes", slug: "moldes", description: null, image_url: null, display_order: 3, is_active: true, created_at: "" },
 ];
 
 describe("Storefront Header", () => {

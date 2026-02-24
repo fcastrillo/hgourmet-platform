@@ -8,6 +8,7 @@ const mockCategory: Category = {
   name: "Chocolate",
   slug: "chocolate",
   description: "Los mejores chocolates importados",
+  image_url: null,
   display_order: 1,
   is_active: true,
   created_at: "",

@@ -278,9 +278,8 @@ export async function updateProduct(
     updated_at: new Date().toISOString(),
   };
 
-  // @ts-expect-error — ADR-005: Supabase chained .update().eq() resolves param as never
-  const { error } = await supabase
-    .from("products")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("products") as any)
     .update(changes)
     .eq("id", id);
 
@@ -480,9 +479,8 @@ export async function toggleProductVisibility(
 ): Promise<ActionResult> {
   const supabase = await createClient();
 
-  // @ts-expect-error — ADR-005: Supabase chained .update().eq() resolves param as never
-  const { error } = await supabase
-    .from("products")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("products") as any)
     .update({ is_visible: isVisible, updated_at: new Date().toISOString() })
     .eq("id", id);
 

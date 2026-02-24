@@ -19,11 +19,12 @@ export default async function EditarProductoPage({ params }: PageProps) {
     notFound();
   }
 
-  const categories = categoriesWithCount.map(({ id, name, slug, description, display_order, is_active, created_at }) => ({
+  const categories = categoriesWithCount.map(({ id, name, slug, description, image_url, display_order, is_active, created_at }) => ({
     id,
     name,
     slug,
     description,
+    image_url,
     display_order,
     is_active,
     created_at,
