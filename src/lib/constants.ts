@@ -1,5 +1,5 @@
-export const WHATSAPP_NUMBER = "525550682072";
 //export const WHATSAPP_NUMBER = "529991978260";
+export const WHATSAPP_NUMBER = "525550682072";
 
 export const SOCIAL_LINKS = {
   whatsapp: `https://wa.me/${WHATSAPP_NUMBER}`,
@@ -12,6 +12,8 @@ export const STORE_INFO = {
   tagline: "Empresa proveedora de productos para repostería y pastería",
   city: "Mérida, Yucatán",
   phone: WHATSAPP_NUMBER,
+  email: "hgourmetoficial@gmail.com",
+  address: "Calle 5, #117, Entre 22 y 3, Local 5, Mérida, México, 97139",
 } as const;
 
 export const PRODUCTS_PER_PAGE = 12;
