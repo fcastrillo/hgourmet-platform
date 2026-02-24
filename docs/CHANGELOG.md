@@ -19,6 +19,20 @@
 
 ---
 
+## [2026-02-24] — HU-1.5: Categorías con imagen administrable y visual homologado
+
+**Feature:** FEAT-1 — Catálogo Digital de Productos
+**Benefit:** Las administradoras pueden gestionar imágenes de categorías de forma autónoma y el storefront mantiene consistencia visual con fallback robusto (imagen real, fallback curado por categoría y fallback final seguro), mejorando calidad percibida sin depender de cambios manuales en código.
+**Changes:**
+- `CategoryFormModal` ahora soporta upload/reemplazo/remoción de imagen con preview y persistencia correcta al guardar.
+- Server Actions de categorías (`create/update/delete`) extienden manejo de `image_url`, validación de archivo y limpieza de archivos en Supabase Storage.
+- Se homologó visualización entre `CategoryCard` y `CategoryShowcase` usando `CategoryImage` compartido.
+- Se incorporaron íconos curados en `public/images/categories/*` como fallback estático por slug (`bases`, `chocolates`, `decoracion`, `desechables`, `insumos`, `moldes`, `utensilios`) para alinear con referencia Lovable.
+- Ajuste visual de imágenes de categoría a `object-contain` para evitar recortes no deseados en el storefront.
+**Tests:** 16 nuevos tests en `hu-1.5-scenarios.test.tsx` + actualizaciones de fixtures de integración; suite total en verde (375/375)
+
+---
+
 ## [2026-02-23] — HU-2.3: Importación masiva de productos vía CSV
 
 **Feature:** FEAT-2 — Panel de Administración

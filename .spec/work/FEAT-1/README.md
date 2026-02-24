@@ -16,6 +16,7 @@
 | HU-1.2 | Ficha de detalle de producto | High | [ ] Pending |
 | HU-1.3 | Búsqueda y filtrado de productos | Medium | [ ] Pending |
 | HU-1.4 | Sección "Lo más vendido" y "Productos de temporada" | Medium | [ ] Pending |
+| HU-1.5 | Categorías con imagen administrable y visual homologado | Medium | [ ] Pending |
 
 ## Acceptance Criteria (Feature Level)
 
