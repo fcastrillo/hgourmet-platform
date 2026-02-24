@@ -19,6 +19,20 @@
 
 ---
 
+## [2026-02-23] — ENABLER-2: Schema Evolution + Curación de Categorías
+
+**Feature:** ENABLERS — Technical / Infrastructure
+**Benefit:** Desbloquea HU-1.5 (imágenes en categorías) y HU-2.3 (importación masiva CSV) al establecer la arquitectura de datos de dominio + staging con mapeo de categorías versionado y trazable. Las administradoras podrán importar 3,382 productos del inventario real sin pérdida de trazabilidad y podrán re-clasificar productos con nuevas versiones de mapeo sin re-subir archivos.
+**Changes:**
+- Migración SQL `005_enabler2_schema_evolution.sql`: `categories.image_url`, `products.barcode` + `sat_code`, tablas staging (`import_batches`, `product_import_raw`, `category_mapping_rules`, `product_import_issues`), RLS admin-only, índices de reproceso.
+- Seed de 35 reglas V1 con sistema de prioridad (10=dept-base / 20=cat-override / 30=exact dept+cat) que cubre los 18 departamentos del inventario real.
+- `TECH_SPEC.md` actualizado con nuevo data model y ADR-003 revisado (arquitectura 2 capas + motor de mapeo).
+- `CATEGORY_MAPPING_V1.md` completado con tabla de prioridades y notas de operación para V2.
+- `CSV_STAGING_STRATEGY.md` actualizado con flujo de importación detallado y códigos de issue.
+**Tests:** 17 tests de integración pasando (resolución de reglas, UNMAPPED, versionado, separación staging/dominio)
+
+---
+
 ## [2026-02-23] — HU-3.3: Página de contacto
 
 **Feature:** FEAT-3 — Canal de Comunicación y Conversión WhatsApp
