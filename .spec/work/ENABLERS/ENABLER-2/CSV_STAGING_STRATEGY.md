@@ -50,13 +50,17 @@ Objetivo: operación de storefront y admin.
 
 ## Flujo de Importación
 
-1. Subir archivo y crear `import_batch`
-2. Persistir filas crudas en `product_import_raw`
-3. Parsear y validar (precio, sku, campos requeridos)
-4. Resolver categoría curada usando `category_mapping_rules`
-5. Upsert en `products` por `sku`
-6. Registrar issues por fila en `product_import_issues`
-7. Publicar resumen: creados, actualizados, omitidos, errores
+1. Subir archivo y crear `import_batch` (con `source_file_hash` para detectar duplicados)
+2. Persistir filas crudas en `product_import_raw` (payload completo como JSONB)
+3. Parsear y validar por fila: precio, sku, campos requeridos
+4. Resolver categoría curada usando `category_mapping_rules`:
+   - normalizar `departamento` y `categoria` a minúsculas sin acentos
+   - buscar regla con mayor `priority` que haga match (ver `CATEGORY_MAPPING_V1.md`)
+   - si ninguna regla aplica → registrar `UNMAPPED_CATEGORY` en `product_import_issues`
+5. Upsert en `products` por `sku` (idempotente — `clave1` del CSV)
+6. Registrar issues por fila en `product_import_issues` con código y detalle
+7. Actualizar contadores en `import_batches` y marcar `status = 'completed'` o `'failed'`
+8. Publicar resumen: creados, actualizados, omitidos, errores
 
 ## Criterios BDD de Estrategia
 

@@ -16,9 +16,12 @@
 
 Para minimizar mapeo manual, se aplican en este orden:
 
-1. **Override por `categoria` exacta** (si existe regla explícita)
-2. **Fallback por `departamento`**
-3. **Si no hay match**: enviar a cola de revisión manual (`UNMAPPED`)
+1. **Base por `departamento`**: asignar una categoría curada inicial con la tabla V1.
+2. **Refinamiento por contexto del mismo departamento**: ajustar casos recurrentes observados dentro del departamento (sin saltar aún a excepciones finas).
+3. **Override final**: aplicar regla explícita de excepción (por `departamento+categoria` o por `categoria`) para corregir casos ambiguos.
+4. **Si no hay match**: enviar a cola de revisión manual (`UNMAPPED`).
+
+> Nota operativa: en V1, `Refrigeracion -> Insumos` queda como regla base aprobada para esta iteración.
 
 ## Mapeo Base por Departamento (V1)
 
@@ -27,7 +30,7 @@ Para minimizar mapeo manual, se aplican en este orden:
 | Herramientas | Utensilios |
 | Cortadores | Utensilios |
 | Accesorios | Utensilios |
-| Refrigeracion | Utensilios |
+| Refrigeracion | Insumos |
 | Decoracion | Decoración |
 | Colorantes | Decoración |
 | Velas | Decoración |
@@ -45,7 +48,7 @@ Para minimizar mapeo manual, se aplican en este orden:
 
 ## Overrides por Categoría (V1)
 
-Estos overrides corrigen ambigüedades conocidas y prevalecen sobre el fallback por departamento.
+Estos overrides se aplican en el paso final para corregir ambigüedades conocidas sobre el mapeo base por departamento.
 
 | Categoria CSV (normalizada) | Categoría Curada |
 |:--|:--|
@@ -64,9 +67,30 @@ Estos overrides corrigen ambigüedades conocidas y prevalecen sobre el fallback 
 | raspas | Utensilios |
 | espatulas | Utensilios |
 
+## Overrides por Departamento + Categoría (V1)
+
+Estos overrides tienen prioridad sobre el mapeo base por departamento y se usan cuando la misma `categoria` puede significar algo distinto según su `departamento`.
+
+| Departamento CSV (normalizado) | Categoria CSV (normalizada) | Categoría Curada |
+|:--|:--|:--|
+| refrigeracion | lacteos | Insumos |
+| insumos | lacteos | Insumos |
+| hgourmet | chocolate | Chocolates |
+
+## Prioridad de Resolución en Base de Datos
+
+La tabla `category_mapping_rules` codifica la prioridad explícitamente:
+
+| `priority` | Tipo de regla | `departamento_raw` | `categoria_raw` |
+|:--:|:--|:--|:--|
+| 10 | Base por departamento | valor específico | `'*'` |
+| 20 | Override por categoría | `'*'` | valor específico |
+| 30 | Override exacto dept+cat | valor específico | valor específico |
+
+Resolución: se selecciona la regla con mayor `priority` que haga match con el par del CSV (usando `'*'` como comodín). Si ninguna regla aplica → `UNMAPPED`.
+
 ## Nota de Operación
 
-- Este V1 documenta el enfoque acordado con las dueñas y el criterio de “probablemente” aprobado para acelerar.
-- Durante HU-2.3, cada fila `UNMAPPED` se captura en reporte de issues para crear **V2** del mapeo sin bloquear importación parcial.
-- Si las dueñas cambian criterios, se incrementa `mapping_version` y se reprocesa desde staging.
-
+- Este V1 documenta el enfoque acordado con las dueñas y el criterio aprobado para acelerar la importación inicial.
+- Durante HU-2.3, cada fila `UNMAPPED` se captura en `product_import_issues` (código `UNMAPPED_CATEGORY`) para crear **V2** del mapeo sin bloquear importación parcial.
+- Si las dueñas cambian criterios, se incrementa `mapping_version` a `v2` y se reprocesa desde staging sin re-subir el CSV original.

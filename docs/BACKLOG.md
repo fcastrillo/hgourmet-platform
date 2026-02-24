@@ -101,8 +101,8 @@
 - [ ] ENABLER-1: Cloudflare Tunnel para preview en desarrollo (Low)
   > Estimate: XS (~30 min) | Instalar `cloudflared`, crear script `npm run tunnel` para exponer `localhost:3000` en URL pública temporal. Documentar en README. No requiere spec ni objetivo formal — es un chore de infraestructura.
 
-- [ ] ENABLER-2: Schema Evolution + Curación de Categorías (High)
-  > Estimate: S (~4h) | Migración SQL: agregar `image_url text` a `categories`, agregar `barcode text` y `sat_code text` a `products`. Definir estrategia de staging+curated para reimportaciones y versionado de mapeo. Crear las 7 categorías curadas en Supabase (reemplazando las 6 del prototipo). Actualizar `TECH_SPEC.md` con nuevos campos y ADR-003 revisado.
+- [x] ENABLER-2: Schema Evolution + Curación de Categorías (High) ✅ (2026-02-23)
+  > Estimate: S (~4h) | Migración SQL `005_enabler2_schema_evolution.sql`: `categories.image_url`, `products.barcode` + `sat_code`, tablas staging (`import_batches`, `product_import_raw`, `category_mapping_rules`, `product_import_issues`), RLS admin-only, índices de reproceso, seed de 35 reglas V1. `TECH_SPEC.md` actualizado (data model + ADR-003 revisado). Desbloquea: HU-1.5 y HU-2.3.
 
 #### Decisión: 7 Categorías Curadas (2026-02-23)
 

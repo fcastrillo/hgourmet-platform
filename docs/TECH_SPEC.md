@@ -33,6 +33,7 @@
 | `name` | `text` | NOT NULL, UNIQUE | Category display name (e.g., "Chocolate", "Harinas") |
 | `slug` | `text` | NOT NULL, UNIQUE | URL-friendly identifier |
 | `description` | `text` | | Optional category description |
+| `image_url` | `text` | | Category image (Supabase Storage `category-images`) — added by ENABLER-2 for HU-1.5 |
 | `display_order` | `integer` | NOT NULL, default `0` | Sorting position in navigation |
 | `is_active` | `boolean` | NOT NULL, default `true` | Whether the category is visible |
 | `created_at` | `timestamptz` | NOT NULL, default `now()` | Creation timestamp |
@@ -48,7 +49,9 @@
 | `description` | `text` | | Product description |
 | `price` | `numeric(10,2)` | NOT NULL, CHECK > 0 | Price in MXN |
 | `image_url` | `text` | | Main product image (Supabase Storage) |
-| `sku` | `text` | UNIQUE | Stock-keeping unit for future POS integration |
+| `sku` | `text` | UNIQUE | Stock-keeping unit / import idempotency key (`clave1` in CSV) |
+| `barcode` | `text` | | Physical barcode (`clave2` in CSV) — added by ENABLER-2 |
+| `sat_code` | `text` | | SAT fiscal code for tax traceability — added by ENABLER-2 |
 | `is_available` | `boolean` | NOT NULL, default `true` | Whether the product is in stock |
 | `is_featured` | `boolean` | NOT NULL, default `false` | Shown in "Lo más vendido" |
 | `is_seasonal` | `boolean` | NOT NULL, default `false` | Shown in "Productos de temporada" |
@@ -103,9 +106,62 @@
 | `is_active` | `boolean` | NOT NULL, default `true` | Whether the brand is displayed |
 | `created_at` | `timestamptz` | NOT NULL, default `now()` | Creation timestamp |
 
+#### import_batches _(staging — ENABLER-2)_
+
+| Column | Type | Constraints | Description |
+|:-------|:-----|:------------|:------------|
+| `id` | `uuid` | PK | Primary key |
+| `source_filename` | `text` | NOT NULL | Original CSV filename |
+| `source_file_hash` | `text` | NOT NULL | MD5/SHA hash for duplicate detection |
+| `mapping_version` | `text` | NOT NULL | Version of mapping rules used (e.g., `v1`) |
+| `status` | `text` | NOT NULL, default `'pending'` | `pending / processing / completed / failed` |
+| `total_rows` | `integer` | | Total rows in the CSV |
+| `rows_created` | `integer` | NOT NULL, default `0` | New products inserted |
+| `rows_updated` | `integer` | NOT NULL, default `0` | Existing products updated |
+| `rows_skipped` | `integer` | NOT NULL, default `0` | Rows skipped (no change) |
+| `rows_errored` | `integer` | NOT NULL, default `0` | Rows with unresolvable issues |
+| `created_at` | `timestamptz` | NOT NULL | Upload timestamp |
+| `processed_at` | `timestamptz` | | Completion timestamp |
+
+#### product_import_raw _(staging — ENABLER-2)_
+
+| Column | Type | Constraints | Description |
+|:-------|:-----|:------------|:------------|
+| `id` | `uuid` | PK | Primary key |
+| `batch_id` | `uuid` | FK → import_batches.id, CASCADE | Parent batch |
+| `source_row_number` | `integer` | NOT NULL | Original row number in CSV |
+| `payload` | `jsonb` | NOT NULL | Full raw CSV row for audit and reprocessing |
+| `created_at` | `timestamptz` | NOT NULL | Insert timestamp |
+
+#### category_mapping_rules _(staging — ENABLER-2)_
+
+| Column | Type | Constraints | Description |
+|:-------|:-----|:------------|:------------|
+| `id` | `uuid` | PK | Primary key |
+| `mapping_version` | `text` | NOT NULL | e.g., `v1`, `v2` |
+| `departamento_raw` | `text` | NOT NULL | Normalized lowercase CSV value; `'*'` = wildcard |
+| `categoria_raw` | `text` | NOT NULL | Normalized lowercase CSV value; `'*'` = wildcard |
+| `curated_category` | `text` | NOT NULL | Target curated category name |
+| `priority` | `integer` | NOT NULL, CHECK IN (10,20,30) | Resolution priority: 10=dept-base, 20=cat-override, 30=exact |
+| `is_active` | `boolean` | NOT NULL, default `true` | Whether this rule is in use |
+| `created_at` | `timestamptz` | NOT NULL | Insert timestamp |
+
+#### product_import_issues _(staging — ENABLER-2)_
+
+| Column | Type | Constraints | Description |
+|:-------|:-----|:------------|:------------|
+| `id` | `uuid` | PK | Primary key |
+| `batch_id` | `uuid` | FK → import_batches.id, CASCADE | Parent batch |
+| `source_row_number` | `integer` | NOT NULL | Row that produced the issue |
+| `issue_code` | `text` | NOT NULL | `INVALID_PRICE / DUPLICATE_SKU / UNMAPPED_CATEGORY / MISSING_FIELD` |
+| `issue_detail` | `text` | NOT NULL | Human-readable description |
+| `created_at` | `timestamptz` | NOT NULL | Insert timestamp |
+
 ### Relationships
 
 - `products.category_id` → `categories.id` (FK, ON DELETE RESTRICT)
+- `product_import_raw.batch_id` → `import_batches.id` (FK, ON DELETE CASCADE)
+- `product_import_issues.batch_id` → `import_batches.id` (FK, ON DELETE CASCADE)
 
 ### Indexes
 
@@ -159,6 +215,8 @@
 | `recipe-images` | authenticated | Yes | Yes | Yes |
 | `brand-logos` | anon | No | Yes | No |
 | `brand-logos` | authenticated | Yes | Yes | Yes |
+| `category-images` | anon | No | Yes | No |
+| `category-images` | authenticated | Yes | Yes | Yes |
 
 ---
 
@@ -176,11 +234,14 @@
 - **Decision:** Use `https://wa.me/{number}?text={message}` deep links with pre-filled product context instead of API integration.
 - **Consequences:** Zero cost. No API quotas. Works on all devices. Limited tracking (use UTM params). Future migration to WhatsApp Business API possible in Fase 3+.
 
-### ADR-003: CSV Import for Bulk Product Upload
+### ADR-003: CSV Import with Staging Model and Versioned Category Mapping (revised — ENABLER-2)
 
-- **Context:** Store has 300-1000 products. Manual entry is impractical for initial load.
-- **Decision:** Build a CSV import feature in the admin panel that maps columns to product fields.
-- **Consequences:** Enables initial bulk load from POS export. Column mapping must handle edge cases (missing images, invalid prices). Validation and error reporting needed.
+- **Context:** Store has 3,382 products across 18 departments and 135 sub-categories. The client-facing catalog uses 7 curated categories. Manual entry is impractical; direct mapping from raw CSV to domain table loses auditability and makes re-imports destructive.
+- **Decision:** Implement a two-layer import architecture:
+  1. **Staging layer** (`import_batches`, `product_import_raw`, `product_import_issues`) persists the full raw CSV payload with a file hash for deduplication and row-level auditability.
+  2. **Domain layer** (`products`, `categories`) only receives curated, validated data.
+  3. **Versioned mapping** (`category_mapping_rules`) translates `departamento+categoria` → curated category using a prioritized rule engine (priority 10 dept-base / 20 cat-override / 30 exact dept+cat). Changing rules increments `mapping_version` and allows reprocessing historical batches without re-uploading files.
+- **Consequences:** Import is idempotent by `sku` (upsert). Row-level issues are captured in `product_import_issues` without blocking partial imports. Mapping V1 seeds 35 rules covering all 18 departments and known chocolate/utensil overrides. Future V2+ rules require no code changes — only new DB rows.
 
 ### ADR-004: SKU Field for Future POS Integration
 
