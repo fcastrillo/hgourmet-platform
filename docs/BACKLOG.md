@@ -104,6 +104,9 @@
 - [x] ENABLER-2: Schema Evolution + Curación de Categorías (High) ✅ (2026-02-23)
   > Estimate: S (~4h) | Migración SQL `005_enabler2_schema_evolution.sql`: `categories.image_url`, `products.barcode` + `sat_code`, tablas staging (`import_batches`, `product_import_raw`, `category_mapping_rules`, `product_import_issues`), RLS admin-only, índices de reproceso, seed de 35 reglas V1. `TECH_SPEC.md` actualizado (data model + ADR-003 revisado). Desbloquea: HU-1.5 y HU-2.3.
 
+- [ ] ENABLER-3: Hardening y performance del importador CSV (High)
+  > Estimate: M (~1–2 días) | Endurecer `upsert` por lotes para evitar fallos silenciosos (si falla un batch, degradar a fila individual con trazabilidad por error), corregir métricas reales de `created/updated/skipped/errored`, mejorar estrategia de generación de slug para evitar colisiones en lote, y optimizar throughput (batch configurable + menor roundtrip en updates). Objetivo: importar 3k+ filas con reporte confiable y sin pérdidas no explicadas.
+
 #### Decisión: 7 Categorías Curadas (2026-02-23)
 
 Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir de los 18 departamentos del inventario (3,382 productos): **Utensilios, Decoración, Bases, Desechables, Chocolates, Insumos, Moldes**.
@@ -113,6 +116,10 @@ Para evitar sobrecargar el backlog, el detalle operativo vive en `.spec/work/ENA
 - `.spec/work/ENABLERS/ENABLER-2/README.md` (arquitectura de datos y plan de ejecución)
 - `.spec/work/ENABLERS/ENABLER-2/CATEGORY_MAPPING_V1.md` (tabla completa `departamento+categoria -> categoria_curada`)
 - `.spec/work/ENABLERS/ENABLER-2/CSV_STAGING_STRATEGY.md` (qué columnas se conservan en staging vs dominio)
+
+Detalle de hardening/optimización del importador:
+
+- `.spec/work/ENABLERS/ENABLER-3/README.md`
 
 ---
 

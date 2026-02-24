@@ -31,6 +31,31 @@ def parse_price(series: pd.Series) -> pd.Series:
     return pd.to_numeric(cleaned, errors="coerce").fillna(0).round(2)
 
 
+def choose_price_column(df: pd.DataFrame, normalized_map: dict[str, str]) -> str:
+    """Pick the most reliable price source from known candidate columns."""
+    candidates: list[str] = []
+    if "precio1" in normalized_map:
+        candidates.append(normalized_map["precio1"])
+
+    # Some exports include malformed headers like "(s/n) precio con impuestos"
+    for norm_key, raw_col in normalized_map.items():
+        if "precio con impuestos" in norm_key and raw_col not in candidates:
+            candidates.append(raw_col)
+
+    if not candidates:
+        raise KeyError("No se encontró una columna de precio en el archivo fuente.")
+
+    best_col = candidates[0]
+    best_non_zero = -1
+    for col in candidates:
+        parsed = parse_price(df[col])
+        non_zero = int((parsed > 0).sum())
+        if non_zero > best_non_zero:
+            best_non_zero = non_zero
+            best_col = col
+    return best_col
+
+
 def convertir_inventario(archivo_origen: str, archivo_destino: str):
     df_origen = safe_read_csv(archivo_origen)
     df_origen.columns = df_origen.columns.str.strip()
@@ -39,7 +64,6 @@ def convertir_inventario(archivo_origen: str, archivo_destino: str):
 
     required_keys = {
         "descripcion": ["descripcion", "descripcion *"],
-        "precio1": ["precio1"],
         "departamento": ["departamento"],
         "categoria": ["categoria"],
         "clave1": ["clave1", "clave1 *"],
@@ -58,10 +82,12 @@ def convertir_inventario(archivo_origen: str, archivo_destino: str):
     if not sat_col:
         sat_col = "Unnamed: 15" if "Unnamed: 15" in df_origen.columns else df_origen.columns[-1]
 
+    price_col = choose_price_column(df_origen, normalized_map)
+
     df_final = pd.DataFrame()
     df_final["nombre"] = df_origen[resolved["descripcion"]].astype(str).str.strip()
     df_final["descripcion"] = df_final["nombre"]
-    df_final["precio"] = parse_price(df_origen[resolved["precio1"]])
+    df_final["precio"] = parse_price(df_origen[price_col])
     df_final["departamento"] = df_origen[resolved["departamento"]].astype(str).str.strip()
     df_final["categoria"] = df_origen[resolved["categoria"]].astype(str).str.strip()
     df_final["clave1"] = df_origen[resolved["clave1"]].astype(str).str.strip()
@@ -89,7 +115,13 @@ def convertir_inventario(archivo_origen: str, archivo_destino: str):
     df_final = df_final[ordered_cols]
 
     df_final.to_csv(archivo_destino, index=False, encoding="utf-8")
-    print(f"Conversion completada. Filas: {len(df_final)}. Archivo: {archivo_destino}")
+    non_zero_prices = int((df_final["precio"] > 0).sum())
+    print(
+        f"Conversion completada. Filas: {len(df_final)}. "
+        f"Precios > 0: {non_zero_prices}. "
+        f"Columna de precio usada: {price_col}. "
+        f"Archivo: {archivo_destino}"
+    )
 
 
 if __name__ == "__main__":
