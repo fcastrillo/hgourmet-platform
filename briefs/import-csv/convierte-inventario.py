@@ -94,7 +94,6 @@ def convertir_inventario(archivo_origen: str, archivo_destino: str):
 
 if __name__ == "__main__":
     script_dir = Path(__file__).resolve().parent
-    briefs_dir = script_dir.parent
-    archivo_origen = briefs_dir / "Inventario_Productos.csv"
+    archivo_origen = script_dir / "source" / "inventory" / "Inventario_Productos.csv"
     archivo_destino = script_dir / "productos_listos_para_importar.csv"
     convertir_inventario(str(archivo_origen), str(archivo_destino))

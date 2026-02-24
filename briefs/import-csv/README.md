@@ -3,9 +3,17 @@
 Esta carpeta contiene utileria de apoyo para preparar la importacion masiva de productos.
 No forma parte del runtime de la app web.
 
+## Estructura
+
+- `source/inventory/Inventario_Productos.csv`: fuente principal para convertir.
+- `source/inventory/Inventario_Productos.xlsx`: fuente original en Excel (referencia).
+- `source/mapping/mapeo_01.jpeg` y `source/mapping/mapeo_02.jpeg`: referencia visual del mapeo de categorias.
+- `convierte-inventario.py`: transforma la fuente al formato de importacion.
+- `productos_listos_para_importar.csv`: salida convertida lista para cargar en admin.
+
 ## Archivos
 
-- `convierte-inventario.py`: transforma `briefs/Inventario_Productos.csv` al formato de importacion.
+- `convierte-inventario.py`: transforma `source/inventory/Inventario_Productos.csv` al formato de importacion.
 - `productos_listos_para_importar.csv`: salida convertida lista para cargar en admin.
 
 ## Uso
