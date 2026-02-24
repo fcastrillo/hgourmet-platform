@@ -14,6 +14,7 @@ export const STORE_INFO = {
   phone: WHATSAPP_NUMBER,
   email: "hgourmetoficial@gmail.com",
   address: "Calle 5, #117, Entre 22 y 3, Local 5, Mérida, México, 97139",
+  hours: "Lun – Sáb: 9:00 – 18:00 · Domingos: cerrado",
 } as const;
 
 export const PRODUCTS_PER_PAGE = 12;
