@@ -27,65 +27,55 @@
 - **Dependencies:** ENABLER-2 completado (desbloqueante), HU-2.2 (CRUD de productos) y ADR-003 vigente.
 - **Risk areas:** parsing de CSV grande en cliente, normalización de precio MXN (`$1,135.00`), mapeo ambiguo de categoría, idempotencia por SKU, feedback de errores por fila.
 
-### Task 1: Definir contrato de datos del importador (~40 min)
-- **Type:** [TEST]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `tests/integration/hu-2.3-scenarios.test.tsx` (new), `src/lib/import/csv/types.ts` (new)
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+### Task 1: Definir contrato de datos del importador ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Files:** `src/lib/import/csv/types.ts` (new)
+- **Commit:** 32eed24
 
-### Task 2: Implementar parser CSV y normalizadores base (~55 min)
-- **Type:** [CC]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `src/lib/import/csv/parseCsv.ts` (new), `src/lib/import/csv/normalizers.ts` (new), `src/lib/import/csv/types.ts`
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+### Task 2: Implementar parser CSV y normalizadores base ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Files:** `src/lib/import/csv/parseCsv.ts` (new), `src/lib/import/csv/normalizers.ts` (new)
+- **Commit:** 32eed24
 
-### Task 3: Resolver mapeo departamento+categoría hacia categoría curada (~55 min)
-- **Type:** [SA]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `src/app/(admin)/admin/productos/actions.ts`, `src/lib/import/csv/mapping.ts` (new)
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+### Task 3: Motor de mapeo categorías ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Files:** `src/lib/import/csv/mapping.ts` (new)
+- **Commit:** 32eed24
 
-### Task 4: Validar filas y generar reporte de errores por fila (~50 min)
-- **Type:** [CC]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `src/lib/import/csv/validators.ts` (new), `src/lib/import/csv/issue-codes.ts` (new), `tests/integration/hu-2.3-scenarios.test.tsx`
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+### Task 4: Validadores por fila + issue codes ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Files:** `src/lib/import/csv/validators.ts` (new)
+- **Commit:** 32eed24
 
-### Task 5: Construir preview de importación y resumen pre-confirmación (~50 min)
-- **Type:** [CC]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
+### Task 5: UI preview + panel de importación ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
 - **Files:** `src/components/admin/ProductCsvImportPanel.tsx` (new), `src/components/admin/ProductCsvPreviewTable.tsx` (new), `src/app/(admin)/admin/productos/importar/page.tsx` (new)
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+- **Commit:** 32eed24
 
-### Task 6: Implementar Server Action de importación parcial idempotente (~55 min)
-- **Type:** [SA]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
+### Task 6: Server Action importación idempotente ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
 - **Files:** `src/app/(admin)/admin/productos/actions.ts`, `src/lib/import/csv/upsert.ts` (new)
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+- **Commit:** 32eed24
 
-### Task 7: Persistir auditoría de batch y issues en staging (~50 min)
-- **Type:** [DB]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `src/app/(admin)/admin/productos/actions.ts`, `src/lib/import/csv/staging.ts` (new), `tests/integration/enabler-2-schema-scenarios.test.ts`
-- **Verification:** `npm run test:run -- tests/integration/enabler-2-schema-scenarios.test.ts tests/integration/hu-2.3-scenarios.test.tsx`
+### Task 7: Staging/auditoría batch ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Files:** `src/lib/import/csv/staging.ts` (new)
+- **Commit:** 32eed24
 
-### Task 8: Integrar navegación admin + descarga de template CSV (~40 min)
-- **Type:** [SC]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `src/app/(admin)/admin/productos/page.tsx`, `src/components/admin/AdminSidebar.tsx`, `public/templates/product-import-template.csv` (new)
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+### Task 8: Navegación admin + template CSV ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Files:** `src/components/admin/ProductTable.tsx` (botón Importar CSV), `public/templates/product-import-template.csv` (new)
+- **Commit:** 32eed24
 
-### Task 9: Endurecer UX de errores, estados de carga y éxito/cancelación (~45 min)
-- **Type:** [CC]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `src/components/admin/ProductCsvImportPanel.tsx`, `src/components/admin/ProductCsvPreviewTable.tsx`, `tests/integration/hu-2.3-scenarios.test.tsx`
-- **Verification:** `npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx`
+### Task 9: UX errores, loading y éxito ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Files:** `src/components/admin/ProductCsvImportPanel.tsx`
+- **Commit:** 32eed24
 
-### Task 10: Validación integral de la HU y smoke de regresión admin (~35 min)
-- **Type:** [TEST]
-- **Cycle:** IMPLEMENT → TEST → REFACTOR
-- **Files:** `tests/integration/hu-2.3-scenarios.test.tsx`, `tests/integration/hu-2.2-scenarios.test.tsx`
-- **Verification:** `npm run lint && npm run test:run -- tests/integration/hu-2.3-scenarios.test.tsx tests/integration/hu-2.2-scenarios.test.tsx`
+### Task 10: Smoke regresión + commit final ✅
+- **Cycle:** IMPLEMENT ✅ → TEST ✅ → REFACTOR ✅
+- **Result:** 51 tests HU-2.3 + 29 tests HU-2.2 = 80/80 passing
+- **Commit:** 32eed24
 
 ## Database Changes (if applicable)
 No schema migration required in this objective. The implementation must reuse ENABLER-2 structures already deployed:
@@ -96,19 +86,37 @@ No schema migration required in this objective. The implementation must reuse EN
 - `products.sku` as idempotency key
 
 ## Manual Testing Checklist
+
+### Setup
 - [ ] Ingresar como admin y abrir `/admin/productos/importar`.
-- [ ] Descargar el template CSV y validar columnas esperadas.
-- [ ] Subir CSV 100% válido y confirmar resumen "N creados, 0 errores".
-- [ ] Subir CSV mixto (válidos + inválidos) y confirmar import parcial con detalle por fila.
-- [ ] Subir CSV con SKUs duplicados existentes y confirmar omisión idempotente.
-- [ ] Verificar que productos importados aparecen en `/admin/productos` y storefront según `is_visible/is_available`.
-- [ ] Verificar que filas con categoría no mapeada quedan registradas como issue y no bloquean el batch completo.
-- [ ] Repetir import del mismo archivo y confirmar comportamiento idempotente sin duplicación de productos.
+- [ ] Descargar `product-import-template.csv` y verificar que tiene header + 3 filas de ejemplo.
+
+### Escenario 1 — CSV 100% válido (archivo: `test-scenario-1-all-valid.csv`)
+- [ ] Subir el archivo. Verificar preview: **30 filas válidas, 0 errores**.
+- [ ] Confirmar importación. Verificar resumen: **"30 creados, 0 errores"**.
+- [ ] Abrir `/admin/productos` y buscar "TEST-S1" para confirmar que los productos existen.
+- [ ] Verificar que aparecen en el storefront según `is_visible = true`.
+
+### Escenario 2 — CSV mixto válidos + errores (archivo: `test-scenario-2-mixed-errors.csv`)
+- [ ] Subir el archivo. Verificar preview: **10 filas válidas, 5 errores** (filas 4, 6, 9, 12, 15).
+- [ ] Confirmar que los errores muestran: MISSING_FIELD (fila 4), INVALID_PRICE (filas 6, 9, 15), UNMAPPED_CATEGORY (fila 12).
+- [ ] Confirmar importación. Verificar resumen: **"10 creados, 5 errores"**.
+- [ ] Buscar "TEST-S2-003", "TEST-S2-005", "TEST-S2-008", "TEST-S2-011", "TEST-S2-014" en admin: deben **no existir**.
+
+### Escenario 3 — SKUs duplicados (archivo: `test-scenario-3-duplicate-skus.csv`)
+> ⚠️ Este escenario requiere que el Escenario 2 ya fue ejecutado (SKUs TEST-S2-002, TEST-S2-006, TEST-S2-013, TEST-S2-015 deben existir).
+- [ ] Subir el archivo. Verificar preview: **7 filas válidas** (el sistema no detecta duplicados en preview — es client-side).
+- [ ] Confirmar importación. Verificar resumen: **"3 nuevos creados, 4 duplicados omitidos"** (TEST-S2-002, TEST-S2-006, TEST-S2-013, TEST-S2-015 son duplicados; TEST-S3-NEW-001/002/003 son nuevos).
+- [ ] Verificar que los 4 productos duplicados **no fueron modificados** (precio original intacto en admin).
+- [ ] Verificar que los 3 nuevos (TEST-S3-NEW-*) sí aparecen en `/admin/productos`.
+
+### Post-importación
+- [ ] Repetir import del Escenario 1 completo. Verificar comportamiento idempotente: **"0 creados, 30 omitidos"** (todos ya existen por SKU).
 
 ## Definition of Done
-- [ ] All BDD criteria have passing tests
-- [ ] No TypeScript errors
-- [ ] RLS policies tested (if applicable)
+- [x] All BDD criteria have passing tests (51 tests, 80/80 con regresión HU-2.2)
+- [x] No TypeScript errors en archivos nuevos (errores pre-existentes en ADR-005 no causados por esta HU)
+- [x] RLS policies reutilizadas de ENABLER-2 (admin-only para staging)
 - [ ] CHANGELOG entry drafted
-- [ ] All changes committed with `feat(HU-2.3):` convention
+- [x] All changes committed with `feat(HU-2.3):` convention — commit 32eed24
 - [ ] Tag `HU-2.3` created

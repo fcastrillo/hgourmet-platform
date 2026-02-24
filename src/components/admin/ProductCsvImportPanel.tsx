@@ -207,7 +207,16 @@ export function ProductCsvImportPanel() {
           </div>
 
           {summary.issues.length > 0 && (
-            <ProductCsvPreviewTable validRows={[]} issues={summary.issues} />
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-red-700">
+                {summary.issues.length} {summary.issues.length === 1 ? "fila omitida" : "filas omitidas"} — detalle por fila:
+              </p>
+              <ProductCsvPreviewTable
+                validRows={[]}
+                issues={summary.issues}
+                hideSummaryPills
+              />
+            </div>
           )}
 
           <button

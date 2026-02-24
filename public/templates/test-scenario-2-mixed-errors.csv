@@ -1,0 +1,16 @@
+nombre,descripcion,precio,departamento,categoria,clave1,clave2,codigo_sat,disponible,destacado,temporada
+"Molde Redondo 20cm","Molde antiadherente desmontable","89.50","Moldes","moldes","TEST-S2-001","","",true,false,false
+"Chocolate Amargo 70%","Cobertura profesional","125.00","HGOURMET","chocolate","TEST-S2-002","","",true,true,false
+"","Producto sin nombre — ERROR fila 4","50.00","Moldes","moldes","TEST-S2-003","","",true,false,false
+"Capacillo #6","Capacillo de papel 100pz","35.00","Capacillos","capacillos","TEST-S2-004","","",true,false,false
+"Producto Precio Negativo","Precio inválido — ERROR fila 6","-20.00","Colorantes","colorantes","TEST-S2-005","","",true,false,false
+"Colorante Rojo Gel","Colorante gel rojo","38.00","Colorantes","colorantes","TEST-S2-006","","",true,false,false
+"Bolsa Celofán 20x30cm","Bolsa transparente 100pz","45.00","Bolsas","bolsas","TEST-S2-007","","",true,false,false
+"Producto Sin Precio","Campo precio vacío — ERROR fila 9","","Moldes","moldes","TEST-S2-008","","",true,false,false
+"Espátula Angular 25cm","Espátula offset","125.00","Herramientas","espatulas","TEST-S2-009","","",true,false,false
+"Vela Número 3 Dorada","Vela decorativa","18.00","Velas","velas","TEST-S2-010","","",true,false,false
+"Producto Categoría Desconocida","Departamento inválido — ERROR fila 12","75.00","DEPARTAMENTO_INEXISTENTE","categoria_inexistente","TEST-S2-011","","",true,false,false
+"Extracto de Vainilla","Extracto puro 120ml","145.00","Extractos","extractos","TEST-S2-012","","",true,true,false
+"Cortador Estrella 5cm","Cortador metálico","28.00","Cortadores","cortadores","TEST-S2-013","","",true,false,false
+"Precio Cero — Error","Precio 0 no válido — ERROR fila 15","0","Moldes","moldes","TEST-S2-014","","",true,false,false
+"Tapete Silicón 60x40","Tapete antiadherente","185.00","Herramientas","tapetes de silicon","TEST-S2-015","","",true,true,false

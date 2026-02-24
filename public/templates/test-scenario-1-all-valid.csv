@@ -1,0 +1,21 @@
+nombre,descripcion,precio,departamento,categoria,clave1,clave2,codigo_sat,disponible,destacado,temporada
+"Chocolate Amargo 70%","Chocolate de cobertura profesional","125.00","HGOURMET","chocolate","TEST-S1-001","","21061000",true,true,false
+"Chocolate Blanco Callebaut","Cobertura chocolate blanco 1kg","210.00","HGOURMET","blanco","TEST-S1-002","","21061000",true,false,false
+"Chispas de Chocolate Oscuro","Chispas para repostería 500g","78.50","HGOURMET","chispas","TEST-S1-003","","",true,false,false
+"Cocoa en Polvo Sin Azucar","Cocoa pura para repostería","55.00","HGOURMET","cocoa","TEST-S1-004","","",true,false,false
+"Granillos de Chocolate","Decoración granillo fino","42.00","HGOURMET","granillos","TEST-S1-005","","",true,false,false
+"Molde Rectangular 30x20cm","Molde antiadherente para panqué","95.00","Moldes","moldes","TEST-S1-006","","",true,false,false
+"Molde Redondo 20cm","Molde desmontable para pastel","89.50","Moldes","moldes","TEST-S1-007","","",true,false,false
+"Molde Corazon 25cm","Molde para pastel corazón","112.00","Moldes","moldes","TEST-S1-008","","",true,false,true
+"Molde Cupcake 12 cavidades","Molde para muffins/cupcakes","75.00","Moldes","moldes","TEST-S1-009","","",true,false,false
+"Molde Bundt 23cm","Molde corona antiadherente","135.00","Moldes","moldes","TEST-S1-010","","",true,false,false
+"Capacillo #6 Paquete 100pz","Capacillo de papel blanco","35.00","Capacillos","capacillos","TEST-S1-011","","",true,false,false
+"Capacillo Cupcake Kraft Natural","Capacillo kraft 50pz","28.00","Capacillos","capacillos","TEST-S1-012","","",true,false,false
+"Bolsa Celofan 20x30cm","Bolsa para regalo transparente 100pz","45.00","Bolsas","bolsas","TEST-S1-013","","",true,false,false
+"Bolsa Kraft Mediana","Bolsa papel kraft manija 50pz","62.00","Bolsas","bolsas","TEST-S1-014","","",true,false,false
+"Desechable Manga Pastelera 50pz","Mangas desechables transparente","55.00","Desechables","desechables","TEST-S1-015","","",true,false,false
+"Palito Brocheta 20cm 50pz","Palitos para paletas y cake pops","22.00","Desechables","desechables","TEST-S1-016","","",true,false,false
+"Caja para Pastel 30x30","Caja cartón con ventana 10pz","85.00","Caja","caja","TEST-S1-017","","",true,false,false
+"Caja Cupcake x6 Kraft","Caja para 6 cupcakes kraft","48.00","Caja","caja","TEST-S1-018","","",true,false,false
+"Cobertura Semiamargo 500g","Cobertura chocolate bitter","145.00","HGOURMET","semiamargo","TEST-S1-019","","",true,true,false
+"Cobertura Leche 500g","Cobertura chocolate con leche","138.00","HGOURMET","leche","TEST-S1-020","","",true,false,false

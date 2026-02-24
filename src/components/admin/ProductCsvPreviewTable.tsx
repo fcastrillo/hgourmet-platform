@@ -14,6 +14,8 @@ interface PreviewRow {
 interface ProductCsvPreviewTableProps {
   validRows: PreviewRow[];
   issues: RowIssue[];
+  /** When true, the "N filas válidas" pill is hidden (used in post-import summary) */
+  hideSummaryPills?: boolean;
 }
 
 const ISSUE_LABELS: Record<string, string> = {
@@ -26,26 +28,32 @@ const ISSUE_LABELS: Record<string, string> = {
 export function ProductCsvPreviewTable({
   validRows,
   issues,
+  hideSummaryPills = false,
 }: ProductCsvPreviewTableProps) {
   return (
     <div className="space-y-6">
-      {/* Summary pills */}
-      <div className="flex flex-wrap gap-3">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
-          <svg className="h-4 w-4" width={16} height={16} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-          {validRows.length} filas válidas
-        </span>
-        {issues.length > 0 && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800">
-            <svg className="h-4 w-4" width={16} height={16} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-            </svg>
-            {issues.length} {issues.length === 1 ? "error" : "errores"}
-          </span>
-        )}
-      </div>
+      {/* Summary pills — shown only in preview mode (not post-import summary) */}
+      {!hideSummaryPills && (
+        <div className="flex flex-wrap gap-3">
+          {validRows.length > 0 && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-sm font-medium text-green-800">
+              <svg className="h-4 w-4" width={16} height={16} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              {validRows.length} filas válidas
+            </span>
+          )}
+          {issues.length > 0 && (
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1 text-sm font-medium text-red-800">
+              <svg className="h-4 w-4" width={16} height={16} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+              </svg>
+              {issues.length} {issues.length === 1 ? "error" : "errores"}
+            </span>
+          )}
+        </div>
+      )}
+
 
       {/* Valid rows table */}
       {validRows.length > 0 && (

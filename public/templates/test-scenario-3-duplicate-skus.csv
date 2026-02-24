@@ -1,0 +1,7 @@
+nombre,descripcion,precio,departamento,categoria,clave1,clave2,codigo_sat,disponible,destacado,temporada
+"Molde Redondo 20cm v2","Precio actualizado — SKU ya existe (TEST-S1-007)","99.00","Moldes","moldes","TEST-S1-007","","",true,false,false
+"Chocolate Amargo 70% v2","Precio actualizado — SKU ya existe (TEST-S1-001)","135.00","HGOURMET","chocolate","TEST-S1-001","","",true,true,false
+"Cobertura Leche 500g v2","Descripcion actualizada — SKU ya existe (TEST-S1-020)","142.00","HGOURMET","leche","TEST-S1-020","","",true,false,false
+"Molde Cuadrado 20cm NUEVO","Molde cuadrado — producto nuevo","88.00","Moldes","moldes","TEST-S3-NEW-001","","",true,false,false
+"Capacillo Rosa 50pz NUEVO","Capacillo de color — producto nuevo","32.00","Capacillos","capacillos","TEST-S3-NEW-002","","",true,false,false
+"Bolsa Celofan Grande NUEVO","Bolsa 30x40 — producto nuevo","52.00","Bolsas","bolsas","TEST-S3-NEW-003","","",true,false,false

@@ -570,8 +570,8 @@ describe("ProductCsvImportPanel", () => {
       expect(screen.getByText(/importación completada/i)).toBeInTheDocument();
     });
 
-    // Issues table shown
-    expect(screen.getByText(/3 errores/i)).toBeInTheDocument();
+    // Issues section shown with label
+    expect(screen.getByText(/3 filas omitidas/i)).toBeInTheDocument();
   });
 
   it("muestra error del servidor cuando importProductsCsv falla", async () => {
