@@ -152,16 +152,31 @@ export async function updateCategory(
   }
 
   const supabase = await createClient();
+
+  // Fetch current image URL from DB so we can clean up Storage on remove/replace.
+  const { data: currentRow } = await supabase
+    .from("categories")
+    .select("image_url")
+    .eq("id", id)
+    .single();
+  const currentImageUrl =
+    (currentRow as { image_url: string | null } | null)?.image_url ?? null;
+
   let imageUrl: string | null = existingImageUrl;
 
   if (imageFile && imageFile.size > 0) {
-    if (existingImageUrl) {
-      await deleteCategoryImage(supabase, existingImageUrl);
+    // Replace: delete old file (if any) then upload new one.
+    if (currentImageUrl) {
+      await deleteCategoryImage(supabase, currentImageUrl);
     }
     imageUrl = await uploadCategoryImage(supabase, imageFile);
     if (!imageUrl) {
       return { success: false, error: "Error al subir la imagen. Intenta de nuevo." };
     }
+  } else if (!existingImageUrl && currentImageUrl) {
+    // No new file and no keep-flag → user explicitly removed the image.
+    await deleteCategoryImage(supabase, currentImageUrl);
+    imageUrl = null;
   }
 
   const changes = {

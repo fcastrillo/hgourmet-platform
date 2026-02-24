@@ -40,13 +40,13 @@ export function CategoryImage({
 
   return (
     <div
-      className={`w-full overflow-hidden rounded-t-xl bg-background ${heightClass} flex items-center justify-center`}
+      className={`w-full overflow-hidden rounded-t-xl bg-secondary/30 ${heightClass} flex items-center justify-center`}
     >
       {showImage ? (
         <img
           src={imageUrl}
           alt={name}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-contain p-2"
           onError={() => setImgError(true)}
         />
       ) : (

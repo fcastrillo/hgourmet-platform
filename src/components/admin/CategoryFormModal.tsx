@@ -52,9 +52,10 @@ export function CategoryFormModal({ category, onClose }: CategoryFormModalProps)
 
     if (selectedFile) {
       formData.set("image", selectedFile);
-    }
-
-    if (isEditing && category?.image_url && !selectedFile) {
+    } else if (isEditing && category?.image_url && imagePreview !== null) {
+      // User kept the existing image — tell server to preserve it.
+      // When imagePreview is null the user explicitly removed the image,
+      // so we intentionally omit existing_image_url to signal deletion.
       formData.set("existing_image_url", category.image_url);
     }
 
