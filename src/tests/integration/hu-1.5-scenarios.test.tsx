@@ -128,7 +128,7 @@ describe("HU-1.5 — Scenario 1: Imagen real se muestra en storefront", () => {
 // ─── Scenario 3: URL rota no rompe el UI ─────────────────────────────────────
 
 describe("HU-1.5 — Scenario 3: URL de imagen rota cae a fallback sin romper UI", () => {
-  it("CategoryImage cae a fallback cuando la imagen produce un error de carga", async () => {
+  it("CategoryImage pasa de imagen real a imagen estática tras error de carga", async () => {
     render(
       <CategoryImage
         imageUrl="https://broken-url.example.com/image.jpg"
@@ -137,17 +137,61 @@ describe("HU-1.5 — Scenario 3: URL de imagen rota cae a fallback sin romper UI
       />
     );
 
-    const img = screen.getByRole("img");
-    expect(img).toBeInTheDocument();
+    const realImg = screen.getByRole("img");
+    expect(realImg).toHaveAttribute("src", "https://broken-url.example.com/image.jpg");
 
-    fireEvent.error(img);
+    fireEvent.error(realImg);
+
+    await waitFor(() => {
+      const staticImg = screen.getByRole("img");
+      expect(staticImg).toHaveAttribute("src", "/images/categories/chocolates.jpg");
+    });
+  });
+
+  it("CategoryImage cae a emoji tras dos errores (real → estática → emoji)", async () => {
+    render(
+      <CategoryImage
+        imageUrl="https://broken-url.example.com/image.jpg"
+        slug="chocolates"
+        name="Chocolates"
+      />
+    );
+
+    // Error 1: real image fails → static image shown
+    fireEvent.error(screen.getByRole("img"));
+
+    await waitFor(() => {
+      expect(screen.getByRole("img")).toHaveAttribute(
+        "src",
+        "/images/categories/chocolates.jpg",
+      );
+    });
+
+    // Error 2: static image also fails → emoji fallback, no more img
+    fireEvent.error(screen.getByRole("img"));
 
     await waitFor(() => {
       expect(screen.queryByRole("img")).toBeNull();
     });
   });
 
-  it("layout no se rompe tras el error de imagen (contenedor permanece visible)", async () => {
+  it("slug desconocido salta directamente a emoji (sin imagen estática intermedia)", async () => {
+    render(
+      <CategoryImage
+        imageUrl="https://broken-url.example.com/image.jpg"
+        slug="slug-desconocido"
+        name="Desconocido"
+      />
+    );
+
+    fireEvent.error(screen.getByRole("img"));
+
+    await waitFor(() => {
+      expect(screen.queryByRole("img")).toBeNull();
+    });
+  });
+
+  it("layout no se rompe tras errores de imagen (contenedor permanece visible)", async () => {
     const { container } = render(
       <CategoryImage
         imageUrl="https://broken-url.example.com/image.jpg"
@@ -156,8 +200,7 @@ describe("HU-1.5 — Scenario 3: URL de imagen rota cae a fallback sin romper UI
       />
     );
 
-    const img = screen.getByRole("img");
-    fireEvent.error(img);
+    fireEvent.error(screen.getByRole("img"));
 
     await waitFor(() => {
       expect(container.firstChild).toBeTruthy();

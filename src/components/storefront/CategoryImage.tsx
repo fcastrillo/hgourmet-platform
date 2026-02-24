@@ -2,32 +2,39 @@
 
 import { useState } from "react";
 
-const CATEGORY_ICONS: Record<string, string> = {
-  chocolate: "🍫",
+/**
+ * Curated static fallback images served from /public/images/categories/{slug}.jpg.
+ * These are the 7 canonical curated categories from ENABLER-2.
+ */
+const STATIC_FALLBACKS = new Set([
+  "bases",
+  "chocolates",
+  "decoracion",
+  "desechables",
+  "insumos",
+  "moldes",
+  "utensilios",
+]);
+
+/** Ultimate emoji fallback for unknown/future slugs */
+const EMOJI_FALLBACK: Record<string, string> = {
   harinas: "🌾",
-  moldes: "🧁",
   sprinkles: "✨",
   colorantes: "🎨",
   fondant: "🎂",
   empaques: "📦",
-  utensilios: "🍴",
-  decoracion: "🌸",
-  bases: "🎂",
-  desechables: "🥤",
-  insumos: "🛒",
 };
-
-function getCategoryIcon(slug: string): string {
-  return CATEGORY_ICONS[slug] ?? "🛒";
-}
+const DEFAULT_EMOJI = "🛒";
 
 interface CategoryImageProps {
   imageUrl: string | null;
   slug: string;
   name: string;
-  /** Tailwind class for the container height, e.g. "h-32" or "h-40" */
+  /** Tailwind class for the container height, e.g. "h-32" or "h-28" */
   heightClass?: string;
 }
+
+type FallbackLevel = "real" | "static" | "emoji";
 
 export function CategoryImage({
   imageUrl,
@@ -35,23 +42,39 @@ export function CategoryImage({
   name,
   heightClass = "h-36",
 }: CategoryImageProps) {
-  const [imgError, setImgError] = useState(false);
-  const showImage = imageUrl && !imgError;
+  const initialLevel: FallbackLevel = imageUrl ? "real" : "static";
+  const [level, setLevel] = useState<FallbackLevel>(initialLevel);
+
+  const handleRealError = () => setLevel("static");
+  const handleStaticError = () => setLevel("emoji");
+
+  const hasStatic = STATIC_FALLBACKS.has(slug);
 
   return (
     <div
       className={`w-full overflow-hidden rounded-t-xl bg-secondary/30 ${heightClass} flex items-center justify-center`}
     >
-      {showImage ? (
+      {level === "real" && imageUrl && (
         <img
           src={imageUrl}
           alt={name}
           className="h-full w-full object-contain p-2"
-          onError={() => setImgError(true)}
+          onError={handleRealError}
         />
-      ) : (
+      )}
+
+      {level === "static" && hasStatic && (
+        <img
+          src={`/images/categories/${slug}.jpg`}
+          alt={name}
+          className="h-full w-full object-contain p-2"
+          onError={handleStaticError}
+        />
+      )}
+
+      {(level === "emoji" || (level === "static" && !hasStatic)) && (
         <span className="text-5xl" role="img" aria-hidden="true">
-          {getCategoryIcon(slug)}
+          {EMOJI_FALLBACK[slug] ?? DEFAULT_EMOJI}
         </span>
       )}
     </div>
