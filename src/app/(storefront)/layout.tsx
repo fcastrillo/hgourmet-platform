@@ -1,5 +1,6 @@
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
+import { WhatsAppFloatingButton } from "@/components/storefront/WhatsAppFloatingButton";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function StorefrontLayout({
@@ -19,6 +20,7 @@ export default async function StorefrontLayout({
       <Header categories={categories ?? []} />
       <main className="flex-1">{children}</main>
       <Footer />
+      <WhatsAppFloatingButton />
     </div>
   );
 }

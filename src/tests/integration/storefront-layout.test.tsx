@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
+import { WhatsAppFloatingButton } from "@/components/storefront/WhatsAppFloatingButton";
 
 const mockCategories = [
   { id: "1", name: "Chocolate", slug: "chocolate", description: null, display_order: 1, is_active: true, created_at: "" },
@@ -35,6 +36,20 @@ describe("Storefront Header", () => {
     const mainNav = screen.getByRole("navigation", { name: /principal/i });
     expect(within(mainNav).queryByRole("link", { name: /chocolate/i })).not.toBeInTheDocument();
     expect(within(mainNav).queryByRole("link", { name: /harinas/i })).not.toBeInTheDocument();
+  });
+});
+
+describe("WhatsApp Floating Button — presencia global (HU-3.1)", () => {
+  it("renders a wa.me link with accessible label when URL is valid", () => {
+    render(<WhatsAppFloatingButton whatsappUrl="https://wa.me/525550682072" />);
+    const link = screen.getByRole("link", { name: /contactar por whatsapp/i });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute("href", expect.stringContaining("wa.me"));
+  });
+
+  it("renders nothing and does not crash when URL is invalid", () => {
+    const { container } = render(<WhatsAppFloatingButton whatsappUrl="" />);
+    expect(container).toBeEmptyDOMElement();
   });
 });
 
