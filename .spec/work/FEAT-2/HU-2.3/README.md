@@ -7,19 +7,19 @@
 
 - **Como:** administradora de HGourmet
 - **Quiero:** cargar un archivo CSV con múltiples productos para agregarlos al catálogo de forma masiva
-- **Para poder:** migrar el inventario completo (~300-1000 productos) sin ingresarlos uno por uno
+- **Para poder:** migrar y mantener el inventario completo (~3,382 productos actuales) sin ingresarlos uno por uno
 
 ---
 
 ## Acceptance Criteria
 
 1. El panel ofrece una sección de "Importar CSV" con instrucciones claras y un archivo CSV de ejemplo descargable.
-2. El sistema acepta archivos CSV con columnas: nombre, descripción, precio, categoría (nombre o slug), SKU, is_available, is_featured, is_seasonal.
+2. El sistema acepta el formato real de inventario y conserva las columnas crudas en staging para reprocesos.
 3. Antes de importar, se muestra una previsualización con el conteo de filas válidas vs. filas con errores.
 4. Las filas con errores de validación se reportan con número de fila y motivo (precio inválido, categoría inexistente, nombre vacío).
 5. Solo las filas válidas se insertan; las filas con errores no bloquean la importación parcial.
 6. El sistema muestra un resumen post-importación: N productos creados, M errores.
-7. La importación es idempotente respecto al SKU: si un SKU ya existe, la fila se marca como "duplicado" y se omite (no se sobrescribe).
+7. La importación es idempotente respecto al SKU: si un SKU ya existe, la fila se actualiza o se omite según política definida por batch.
 
 ---
 
@@ -47,9 +47,11 @@
 
 ## Technical Notes
 
-- **ADR-003:** CSV Import for Bulk Product Upload
+- **ADR-003:** CSV Import for Bulk Product Upload (actualizado a inventario real 3,382+)
 - **Components:** CSV import page `[CC]`, CSV parser (client-side), Import action `[SA]`
 - **Parsing:** Client-side CSV parsing con previsualización antes de enviar al server
 - **Batch insert:** Server Action que recibe las filas validadas y ejecuta batch insert
 - **Slug generation:** Automática desde el nombre para cada fila importada
 - **Template:** Archivo CSV de ejemplo disponible para descarga
+- **Mapping strategy:** usar `.spec/work/ENABLERS/ENABLER-2/CATEGORY_MAPPING_V1.md`
+- **Staging strategy:** usar `.spec/work/ENABLERS/ENABLER-2/CSV_STAGING_STRATEGY.md`

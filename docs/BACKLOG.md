@@ -62,10 +62,10 @@
 
 ### FEAT-3: Canal de Comunicación y Conversión WhatsApp
 
-> Estimate: M (rollup) | 3 stories: 2×S + 1×XS; esfuerzo total ~1–2 días por UI cross-page + validaciones + paridad visual.
+> Estimate: M (rollup) | 4 stories: 3×S + 1×XS; esfuerzo total ~1–2.5 días por UI cross-page + validaciones + paridad visual.
 
 - **Hypothesis:** Si entregamos un canal de comunicación integrado con WhatsApp y redes sociales desde cada punto del catálogo, entonces los clientes podrán pasar de la consulta al pedido en un solo clic, medido por ≥50 pedidos confirmados vía WhatsApp originados desde la web en el primer mes.
-- **Status:** Delivered (3/3 stories delivered) ✅ (2026-02-23)
+- **Status:** In Progress (3/4 stories delivered; HU-3.4 added as MVP closeout)
 - **Priority:** High
 - **Stories:**
   - [x] HU-3.1: Botón fijo de WhatsApp en todo el sitio (High) ✅ (2026-02-23)
@@ -74,6 +74,8 @@
     > Estimate: S | CTA contextual por producto con composición segura de mensaje y manejo de datos incompletos; requiere coordinación de UI + formato de enlace dinámico.
   - [x] HU-3.3: Página de contacto (Medium) ✅ (2026-02-23)
     > Estimate: S | Nueva ruta `/contacto` con layout completo, enlaces sociales, mapa placeholder y formulario con validaciones/estados; sin integración externa obligatoria en esta iteración.
+  - [ ] HU-3.4: Formulario de contacto con envío real vía WhatsApp (High)
+    > Estimate: S (~4–8h) | Convertir el formulario de `/contacto` de estado simulado a envío real por deep link `wa.me` con mensaje prellenado (nombre, teléfono, email opcional y mensaje). Incluir validaciones de campos requeridos, encoding seguro del texto y manejo explícito de cancelación/error para evitar "success fake". Alineado con ADR-002.
 
 ---
 
@@ -100,23 +102,17 @@
   > Estimate: XS (~30 min) | Instalar `cloudflared`, crear script `npm run tunnel` para exponer `localhost:3000` en URL pública temporal. Documentar en README. No requiere spec ni objetivo formal — es un chore de infraestructura.
 
 - [ ] ENABLER-2: Schema Evolution + Curación de Categorías (High)
-  > Estimate: S (~4h) | Migración SQL: agregar `image_url text` a `categories`, agregar `barcode text` y `sat_code text` a `products`. Crear las 7 categorías curadas en Supabase (reemplazando las 6 del prototipo). Documentar mapeo `dept+cat CSV → categoría curada` en el workspace de FEAT-1 cuando se ejecute este enabler. Actualizar `TECH_SPEC.md` con nuevos campos y ADR-003 revisado.
+  > Estimate: S (~4h) | Migración SQL: agregar `image_url text` a `categories`, agregar `barcode text` y `sat_code text` a `products`. Definir estrategia de staging+curated para reimportaciones y versionado de mapeo. Crear las 7 categorías curadas en Supabase (reemplazando las 6 del prototipo). Actualizar `TECH_SPEC.md` con nuevos campos y ADR-003 revisado.
 
 #### Decisión: 7 Categorías Curadas (2026-02-23)
 
-Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir de los 18 departamentos del inventario (3,382 productos):
+Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir de los 18 departamentos del inventario (3,382 productos): **Utensilios, Decoración, Bases, Desechables, Chocolates, Insumos, Moldes**.
 
-| # | Categoría | Sub-categorías | Mapeo de departamentos CSV |
-|:-:|:--|:--|:--|
-| 1 | **Utensilios** | Herramientas, Tapetes de silicón, Plumones, Cortadores, Raspas, Globos, Espátulas, Termómetro | Herramientas, Cortadores, Accesorios, Refrigeración |
-| 2 | **Decoración** | Sprinkles, Domis, Duyas, Cake topper, Tag, Diamantina, Matizador, Hoja de oro, Colorantes, Velas, Mangas | Decoración, Colorantes, Velas |
-| 3 | **Bases** | Cuadrada, Rectangular, Redonda, Monoporción, MDF, Delgadas, Doble listón, Blondas, Soportes | Pastel |
-| 4 | **Desechables** | Bolsa celofán, Cajas, Bisagras, Domos, Vasos, Tapas, Papel horneable, Papel antigrasa, Capacillos, Aluminios, Charolas | Capacillos, Bolsas, Desechables, Caja |
-| 5 | **Chocolates** | Amargo, Semiamargo, Leche, Blanco, Sin Azúcar, Chispas, Horneables, Cocoa, Granillos, Coberturas | (sub-set de Insumos CSV) |
-| 6 | **Insumos** | Harinas, Fondant, Galletas, Merengues, Lácteos, Mantequillas, Granos, Azúcares, Polvos, Vainillas | Insumos, Extractos, INIX, Comida |
-| 7 | **Moldes** | Redondos, Cuadrados, Corazón, Flaneras, Aros, Panqué, Donas, Pay, Tartaleta, Desmoldable, Rosca, Cupcake | Moldes |
+Para evitar sobrecargar el backlog, el detalle operativo vive en `.spec/work/ENABLERS/ENABLER-2`:
 
-**Nota:** Productos de marca propia (dept HGOURMET, 27 productos) se distribuyen en la categoría que corresponda según su tipo.
+- `.spec/work/ENABLERS/ENABLER-2/README.md` (arquitectura de datos y plan de ejecución)
+- `.spec/work/ENABLERS/ENABLER-2/CATEGORY_MAPPING_V1.md` (tabla completa `departamento+categoria -> categoria_curada`)
+- `.spec/work/ENABLERS/ENABLER-2/CSV_STAGING_STRATEGY.md` (qué columnas se conservan en staging vs dominio)
 
 ---
 
@@ -169,7 +165,7 @@ Validado con las dueñas. Se curan 7 categorías orientadas al cliente a partir 
   - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto ✅ (2026-02-21)
   - [x] HU-3.3: Página de contacto ✅ (2026-02-23)
 - FEAT-4
-  - [x] HU-4.3: Sección de marcas HGourmet ✅ (2026-02-23) — FEAT-4
-  - [x] HU-4.4: Sección de recetas y tips ✅ (2026-02-22) — FEAT-4
+  - [x] HU-4.3: Sección de recetas y tips ✅ (2026-02-23) — FEAT-4
+  - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
 - Chores (Technical / Visual)
   - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)

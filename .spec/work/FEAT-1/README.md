@@ -39,3 +39,9 @@
 - Recomendaciones personalizadas por usuario
 - Paginación infinita (se usará paginación estándar si el volumen lo requiere)
 - Filtros avanzados por rango de precio (se evaluará en iteraciones futuras)
+
+## Supporting Artifacts
+
+- `../ENABLERS/ENABLER-2/README.md`
+- `../ENABLERS/ENABLER-2/CATEGORY_MAPPING_V1.md`
+- `../ENABLERS/ENABLER-2/CSV_STAGING_STRATEGY.md`
