@@ -7,21 +7,76 @@ import { fetchMaxDisplayOrder } from "@/lib/supabase/queries/admin-categories";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5 MB
+
 function revalidateCategoryPaths() {
   revalidatePath("/admin/categorias");
   revalidatePath("/");
+  revalidatePath("/categorias");
 }
 
 // ADR-005: Supabase TS resolves insert/update params as `never` when chaining.
 // We use typed helpers with explicit casts on the query result/params.
 
+async function uploadCategoryImage(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  file: File,
+): Promise<string | null> {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) return null;
+  if (file.size > MAX_IMAGE_SIZE) return null;
+
+  const ext = file.name.split(".").pop() ?? "jpg";
+  const fileName = `${crypto.randomUUID()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from("category-images")
+    .upload(fileName, file, { contentType: file.type, upsert: false });
+
+  if (error) return null;
+
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("category-images").getPublicUrl(fileName);
+
+  return publicUrl;
+}
+
+async function deleteCategoryImage(
+  supabase: Awaited<ReturnType<typeof createClient>>,
+  imageUrl: string,
+): Promise<void> {
+  const parts = imageUrl.split("/category-images/");
+  if (parts.length < 2) return;
+  const filePath = parts[1];
+  await supabase.storage.from("category-images").remove([filePath]);
+}
+
 export async function createCategory(formData: FormData): Promise<ActionResult> {
   const name = formData.get("name") as string | null;
   const description = (formData.get("description") as string | null) || null;
   const isActive = formData.get("is_active") === "true";
+  const imageFile = formData.get("image") as File | null;
 
   if (!name || name.trim().length === 0) {
     return { success: false, error: "El nombre es obligatorio." };
+  }
+
+  if (imageFile && imageFile.size > 0) {
+    if (!ALLOWED_IMAGE_TYPES.includes(imageFile.type)) {
+      return {
+        success: false,
+        error: "Formato de imagen no soportado. Usa JPG, PNG, WebP o GIF.",
+      };
+    }
+    if (imageFile.size > MAX_IMAGE_SIZE) {
+      return { success: false, error: "La imagen no debe superar los 5 MB." };
+    }
   }
 
   const slug = slugify(name);
@@ -32,10 +87,19 @@ export async function createCategory(formData: FormData): Promise<ActionResult> 
   const maxOrder = await fetchMaxDisplayOrder();
   const supabase = await createClient();
 
+  let imageUrl: string | null = null;
+  if (imageFile && imageFile.size > 0) {
+    imageUrl = await uploadCategoryImage(supabase, imageFile);
+    if (!imageUrl) {
+      return { success: false, error: "Error al subir la imagen. Intenta de nuevo." };
+    }
+  }
+
   const row = {
     name: name.trim(),
     slug,
     description,
+    image_url: imageUrl,
     display_order: maxOrder + 1,
     is_active: isActive,
   };
@@ -44,6 +108,7 @@ export async function createCategory(formData: FormData): Promise<ActionResult> 
   const { error } = await supabase.from("categories").insert(row as any);
 
   if (error) {
+    if (imageUrl) await deleteCategoryImage(supabase, imageUrl);
     if (error.code === "23505") {
       return { success: false, error: "Ya existe una categoría con ese nombre." };
     }
@@ -61,9 +126,24 @@ export async function updateCategory(
   const name = formData.get("name") as string | null;
   const description = (formData.get("description") as string | null) || null;
   const isActive = formData.get("is_active") === "true";
+  const imageFile = formData.get("image") as File | null;
+  const existingImageUrl =
+    (formData.get("existing_image_url") as string | null) || null;
 
   if (!name || name.trim().length === 0) {
     return { success: false, error: "El nombre es obligatorio." };
+  }
+
+  if (imageFile && imageFile.size > 0) {
+    if (!ALLOWED_IMAGE_TYPES.includes(imageFile.type)) {
+      return {
+        success: false,
+        error: "Formato de imagen no soportado. Usa JPG, PNG, WebP o GIF.",
+      };
+    }
+    if (imageFile.size > MAX_IMAGE_SIZE) {
+      return { success: false, error: "La imagen no debe superar los 5 MB." };
+    }
   }
 
   const slug = slugify(name);
@@ -72,15 +152,28 @@ export async function updateCategory(
   }
 
   const supabase = await createClient();
+  let imageUrl: string | null = existingImageUrl;
+
+  if (imageFile && imageFile.size > 0) {
+    if (existingImageUrl) {
+      await deleteCategoryImage(supabase, existingImageUrl);
+    }
+    imageUrl = await uploadCategoryImage(supabase, imageFile);
+    if (!imageUrl) {
+      return { success: false, error: "Error al subir la imagen. Intenta de nuevo." };
+    }
+  }
+
   const changes = {
     name: name.trim(),
     slug,
     description,
+    image_url: imageUrl,
     is_active: isActive,
   };
 
-  // @ts-expect-error — ADR-005: Supabase chained .update().eq() resolves param as never
-  const { error } = await supabase.from("categories").update(changes).eq("id", id);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("categories") as any).update(changes).eq("id", id);
 
   if (error) {
     if (error.code === "23505") {
@@ -108,10 +201,21 @@ export async function deleteCategory(id: string): Promise<ActionResult> {
     };
   }
 
+  const { data: category } = await supabase
+    .from("categories")
+    .select("image_url")
+    .eq("id", id)
+    .single();
+
   const { error } = await supabase.from("categories").delete().eq("id", id);
 
   if (error) {
     return { success: false, error: "Error al eliminar la categoría." };
+  }
+
+  const imageUrl = (category as { image_url: string | null } | null)?.image_url;
+  if (imageUrl) {
+    await deleteCategoryImage(supabase, imageUrl);
   }
 
   revalidateCategoryPaths();
@@ -124,9 +228,8 @@ export async function toggleCategoryActive(
 ): Promise<ActionResult> {
   const supabase = await createClient();
 
-  // @ts-expect-error — ADR-005: Supabase chained .update().eq() resolves param as never
-  const { error } = await supabase
-    .from("categories")
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { error } = await (supabase.from("categories") as any)
     .update({ is_active: isActive })
     .eq("id", id);
 
@@ -144,8 +247,8 @@ export async function reorderCategories(
   const supabase = await createClient();
 
   const updates = orderedIds.map((id, index) =>
-    // @ts-expect-error — ADR-005: Supabase chained .update().eq() resolves param as never
-    supabase.from("categories").update({ display_order: index + 1 }).eq("id", id)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (supabase.from("categories") as any).update({ display_order: index + 1 }).eq("id", id)
   );
 
   const results = await Promise.all(updates);
