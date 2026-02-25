@@ -23,6 +23,15 @@ export function SearchableProductCatalog({
   const [availableOnly, setAvailableOnly] = useState(false);
   const [results, setResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    setIsDesktop(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   const isActive =
     searchTerm.trim().length > 0 ||
@@ -65,11 +74,24 @@ export function SearchableProductCatalog({
     : null;
 
   return (
-    <div className="catalog-layout">
+    <div
+      style={
+        isDesktop
+          ? {
+              display: "grid",
+              gridTemplateColumns: "13rem 1fr",
+              gap: "1.5rem",
+              marginTop: "2rem",
+              alignItems: "start",
+            }
+          : { marginTop: "2rem" }
+      }
+    >
 
       {/* ── Sidebar de filtros ───────────────────────────────── */}
       <aside
-        className="self-start rounded-2xl border border-secondary bg-white p-5 shadow-sm"
+        className="rounded-2xl border border-secondary bg-white p-5 shadow-sm"
+        style={isDesktop ? {} : { marginBottom: "1.5rem" }}
         aria-label="Filtros de catálogo"
       >
         <h2 className="mb-4 font-heading text-base font-semibold text-text">
