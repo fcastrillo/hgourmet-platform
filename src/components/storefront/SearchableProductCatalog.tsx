@@ -65,11 +65,11 @@ export function SearchableProductCatalog({
     : null;
 
   return (
-    <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-start">
+    <div className="mt-8 grid gap-6 md:grid-cols-[13rem_1fr] md:items-start">
 
       {/* ── Sidebar de filtros ───────────────────────────────── */}
       <aside
-        className="w-full shrink-0 rounded-2xl border border-secondary bg-white p-5 shadow-sm md:w-52"
+        className="self-start rounded-2xl border border-secondary bg-white p-5 shadow-sm"
         aria-label="Filtros de catálogo"
       >
         <h2 className="mb-4 font-heading text-base font-semibold text-text">
@@ -190,7 +190,7 @@ export function SearchableProductCatalog({
       </aside>
 
       {/* ── Área principal ───────────────────────────────────── */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0">
         {/* Buscador */}
         <SearchBar onSearch={handleSearch} />
 
