@@ -130,7 +130,7 @@ Detalle de hardening/optimización del importador:
 - [x] CHORE-1: Sprint cosmético del storefront (Medium) ✅ (2026-02-23)
   > Estimate: S (~4h) | Hero con imagen de fondo, logo real, nav reestructurado, sección categorías estilizada, polish general. ~10 min (AI-assisted).
 
-- [ ] CHORE-2: Sprint de polish final pre-demo (Low)
+- [x] CHORE-2: Sprint de polish final pre-demo (Low) ✅ (2026-02-25)
   > Estimate: S (~4h) | Revisión visual integral post-funcionalidades. Ajustes tipográficos, spacing, responsive, empty states, loading states. Se ejecuta después de completar todos los tracks funcionales.
 
 ---
@@ -182,3 +182,4 @@ Detalle de hardening/optimización del importador:
   - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
 - Chores (Technical / Visual)
   - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)
+  - [x] CHORE-2: Sprint de polish final pre-demo ✅ (2026-02-25)

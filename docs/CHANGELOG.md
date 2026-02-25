@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-02-25] — CHORE-2: Sprint de polish final pre-demo
+
+**Feature:** Chores (Technical / Visual)
+**Benefit:** El catálogo y la página de recetas quedan homologados visualmente con el prototipo para la demo, con mejor jerarquía tipográfica, filtros claros y comportamiento consistente en desktop/mobile.
+**Changes:**
+- Se acentuaron los títulos faltantes: `Nuestro Catálogo` y `Recetas & Tips` (palabra acentuada en `accent`).
+- Se implementó sidebar visual de filtros en catálogo (categoría, precio y disponibilidad) con comportamiento responsive validado en navegador real.
+- Se extendió la búsqueda de catálogo para considerar `priceMax` y `availableOnly`, alineando controles visuales con filtros funcionales.
+- Se corrigieron inconsistencias cross-browser/mobile de layout y color en controles nativos (slider/toggle) para mantener paridad visual.
+**Tests:** Regresión completa en verde (403/403), con ajustes en `hu-1.3-scenarios.test.tsx` y `src/tests/setup.ts`.
+
+---
+
 ## [2026-02-25] — HU-4.1: Página principal con banners rotativos y secciones destacadas
 
 **Feature:** FEAT-4 — Contenido y Marketing Digital
