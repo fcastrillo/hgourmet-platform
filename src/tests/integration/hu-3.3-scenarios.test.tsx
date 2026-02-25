@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ContactForm } from "@/components/storefront/ContactForm";
@@ -7,14 +7,26 @@ import { SOCIAL_LINKS, STORE_INFO } from "@/lib/constants";
 
 // ============================================================
 // HU-3.3 — Página de contacto
+// NOTE: ContactForm evolved in HU-3.4 — phone is now required,
+// email is optional, and submit opens WhatsApp (not a placeholder).
+// Tests that relied on the old behavior are updated accordingly.
 // ============================================================
+
+const mockOpen = vi.fn();
+
+beforeEach(() => {
+  vi.stubGlobal("open", mockOpen);
+  mockOpen.mockReturnValue({ focus: vi.fn() });
+});
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+  mockOpen.mockReset();
+});
 
 describe("HU-3.3 — Página de contacto", () => {
   // ──────────────────────────────────────────────────────────
   // Escenario 1: Contacto completo visible
-  // Dado que una persona entra a /contacto,
-  // Cuando la página termina de cargar,
-  // Entonces debe visualizar información de contacto completa.
   // ──────────────────────────────────────────────────────────
   describe("Escenario 1: Contacto completo visible", () => {
     it("muestra el encabezado 'Contáctanos'", () => {
@@ -26,7 +38,6 @@ describe("HU-3.3 — Página de contacto", () => {
 
     it("muestra la dirección física de la tienda", () => {
       render(<ContactoPage />);
-      // The address appears both in the info list and the map placeholder
       const matches = screen.getAllByText(STORE_INFO.address);
       expect(matches.length).toBeGreaterThanOrEqual(1);
     });
@@ -84,69 +95,66 @@ describe("HU-3.3 — Página de contacto", () => {
 
   // ──────────────────────────────────────────────────────────
   // Escenario 2: Envío exitoso del formulario
-  // Dado que la persona completa nombre, email y mensaje válidos,
-  // Cuando presiona "Enviar mensaje",
-  // Entonces debe mostrarse confirmación de envío placeholder.
+  // Updated for HU-3.4: form now requires phone, email is
+  // optional, button is "Enviar por WhatsApp", success state
+  // shows "¡Abrimos WhatsApp!" (honest, not placeholder).
   // ──────────────────────────────────────────────────────────
   describe("Escenario 2: Envío exitoso del formulario", () => {
-    it("muestra el estado de éxito tras enviar datos válidos", async () => {
+    it("muestra confirmación de apertura tras enviar datos válidos", async () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
       await user.type(screen.getByLabelText(/nombre/i), "Ana García");
-      await user.type(
-        screen.getByLabelText(/email/i),
-        "ana@example.com",
-      );
+      await user.type(screen.getByLabelText(/teléfono/i), "9991234567");
       await user.type(
         screen.getByLabelText(/mensaje/i),
         "Hola, necesito información sobre sus productos.",
       );
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(
-        await screen.findByText(/mensaje enviado/i),
+        await screen.findByText(/abrimos whatsapp/i),
       ).toBeInTheDocument();
     });
 
-    it("mantiene la UI estable sin recarga (el formulario se reemplaza por confirmación)", async () => {
+    it("mantiene la UI estable sin recarga (formulario se reemplaza por confirmación)", async () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
       await user.type(screen.getByLabelText(/nombre/i), "Pedro López");
-      await user.type(
-        screen.getByLabelText(/email/i),
-        "pedro@example.com",
-      );
+      await user.type(screen.getByLabelText(/teléfono/i), "9990000000");
       await user.type(
         screen.getByLabelText(/mensaje/i),
         "Mensaje de prueba.",
       );
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(
-        screen.queryByRole("button", { name: /enviar mensaje/i }),
+        screen.queryByRole("button", { name: /enviar por whatsapp/i }),
       ).not.toBeInTheDocument();
     });
 
-    it("el mensaje de éxito usa role=status para accesibilidad", async () => {
+    it("el estado de confirmación usa role=status para accesibilidad", async () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
       await user.type(screen.getByLabelText(/nombre/i), "María");
-      await user.type(screen.getByLabelText(/email/i), "maria@test.com");
+      await user.type(screen.getByLabelText(/teléfono/i), "9991111111");
       await user.type(screen.getByLabelText(/mensaje/i), "Consulta.");
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(await screen.findByRole("status")).toBeInTheDocument();
     });
   });
 
   // ──────────────────────────────────────────────────────────
-  // Escenario 3: Paridad visual con prototipo
-  // Dado que el prototipo define la referencia visual,
-  // Cuando se valida la implementación,
-  // Entonces debe respetarse la jerarquía tipográfica.
+  // Escenario 3: Paridad visual / estructura de la página
   // ──────────────────────────────────────────────────────────
   describe("Escenario 3: Paridad visual / estructura de la página", () => {
     it("renderiza el encabezado H1 'Contáctanos'", () => {
@@ -174,7 +182,6 @@ describe("HU-3.3 — Página de contacto", () => {
       const infoList = screen.getByRole("list", {
         name: /información de contacto/i,
       });
-      // "Email" also appears as a form label — scope to the info list
       expect(infoList).toHaveTextContent("Dirección");
       expect(infoList).toHaveTextContent("Teléfono");
       expect(infoList).toHaveTextContent("Email");
@@ -184,30 +191,32 @@ describe("HU-3.3 — Página de contacto", () => {
 
   // ──────────────────────────────────────────────────────────
   // Escenario 4: Bloqueo por validación inválida
-  // Dado que hay campos vacíos o email inválido,
-  // Cuando la persona intenta enviar,
-  // Entonces el sistema impide el envío y muestra errores.
+  // Updated for HU-3.4: phone required, email optional.
   // ──────────────────────────────────────────────────────────
   describe("Escenario 4: Bloqueo por validación inválida", () => {
     it("muestra error de nombre cuando el formulario se envía vacío", async () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(
         screen.getByText(/nombre es obligatorio/i),
       ).toBeInTheDocument();
     });
 
-    it("muestra error de email cuando el formulario se envía vacío", async () => {
+    it("muestra error de teléfono cuando el formulario se envía vacío", async () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(
-        screen.getByText(/email es obligatorio/i),
+        screen.getByText(/teléfono es obligatorio/i),
       ).toBeInTheDocument();
     });
 
@@ -215,7 +224,9 @@ describe("HU-3.3 — Página de contacto", () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(
         screen.getByText(/mensaje es obligatorio/i),
@@ -227,27 +238,34 @@ describe("HU-3.3 — Página de contacto", () => {
       render(<ContactForm />);
 
       await user.type(screen.getByLabelText(/nombre/i), "Ana");
+      await user.type(screen.getByLabelText(/teléfono/i), "9991234567");
       await user.type(screen.getByLabelText(/email/i), "no-es-un-email");
       await user.type(screen.getByLabelText(/mensaje/i), "Hola.");
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(screen.getByText(/formato válido/i)).toBeInTheDocument();
     });
 
-    it("no muestra el estado de éxito cuando la validación falla", async () => {
+    it("no abre WhatsApp cuando la validación falla", async () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
-      expect(screen.queryByText(/mensaje enviado/i)).not.toBeInTheDocument();
+      expect(mockOpen).not.toHaveBeenCalled();
     });
 
     it("los mensajes de error usan role=alert para accesibilidad", async () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       const alerts = screen.getAllByRole("alert");
       expect(alerts.length).toBeGreaterThanOrEqual(3);
@@ -257,13 +275,15 @@ describe("HU-3.3 — Página de contacto", () => {
       const user = userEvent.setup();
       render(<ContactForm />);
 
-      await user.click(screen.getByRole("button", { name: /enviar mensaje/i }));
+      await user.click(
+        screen.getByRole("button", { name: /enviar por whatsapp/i }),
+      );
 
       expect(screen.getByLabelText(/nombre/i)).toHaveAttribute(
         "aria-invalid",
         "true",
       );
-      expect(screen.getByLabelText(/email/i)).toHaveAttribute(
+      expect(screen.getByLabelText(/teléfono/i)).toHaveAttribute(
         "aria-invalid",
         "true",
       );

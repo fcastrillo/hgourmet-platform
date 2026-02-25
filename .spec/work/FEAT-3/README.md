@@ -15,9 +15,10 @@
 
 | ID | Story | Priority | Status |
 |:---|:------|:---------|:-------|
-| HU-3.1 | Boton fijo de WhatsApp en todo el sitio | High | [ ] Pending |
+| HU-3.1 | Boton fijo de WhatsApp en todo el sitio | High | [x] Delivered (2026-02-23) |
 | HU-3.2 | CTA "Pide por WhatsApp" con contexto de producto | High | [x] Delivered (2026-02-21) |
-| HU-3.3 | Pagina de contacto | Medium | [ ] Pending |
+| HU-3.3 | Pagina de contacto | Medium | [x] Delivered (2026-02-23) |
+| HU-3.4 | Formulario de contacto con envio real via WhatsApp | High | [ ] Planned |
 
 ---
 
@@ -26,3 +27,4 @@
 - `.spec/work/FEAT-3/HU-3.1/README.md`
 - `.spec/work/FEAT-3/HU-3.2/README.md`
 - `.spec/work/FEAT-3/HU-3.3/README.md`
+- `.spec/work/FEAT-3/HU-3.4/README.md`

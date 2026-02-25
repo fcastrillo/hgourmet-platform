@@ -76,6 +76,8 @@
     > Estimate: S | Nueva ruta `/contacto` con layout completo, enlaces sociales, mapa placeholder y formulario con validaciones/estados; sin integración externa obligatoria en esta iteración.
   - [ ] HU-3.4: Formulario de contacto con envío real vía WhatsApp (High)
     > Estimate: S (~4–8h) | Convertir el formulario de `/contacto` de estado simulado a envío real por deep link `wa.me` con mensaje prellenado (nombre, teléfono, email opcional y mensaje). Incluir validaciones de campos requeridos, encoding seguro del texto y manejo explícito de cancelación/error para evitar "success fake". Alineado con ADR-002.
+    > Como cliente o visitante, quiero enviar el formulario de contacto y abrir WhatsApp con mensaje prellenado, para poder contactar a HGourmet en un solo flujo sin copiar información manualmente.
+    > BDD mínimo: (1) Dado que completo campos válidos, cuando envío, entonces se abre `wa.me` con contexto prellenado; (2) Dado que faltan requeridos o falla apertura/cancelación, cuando intento enviar, entonces no se muestra éxito falso y se informa error recuperable.
 
 ---
 
