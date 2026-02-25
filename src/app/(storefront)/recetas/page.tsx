@@ -17,7 +17,7 @@ export default async function RecetasPage() {
       {/* Encabezado centrado — Visual Invariant #1 */}
       <div className="mb-10 text-center">
         <h1 className="font-heading text-3xl font-bold text-text md:text-4xl">
-          Recetas &amp; <span className="text-primary">Tips</span>
+          Recetas &amp; <span className="text-accent">Tips</span>
         </h1>
         <p className="mx-auto mt-3 max-w-xl text-muted">
           Inspírate con nuestras recetas elaboradas con ingredientes gourmet
