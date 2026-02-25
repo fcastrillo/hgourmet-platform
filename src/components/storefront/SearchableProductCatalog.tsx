@@ -171,7 +171,8 @@ export function SearchableProductCatalog({
             step={50}
             value={priceMax}
             onChange={(e) => setPriceMax(Number(e.target.value))}
-            className="w-full accent-accent"
+            className="w-full"
+            style={{ accentColor: "#C9A84C" }}
             aria-label="Precio máximo"
           />
           <div className="mt-1 flex justify-between text-xs text-muted">
@@ -195,9 +196,10 @@ export function SearchableProductCatalog({
               aria-checked={availableOnly}
               onClick={() => setAvailableOnly((v) => !v)}
               className={cn(
-                "relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors",
-                availableOnly ? "bg-accent" : "bg-secondary"
-              )}
+                  "relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors",
+                  availableOnly ? "bg-secondary" : "bg-secondary"
+                )}
+              style={availableOnly ? { backgroundColor: "#C9A84C" } : undefined}
             >
               <span
                 className={cn(
