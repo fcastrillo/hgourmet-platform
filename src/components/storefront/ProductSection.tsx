@@ -31,14 +31,14 @@ export function ProductSection({
 
   return (
     <section className="py-12">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="font-heading text-2xl font-bold text-text">
+      <div className="relative mb-8 text-center">
+        <h2 className="font-heading text-3xl font-bold text-text">
           {renderTitle()}
         </h2>
         {viewAllHref && (
           <Link
             href={viewAllHref}
-            className="text-sm font-medium text-primary transition-colors hover:text-primary/80"
+            className="absolute right-0 top-1/2 -translate-y-1/2 text-sm font-medium text-primary transition-colors hover:text-primary/80"
           >
             Ver todos →
           </Link>
