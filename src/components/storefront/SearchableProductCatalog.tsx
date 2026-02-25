@@ -65,11 +65,11 @@ export function SearchableProductCatalog({
     : null;
 
   return (
-    <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start">
+    <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-start">
 
       {/* ── Sidebar de filtros ───────────────────────────────── */}
       <aside
-        className="w-full shrink-0 rounded-2xl border border-secondary bg-white p-5 shadow-sm lg:w-60"
+        className="w-full shrink-0 rounded-2xl border border-secondary bg-white p-5 shadow-sm md:w-52"
         aria-label="Filtros de catálogo"
       >
         <h2 className="mb-4 font-heading text-base font-semibold text-text">
@@ -202,7 +202,7 @@ export function SearchableProductCatalog({
                 No hay categorías disponibles por el momento.
               </p>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
                 {categories.map((category) => (
                   <CategoryCard key={category.id} category={category} />
                 ))}
@@ -242,7 +242,7 @@ export function SearchableProductCatalog({
                 {results.length}{" "}
                 {results.length === 1 ? "producto encontrado" : "productos encontrados"}
               </p>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
                 {results.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
