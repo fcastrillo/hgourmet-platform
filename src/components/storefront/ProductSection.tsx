@@ -23,7 +23,7 @@ export function ProductSection({
     return (
       <>
         {parts[0]}
-        <span className="text-primary">{accentWord}</span>
+        <span className="text-accent">{accentWord}</span>
         {parts[1] ?? ""}
       </>
     );

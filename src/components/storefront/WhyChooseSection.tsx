@@ -81,7 +81,7 @@ export function WhyChooseSection() {
     <section className="py-16">
       <div className="mb-10 text-center">
         <h2 className="font-heading text-3xl font-bold text-text">
-          ¿Por qué <span className="text-primary">elegirnos</span>?
+          ¿Por qué <span className="text-accent">elegirnos</span>?
         </h2>
       </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">

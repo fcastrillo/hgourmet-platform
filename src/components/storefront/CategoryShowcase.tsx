@@ -12,7 +12,7 @@ export function CategoryShowcase({ categories }: CategoryShowcaseProps) {
   return (
     <section className="py-16">
       <h2 className="text-center font-heading text-3xl font-bold text-text">
-        Nuestras <span className="text-primary">Categorías</span>
+        Nuestras <span className="text-accent">Categorías</span>
       </h2>
       <p className="mx-auto mt-3 max-w-lg text-center text-muted">
         Encuentra todo lo que necesitas para tus creaciones
