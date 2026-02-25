@@ -19,6 +19,20 @@
 
 ---
 
+## [2026-02-25] — HU-3.4: Formulario de contacto con envío real vía WhatsApp
+
+**Feature:** FEAT-3 — Canal de Comunicación y Conversión WhatsApp
+**Benefit:** El formulario de `/contacto` deja de simular envío exitoso y ahora abre un flujo real de conversación por WhatsApp con contexto del cliente (nombre, teléfono, email opcional y mensaje), reduciendo fricción y evitando falsos positivos de UX.
+**Changes:**
+- Nuevo helper `src/lib/whatsapp.ts` para construir deep links `wa.me` con encoding seguro de caracteres especiales y saltos de línea.
+- Refactor de `ContactForm` para requerir nombre/teléfono/mensaje, hacer email opcional y abrir WhatsApp con `window.open(...)`.
+- Manejo explícito de error por bloqueo/cancelación (popup bloqueado): se muestra estado recuperable con enlace directo en vez de “success fake”.
+- Estado de éxito honesto (“¡Abrimos WhatsApp!”) con fallback accesible para reintento.
+- Actualización de pruebas HU-3.3 para mantener compatibilidad con el nuevo comportamiento del formulario.
+**Tests:** 20 nuevos tests en `hu-3.4-scenarios.test.tsx` + ajustes de regresión en `hu-3.3-scenarios.test.tsx` (suite total: 398/398 passing)
+
+---
+
 ## [2026-02-24] — HU-1.5: Categorías con imagen administrable y visual homologado
 
 **Feature:** FEAT-1 — Catálogo Digital de Productos

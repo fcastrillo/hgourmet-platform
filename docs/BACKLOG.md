@@ -65,7 +65,7 @@
 > Estimate: M (rollup) | 4 stories: 3×S + 1×XS; esfuerzo total ~1–2.5 días por UI cross-page + validaciones + paridad visual.
 
 - **Hypothesis:** Si entregamos un canal de comunicación integrado con WhatsApp y redes sociales desde cada punto del catálogo, entonces los clientes podrán pasar de la consulta al pedido en un solo clic, medido por ≥50 pedidos confirmados vía WhatsApp originados desde la web en el primer mes.
-- **Status:** In Progress (3/4 stories delivered; HU-3.4 added as MVP closeout)
+- **Status:** Delivered (4/4 stories delivered) ✅ (2026-02-25)
 - **Priority:** High
 - **Stories:**
   - [x] HU-3.1: Botón fijo de WhatsApp en todo el sitio (High) ✅ (2026-02-23)
@@ -74,7 +74,7 @@
     > Estimate: S | CTA contextual por producto con composición segura de mensaje y manejo de datos incompletos; requiere coordinación de UI + formato de enlace dinámico.
   - [x] HU-3.3: Página de contacto (Medium) ✅ (2026-02-23)
     > Estimate: S | Nueva ruta `/contacto` con layout completo, enlaces sociales, mapa placeholder y formulario con validaciones/estados; sin integración externa obligatoria en esta iteración.
-  - [ ] HU-3.4: Formulario de contacto con envío real vía WhatsApp (High)
+  - [x] HU-3.4: Formulario de contacto con envío real vía WhatsApp (High) ✅ (2026-02-25)
     > Estimate: S (~4–8h) | Convertir el formulario de `/contacto` de estado simulado a envío real por deep link `wa.me` con mensaje prellenado (nombre, teléfono, email opcional y mensaje). Incluir validaciones de campos requeridos, encoding seguro del texto y manejo explícito de cancelación/error para evitar "success fake". Alineado con ADR-002.
     > Como cliente o visitante, quiero enviar el formulario de contacto y abrir WhatsApp con mensaje prellenado, para poder contactar a HGourmet en un solo flujo sin copiar información manualmente.
     > BDD mínimo: (1) Dado que completo campos válidos, cuando envío, entonces se abre `wa.me` con contexto prellenado; (2) Dado que faltan requeridos o falla apertura/cancelación, cuando intento enviar, entonces no se muestra éxito falso y se informa error recuperable.
@@ -175,6 +175,7 @@ Detalle de hardening/optimización del importador:
   - [x] HU-3.1: Botón fijo de WhatsApp en todo el sitio ✅ (2026-02-23)
   - [x] HU-3.2: CTA "Pide por WhatsApp" con contexto de producto ✅ (2026-02-21)
   - [x] HU-3.3: Página de contacto ✅ (2026-02-23)
+  - [x] HU-3.4: Formulario de contacto con envío real vía WhatsApp ✅ (2026-02-25)
 - FEAT-4
   - [x] HU-4.3: Sección de recetas y tips ✅ (2026-02-23) — FEAT-4
   - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
