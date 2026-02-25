@@ -65,7 +65,7 @@ export function SearchableProductCatalog({
     : null;
 
   return (
-    <div className="mt-8 grid gap-6 md:grid-cols-[13rem_1fr] md:items-start">
+    <div className="catalog-layout">
 
       {/* ── Sidebar de filtros ───────────────────────────────── */}
       <aside
