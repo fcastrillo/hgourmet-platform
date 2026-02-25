@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { HomepageHero } from "@/components/storefront/HomepageHero";
 import { BannerCarousel } from "@/components/storefront/BannerCarousel";
 import { CategoryShowcase } from "@/components/storefront/CategoryShowcase";
 import { ProductSection } from "@/components/storefront/ProductSection";
 import { BrandSection } from "@/components/storefront/BrandSection";
+import { WhyChooseSection } from "@/components/storefront/WhyChooseSection";
 import {
   fetchFeaturedProducts,
   fetchSeasonalProducts,
@@ -35,10 +35,8 @@ export default async function HomePage() {
 
   return (
     <>
-      <HomepageHero />
-      {activeBanners.length > 0 && (
-        <BannerCarousel banners={activeBanners} />
-      )}
+      {/* Hero is always slide 0; active banners follow as additional slides */}
+      <BannerCarousel banners={activeBanners} />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <CategoryShowcase categories={categoriesWithCount} />
         <ProductSection
@@ -54,6 +52,7 @@ export default async function HomePage() {
           viewAllHref="/productos/temporada"
         />
         <BrandSection brands={activeBrands} />
+        <WhyChooseSection />
       </div>
     </>
   );

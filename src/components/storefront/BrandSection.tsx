@@ -11,7 +11,7 @@ export function BrandSection({ brands }: BrandSectionProps) {
     <section className="py-12">
       <div className="mb-8 text-center">
         <h2 className="font-heading text-2xl font-bold text-text">
-          Nuestras Marcas
+          Nuestras <span className="text-primary">Marcas</span>
         </h2>
         <p className="mt-2 text-sm text-muted">
           Trabajamos con las mejores marcas del mundo repostero

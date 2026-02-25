@@ -59,6 +59,7 @@ export function CategoryImage({
           src={imageUrl}
           alt={name}
           className="h-full w-full object-contain p-2"
+          style={{ mixBlendMode: "multiply" }}
           onError={handleRealError}
         />
       )}
@@ -68,6 +69,7 @@ export function CategoryImage({
           src={`/images/categories/${slug}.jpg`}
           alt={name}
           className="h-full w-full object-contain p-2"
+          style={{ mixBlendMode: "multiply" }}
           onError={handleStaticError}
         />
       )}
