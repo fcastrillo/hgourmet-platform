@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-02-25] — HU-4.1: Página principal con banners rotativos y secciones destacadas
+
+**Feature:** FEAT-4 — Contenido y Marketing Digital
+**Benefit:** La homepage queda alineada al prototipo Lovable con una jerarquía visual más clara y señales de confianza explícitas, mejorando percepción de marca y comprensión del contenido principal en el primer scroll.
+**Changes:**
+- Se unificó el Hero y los banners activos en una sola superficie de carrusel (Hero como slide inicial + banners en orden de administración), eliminando duplicidad visual.
+- Se incorporó la sección **"¿Por qué elegirnos?"** con 3 tarjetas de valor para reforzar confianza.
+- Se corrigió el problema visual de fondo blanco en imágenes de categorías usando `mix-blend-mode: multiply`.
+- Se ajustó tipografía y color de palabra acentuada en títulos de secciones para mayor paridad con Lovable, incluyendo centrado de "Lo más vendido" y "Productos de temporada".
+**Tests:** Suite `homepage.test.tsx` reforzada a 10 pruebas BDD; regresión global en verde (403/403).
+
+---
+
 ## [2026-02-25] — HU-3.4: Formulario de contacto con envío real vía WhatsApp
 
 **Feature:** FEAT-3 — Canal de Comunicación y Conversión WhatsApp

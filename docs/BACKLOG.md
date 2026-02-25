@@ -1,7 +1,7 @@
 # Product Backlog
 
 > **Project:** hgourmet-platform
-> **Last updated:** 2026-02-23
+> **Last updated:** 2026-02-25
 >
 > This is the **Single Source of Truth** for the SAFe hierarchy.
 > Structure: Epic → Feature (FEAT-N) → User Story (HU-N.M)
@@ -86,10 +86,10 @@
 > Estimate: M (rollup) | 3 stories: 1×M + 1×S + 1×XS; esfuerzo total ~1–2 días por nuevas rutas de contenido + cierre visual de homepage.
 
 - **Hypothesis:** Si entregamos herramientas de contenido de alto valor para el storefront (homepage optimizada y recetas/tips), entonces HGourmet podrá atraer tráfico recurrente y reforzar recordación de marca, medido por ≥80% de feedback positivo del contenido y mayor recurrencia de visitas en el primer trimestre.
-- **Status:** Partially Delivered (HU-4.1 y HU-4.4 parcialmente entregados)
+- **Status:** Delivered (3/3 stories delivered) ✅ (2026-02-25)
 - **Priority:** Medium
 - **Stories:**
-  - [~] HU-4.1: Página principal con banners rotativos y secciones destacadas (High) ~Parcial
+  - [x] HU-4.1: Página principal con banners rotativos y secciones destacadas (High) ✅ (2026-02-25)
     > Estimate: XS | Cierre visual sobre base ya implementada (paridad Lovable, ajustes de jerarquía y bloques de confianza) sin cambios de datos ni integraciones nuevas.
   - [x] HU-4.3: Sección de recetas y tips (Medium) ✅ (2026-02-23)
     > Estimate: M | Implementa nuevas rutas (`/recetas`, `/recetas/[slug]`), render SEO-friendly, manejo de estados de no disponible y dependencia de contenido administrable.
@@ -177,6 +177,7 @@ Detalle de hardening/optimización del importador:
   - [x] HU-3.3: Página de contacto ✅ (2026-02-23)
   - [x] HU-3.4: Formulario de contacto con envío real vía WhatsApp ✅ (2026-02-25)
 - FEAT-4
+  - [x] HU-4.1: Página principal con banners rotativos y secciones destacadas ✅ (2026-02-25) — FEAT-4
   - [x] HU-4.3: Sección de recetas y tips ✅ (2026-02-23) — FEAT-4
   - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
 - Chores (Technical / Visual)
