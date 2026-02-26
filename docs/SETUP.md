@@ -18,6 +18,7 @@
 6. [Next.js Configuration](#6-nextjs-configuration)
 7. [Business Data to Customize](#7-business-data-to-customize)
 8. [Quick Start Checklist](#8-quick-start-checklist)
+9. [Cloudflare Tunnel for Shared Preview (ENABLER-1)](#9-cloudflare-tunnel-for-shared-preview-enabler-1)
 
 ---
 
@@ -441,3 +442,92 @@ npm run dev
 - [ ] Add production `/auth/callback` URL to Supabase Redirect URLs
 - [ ] Update `src/lib/constants.ts` with real business data
 - [ ] Verify `next.config.ts` image hostname matches your Supabase project
+
+---
+
+## 9. Cloudflare Tunnel for Shared Preview (ENABLER-1)
+
+This setup is designed for a **fixed preview domain** (`demo.hgourmet.com.mx`) that points
+to your local environment through a named Cloudflare Tunnel.
+
+### 9.1 Install `cloudflared`
+
+Use the official installation method for your OS:
+- https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/
+
+Verify installation:
+
+```bash
+npm run tunnel:check
+```
+
+### 9.2 Configure named tunnel with fixed domain
+
+1. Authenticate cloudflared:
+
+```bash
+cloudflared tunnel login
+```
+
+2. Create tunnel (first time only):
+
+```bash
+cloudflared tunnel create hgourmet-demo
+```
+
+3. Route DNS hostname to tunnel:
+
+```bash
+cloudflared tunnel route dns hgourmet-demo demo.hgourmet.com.mx
+```
+
+4. Update `cloudflared/config.yml`:
+- `tunnel`: real UUID
+- `credentials-file`: local JSON path created by `cloudflared`
+- `ingress[0].hostname`: `demo.hgourmet.com.mx`
+- `ingress[0].service`: `http://localhost:3000`
+
+### 9.3 Run fixed-domain shared preview
+
+1. Start the app:
+
+```bash
+npm run dev
+```
+
+2. In another terminal, start the named tunnel:
+
+```bash
+npm run tunnel
+```
+
+Expected result:
+- `https://demo.hgourmet.com.mx` serves your local app.
+- Stakeholders always use the same domain for preview.
+
+Optional fallback (temporary URL, no fixed domain):
+
+```bash
+npm run tunnel:quick
+```
+
+### 9.4 Operational recovery (tunnel dropped or misconfigured)
+
+If a shared link stops working:
+
+1. Stop the current tunnel process (`Ctrl + C`).
+2. Re-run:
+
+```bash
+npm run tunnel
+```
+
+3. If the domain does not resolve, re-run DNS route command and verify `cloudflared/config.yml`.
+4. Ask stakeholders to hard-refresh the page.
+
+### 9.5 Demo checklist before sharing
+
+- Confirm local app is healthy (`npm run dev` without runtime errors).
+- Open `https://demo.hgourmet.com.mx` in an incognito window.
+- Validate homepage + one category/product route.
+- Share the URL with clear label: `DEV PREVIEW (fixed domain)`.

@@ -102,7 +102,10 @@
 ### Enablers (Technical / Infrastructure)
 
 - [ ] ENABLER-1: Cloudflare Tunnel para preview en desarrollo (Low)
-  > Estimate: XS (~30 min) | Instalar `cloudflared`, crear script `npm run tunnel` para exponer `localhost:3000` en URL pública temporal. Documentar en README. No requiere spec ni objetivo formal — es un chore de infraestructura.
+  > Estimate: XS (~30–45 min) | Instalar `cloudflared`, crear script `npm run tunnel` para exponer `localhost:3000` en URL pública temporal y preparar subdominio de demo (ej. `demo.hgourmet.com.mx`) separado de producción (`hgourmet.com.mx`).
+  > **Hipótesis de beneficio:** Si habilitamos un canal de preview público y estable para la versión local, entonces podremos acelerar validaciones con stakeholders y reducir fricción antes de publicar a `main`, medido por al menos 1 demo externa funcional por iteración y decisión explícita de estrategia de deployment/Git (trunk→feature) acordada antes del siguiente objetivo funcional.
+  > **BDD mínimo:** (1) Dado que el entorno local está levantado, cuando ejecuto `npm run tunnel`, entonces obtengo una URL pública accesible para compartir demo; (2) Dado que stakeholders acceden al preview, cuando revisamos el flujo principal, entonces se registran VoBo/ajustes previos a merge en `main`; (3) Dado que el túnel falla o expira, cuando intento reutilizar la URL, entonces se informa recuperación operativa (reinicio de túnel y actualización de enlace) sin bloquear el trabajo local.
+  > **Estado actual (temporal):** scripts + documentación implementados y conector registrado; pendiente cierre definitivo por dependencia externa de DNS de la zona (`demo.hgourmet.com.mx` aún sin resolución pública estable en esta iteración).
 
 - [x] ENABLER-2: Schema Evolution + Curación de Categorías (High) ✅ (2026-02-23)
   > Estimate: S (~4h) | Migración SQL `005_enabler2_schema_evolution.sql`: `categories.image_url`, `products.barcode` + `sat_code`, tablas staging (`import_batches`, `product_import_raw`, `category_mapping_rules`, `product_import_issues`), RLS admin-only, índices de reproceso, seed de 35 reglas V1. `TECH_SPEC.md` actualizado (data model + ADR-003 revisado). Desbloquea: HU-1.5 y HU-2.3.

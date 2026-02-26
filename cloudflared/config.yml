@@ -1,0 +1,17 @@
+# Cloudflare Tunnel config for fixed dev preview domain.
+# This repository tracks only a safe template-like config.
+# Replace these placeholders with your real tunnel values.
+#
+# 1) cloudflared tunnel login
+# 2) cloudflared tunnel create hgourmet-demo
+# 3) cloudflared tunnel route dns hgourmet-demo demo.hgourmet.com.mx
+# 4) Set real tunnel UUID + credentials file below
+# 5) Run: npm run tunnel
+
+tunnel: fe40d3ce-af37-433a-98fb-0a2583368549
+credentials-file: /Users/fcastrillo/.cloudflared/fe40d3ce-af37-433a-98fb-0a2583368549.json
+
+ingress:
+  - hostname: demo.hgourmet.com.mx
+    service: http://localhost:3000
+  - service: http_status:404

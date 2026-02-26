@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "tunnel": "bash -lc 'cloudflared tunnel --config \"${TUNNEL_CONFIG:-cloudflared/config.yml}\" run \"${TUNNEL_NAME:-hgourmet-demo}\"'",
+    "tunnel:quick": "cloudflared tunnel --url http://localhost:${TUNNEL_PORT:-3000}",
+    "tunnel:check": "bash -lc 'command -v cloudflared >/dev/null 2>&1 && cloudflared --version || (echo \"cloudflared is not installed. Install it first: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/\" && exit 1)'"
   },
   "dependencies": {
     "@supabase/ssr": "^0.8.0",
