@@ -101,7 +101,7 @@
 
 ### Enablers (Technical / Infrastructure)
 
-- [ ] ENABLER-1: Cloudflare Tunnel para preview en desarrollo (Low)
+- [x] ENABLER-1: Cloudflare Tunnel para preview en desarrollo (Low) ✅ (2026-02-26, cierre temporal)
   > Estimate: XS (~30–45 min) | Instalar `cloudflared`, crear script `npm run tunnel` para exponer `localhost:3000` en URL pública temporal y preparar subdominio de demo (ej. `demo.hgourmet.com.mx`) separado de producción (`hgourmet.com.mx`).
   > **Hipótesis de beneficio:** Si habilitamos un canal de preview público y estable para la versión local, entonces podremos acelerar validaciones con stakeholders y reducir fricción antes de publicar a `main`, medido por al menos 1 demo externa funcional por iteración y decisión explícita de estrategia de deployment/Git (trunk→feature) acordada antes del siguiente objetivo funcional.
   > **BDD mínimo:** (1) Dado que el entorno local está levantado, cuando ejecuto `npm run tunnel`, entonces obtengo una URL pública accesible para compartir demo; (2) Dado que stakeholders acceden al preview, cuando revisamos el flujo principal, entonces se registran VoBo/ajustes previos a merge en `main`; (3) Dado que el túnel falla o expira, cuando intento reutilizar la URL, entonces se informa recuperación operativa (reinicio de túnel y actualización de enlace) sin bloquear el trabajo local.

@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-02-26] — ENABLER-1: Cloudflare Tunnel para preview en desarrollo (cierre temporal)
+
+**Feature:** ENABLERS — Technical / Infrastructure
+**Benefit:** El equipo ya cuenta con un flujo operativo documentado para compartir demos por túnel de forma controlada (incluyendo fallback temporal), reduciendo fricción de validación con stakeholders mientras se resuelve el acceso DNS para dominio fijo.
+**Changes:**
+- Se agregó operación estandarizada de túnel con scripts `tunnel`, `tunnel:quick` y `tunnel:check`.
+- Se documentó el runbook de configuración/operación/recuperación en `docs/SETUP.md` y guía rápida en `README.md`.
+- Se estructuró `cloudflared/config.yml` fuera de raíz para mantener orden de infraestructura.
+- Se registró explícitamente la desviación de cierre temporal por dependencia externa de DNS (`demo.hgourmet.com.mx`).
+**Tests:** 0 tests automatizados nuevos (validaciones operativas manuales y verificación de comandos)
+
+---
+
 ## [2026-02-26] — ENABLER-3: Hardening del importador CSV (confiabilidad + trazabilidad)
 
 **Feature:** ENABLERS — Technical / Infrastructure
