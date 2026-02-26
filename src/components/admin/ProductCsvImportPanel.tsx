@@ -198,18 +198,19 @@ export function ProductCsvImportPanel() {
               </svg>
               <h3 className="text-base font-semibold text-green-800">Importación completada</h3>
             </div>
-            <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-5">
               <SummaryCard label="Total filas" value={summary.totalRows} />
               <SummaryCard label="Creados" value={summary.created} color="green" />
               <SummaryCard label="Actualizados" value={summary.updated} color="blue" />
-              <SummaryCard label="Omitidos" value={summary.skipped + summary.errored} color="red" />
+              <SummaryCard label="Omitidos" value={summary.skipped} color="amber" />
+              <SummaryCard label="Con error" value={summary.errored} color="red" />
             </dl>
           </div>
 
           {summary.issues.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-semibold text-red-700">
-                {summary.issues.length} {summary.issues.length === 1 ? "fila omitida" : "filas omitidas"} — detalle por fila:
+                {summary.issues.length} {summary.issues.length === 1 ? "fila con incidencia" : "filas con incidencias"} — detalle por fila:
               </p>
               <ProductCsvPreviewTable
                 validRows={[]}
@@ -254,12 +255,13 @@ function SummaryCard({
 }: {
   label: string;
   value: number;
-  color?: "green" | "blue" | "red" | "gray";
+  color?: "green" | "blue" | "red" | "amber" | "gray";
 }) {
   const colorClasses = {
     green: "text-green-700",
     blue: "text-blue-700",
     red: "text-red-700",
+    amber: "text-amber-600",
     gray: "text-text",
   };
 

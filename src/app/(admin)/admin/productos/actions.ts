@@ -407,7 +407,7 @@ export async function importProductsCsv(
   });
 
   // ── Step 6: Upsert valid products ────────────────────────────────────────
-  let upsertResult = { created: 0, updated: 0, skipped: 0 };
+  let upsertResult = { created: 0, updated: 0, issues: [] as import("@/lib/import/csv/types").RowIssue[] };
   if (validatedRows.length > 0) {
     try {
       upsertResult = await upsertProducts(supabase, validatedRows);
@@ -416,14 +416,27 @@ export async function importProductsCsv(
     }
   }
 
-  // ── Step 7: Persist staging audit ────────────────────────────────────────
-  const totalRows = parsedRows.length + parseIssues.filter((i) => i.code === "MISSING_FIELD" || i.code === "INVALID_PRICE").length;
+  // ── Step 7: Build consolidated metrics ───────────────────────────────────
+  //
+  // Invariant: created + updated + skipped + errored = totalRows
+  //
+  //   totalRows   = parsedRows (passed parse) + parseIssues (rejected at parse level)
+  //   skipped     = DUPLICATE_SKU issues (functional rule — row intentionally omitted)
+  //   errored     = validation issues (non-DUPLICATE) + DB errors from upsert
+  //   created + updated = validatedRows successfully upserted
+  //
+  const totalRows = parsedRows.length + parseIssues.length;
   const dupSkipCount = allIssues.filter((i) => i.code === "DUPLICATE_SKU").length;
+  const validationErrorCount = allIssues.filter((i) => i.code !== "DUPLICATE_SKU").length;
+  const dbErrorCount = upsertResult.issues.length;
+  const erroredCount = validationErrorCount + dbErrorCount;
 
+  // Merge all issues for the audit trail and UI detail table.
+  const mergedIssues = [...allIssues, ...upsertResult.issues];
+
+  // ── Step 8: Persist staging audit ────────────────────────────────────────
   let batchId = "";
   try {
-    // Rebuild raw rows map from original parse (sourceRow → original cells)
-    // We send parsedRows payload as best-effort audit (normalized form)
     const rawRows = parsedRows.map((r) => ({
       sourceRow: r.sourceRow,
       payload: r.data as unknown as Record<string, unknown>,
@@ -433,16 +446,16 @@ export async function importProductsCsv(
       filename: file.name,
       fileHash: await computeFileHash(csvText),
       mappingVersion: MAPPING_VERSION,
-      totalRows: totalRows + parsedRows.length - parsedRows.length, // all data rows
+      totalRows,
       rawRows,
-      issues: allIssues,
+      issues: mergedIssues,
       rowsCreated: upsertResult.created,
       rowsUpdated: upsertResult.updated,
-      rowsSkipped: dupSkipCount + upsertResult.skipped,
-      rowsErrored: allIssues.filter((i) => i.code !== "DUPLICATE_SKU").length,
+      rowsSkipped: dupSkipCount,
+      rowsErrored: erroredCount,
     });
   } catch {
-    // Staging failure is non-fatal — products were already upserted
+    // Staging failure is non-fatal — products were already upserted.
     batchId = "staging-error";
   }
 
@@ -452,12 +465,12 @@ export async function importProductsCsv(
 
   const summary: ImportSummary = {
     batchId,
-    totalRows: parsedRows.length + parseIssues.length,
+    totalRows,
     created: upsertResult.created,
     updated: upsertResult.updated,
     skipped: dupSkipCount,
-    errored: allIssues.filter((i) => i.code !== "DUPLICATE_SKU").length,
-    issues: allIssues,
+    errored: erroredCount,
+    issues: mergedIssues,
   };
 
   return { success: true, summary };

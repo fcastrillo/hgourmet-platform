@@ -3,7 +3,9 @@ export type IssueCode =
   | "INVALID_PRICE"
   | "MISSING_FIELD"
   | "UNMAPPED_CATEGORY"
-  | "DUPLICATE_SKU";
+  | "DUPLICATE_SKU"
+  | "DB_INSERT_ERROR"
+  | "DB_UPDATE_ERROR";
 
 // Raw row as parsed from CSV (all strings, pre-normalization)
 export interface CsvRawRow {

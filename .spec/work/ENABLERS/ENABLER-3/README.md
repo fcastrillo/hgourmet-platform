@@ -1,11 +1,11 @@
-# ENABLER-3: Hardening y performance del importador CSV
+# ENABLER-3: Hardening del importador CSV (confiabilidad + trazabilidad)
 
 ## Objetivo del Enabler
 
 - **Para**: Administradoras de HGourmet y equipo técnico
 - **Que**: requieren importaciones masivas confiables (3k+ filas) con trazabilidad real de errores
-- **Este enabler**: robustece el pipeline de `upsert` por lotes y optimiza performance de importación
-- **Esperamos**: eliminar pérdidas silenciosas de filas y reducir tiempo total de importación
+- **Este enabler**: robustece el pipeline de `upsert` por lotes para evitar fallos silenciosos y garantizar trazabilidad por fila
+- **Esperamos**: eliminar pérdidas silenciosas de filas y asegurar reporte confiable de resultados
 - **Sabremos que hemos tenido éxito cuando**: una carga de ~3,382 filas reporte métricas consistentes (`created + updated + skipped + errored = total`) y no detenga progreso por fallos de lote no trazados
 
 ## Contexto
@@ -15,7 +15,7 @@ Durante la prueba con inventario real (3,382 filas), el importador logró catego
 1. **Fallo silencioso por lote**: si falla una inserción de batch, el bloque no suma a `created` y no siempre queda error detallado por fila.
 2. **Métricas potencialmente engañosas**: el resumen puede no reflejar exactamente todas las filas no procesadas.
 3. **Posibles colisiones de slug dentro de un mismo lote**: la estrategia actual consulta unicidad fuera del contexto completo del chunk.
-4. **Throughput mejorable**: updates fila por fila y tamaño de chunk fijo.
+4. **Throughput mejorable (secundario)**: updates fila por fila y tamaño de chunk fijo.
 
 ## Alcance Técnico
 
@@ -41,7 +41,7 @@ Durante la prueba con inventario real (3,382 filas), el importador logró catego
   - sufijo incremental estable por nombre base
 - Mantener compatibilidad con `slug` único en DB.
 
-### 4) Performance
+### 4) Performance (secundario, no bloqueante)
 
 - Hacer configurable el `CHUNK` (por env o constante centralizada).
 - Evaluar estrategia para reducir roundtrips en updates (p. ej. RPC SQL o merge por staging).
@@ -57,12 +57,25 @@ Durante la prueba con inventario real (3,382 filas), el importador logró catego
    - consistencia de métricas.
 4. Nota de operación en docs (`CHANGELOG` al cerrar + actualización de estrategia técnica si aplica).
 
+## Decisiones de Diseño (acordadas)
+
+1. **Política de ejecución**: `best-effort`.
+   - Si falla un `insert` por lote, se degrada a inserción fila individual.
+   - El proceso continúa para evitar que una sola fila bloquee todo el archivo.
+2. **Trazabilidad por fila**:
+   - Toda fila debe terminar como `created`, `updated`, `skipped` o `errored`.
+   - No se aceptan filas “sin rastro” al cierre del import.
+3. **Semántica de resumen**:
+   - `skipped` = filas omitidas por regla funcional (ej. `DUPLICATE_SKU`).
+   - `errored` = fallas técnicas o de validación (ej. error DB insert/update, parsing inválido).
+   - Invariante obligatorio: `created + updated + skipped + errored = totalRows`.
+
 ## Criterios de Aceptación
 
 1. En importación de >3,000 filas, no existen filas “desaparecidas” sin issue asociado.
 2. El resumen final cuadra matemáticamente con el total de filas.
 3. Los errores de DB se visualizan con detalle utilizable para reproceso.
-4. El tiempo total de importación no empeora respecto al baseline actual en ±10% (ideal: mejora).
+4. El import no se aborta globalmente por fallos puntuales de DB; concluye en modo `best-effort` con trazabilidad por fila.
 
 ## BDD (Enabler)
 
@@ -77,3 +90,7 @@ Durante la prueba con inventario real (3,382 filas), el importador logró catego
 - **Dado que** pueden existir nombres repetidos dentro del mismo lote,  
   **Cuando** se generen slugs para nuevos productos,  
   **Entonces** no deben producirse colisiones que aborten silenciosamente el batch.
+
+- **Dado que** existe una fila con error de DB dentro de un archivo grande,  
+  **Cuando** se procesa la importación,  
+  **Entonces** el sistema debe continuar con el resto de filas y registrar el detalle técnico de la fila fallida.

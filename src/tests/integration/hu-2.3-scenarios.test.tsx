@@ -570,8 +570,8 @@ describe("ProductCsvImportPanel", () => {
       expect(screen.getByText(/importación completada/i)).toBeInTheDocument();
     });
 
-    // Issues section shown with label
-    expect(screen.getByText(/3 filas omitidas/i)).toBeInTheDocument();
+    // Issues section shown with label (changed from "omitidas" to "con incidencias" in ENABLER-3)
+    expect(screen.getByText(/3 filas con incidencias/i)).toBeInTheDocument();
   });
 
   it("muestra error del servidor cuando importProductsCsv falla", async () => {
@@ -647,6 +647,187 @@ describe("ProductCsvImportPanel", () => {
     await user.click(screen.getByRole("button", { name: /cancelar/i }));
 
     expect(screen.getByText(/seleccionar un archivo csv/i)).toBeInTheDocument();
+  });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ENABLER-3: Hardening — confiabilidad y trazabilidad de errores
+// ─────────────────────────────────────────────────────────────────────────────
+
+describe("ENABLER-3: Métricas de import consistentes (invariante matemático)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("BDD: created + updated + skipped + errored = totalRows cuando todo es válido", async () => {
+    const user = userEvent.setup();
+
+    mockImportProductsCsv.mockResolvedValueOnce({
+      success: true,
+      summary: {
+        batchId: "batch-e3-1",
+        totalRows: 100,
+        created: 100,
+        updated: 0,
+        skipped: 0,
+        errored: 0,
+        issues: [],
+      },
+    });
+
+    render(<ProductCsvImportPanel />);
+    const csv =
+      "nombre,descripcion,precio,departamento,categoria,clave1,clave2,codigo_sat,disponible,destacado,temporada\n" +
+      '"Prod A","","50.00","Moldes","moldes","M-001","","",true,false,false';
+    const file = new File([csv], "p.csv", { type: "text/csv" });
+    await user.upload(screen.getByLabelText(/seleccionar archivo csv/i), file);
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /confirmar importación/i })).toBeInTheDocument(),
+    );
+    await user.click(screen.getByRole("button", { name: /confirmar importación/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/importación completada/i)).toBeInTheDocument(),
+    );
+
+    // Verifica que skipped y errored se muestran como tarjetas separadas
+    expect(screen.getByText("Omitidos")).toBeInTheDocument();
+    expect(screen.getByText("Con error")).toBeInTheDocument();
+  });
+
+  it("BDD: fallo parcial de batch — errored > 0 muestra detalle de errores DB en tabla", async () => {
+    const user = userEvent.setup();
+
+    mockImportProductsCsv.mockResolvedValueOnce({
+      success: true,
+      summary: {
+        batchId: "batch-e3-2",
+        totalRows: 10,
+        created: 8,
+        updated: 0,
+        skipped: 0,
+        errored: 2,
+        issues: [
+          {
+            sourceRow: 4,
+            code: "DB_INSERT_ERROR",
+            detail: "Error al insertar producto: duplicate key value violates unique constraint",
+          },
+          {
+            sourceRow: 7,
+            code: "DB_INSERT_ERROR",
+            detail: "Error al insertar producto: violates not-null constraint",
+          },
+        ],
+      },
+    });
+
+    render(<ProductCsvImportPanel />);
+    const csv =
+      "nombre,descripcion,precio,departamento,categoria,clave1,clave2,codigo_sat,disponible,destacado,temporada\n" +
+      '"Prod A","","50.00","Moldes","moldes","M-001","","",true,false,false';
+    const file = new File([csv], "p.csv", { type: "text/csv" });
+    await user.upload(screen.getByLabelText(/seleccionar archivo csv/i), file);
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /confirmar importación/i })).toBeInTheDocument(),
+    );
+    await user.click(screen.getByRole("button", { name: /confirmar importación/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/importación completada/i)).toBeInTheDocument(),
+    );
+
+    // Tarjeta "Con error" muestra 2
+    expect(screen.getByText("Con error")).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument();
+
+    // Tabla de incidencias muestra las filas con error DB
+    expect(screen.getByText(/2 filas con incidencias/i)).toBeInTheDocument();
+    // El badge y el detalle comparten la misma raíz textual — usamos getAllByText
+    expect(screen.getAllByText(/Error al insertar/i).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText(/Error al insertar producto:/i).length).toBeGreaterThanOrEqual(1);
+  });
+
+  it("BDD: resumen con skipped y errored separados cuadra con totalRows", async () => {
+    const user = userEvent.setup();
+
+    // 10 total: 5 creados + 0 actualizados + 3 omitidos (dup) + 2 errores = 10
+    mockImportProductsCsv.mockResolvedValueOnce({
+      success: true,
+      summary: {
+        batchId: "batch-e3-3",
+        totalRows: 10,
+        created: 5,
+        updated: 0,
+        skipped: 3,
+        errored: 2,
+        issues: [
+          { sourceRow: 2, code: "DUPLICATE_SKU", detail: "SKU duplicado: A-001" },
+          { sourceRow: 5, code: "DUPLICATE_SKU", detail: "SKU duplicado: A-002" },
+          { sourceRow: 8, code: "DUPLICATE_SKU", detail: "SKU duplicado: A-003" },
+          { sourceRow: 3, code: "DB_INSERT_ERROR", detail: "Error al insertar producto: constraint" },
+          { sourceRow: 9, code: "DB_UPDATE_ERROR", detail: "Error al actualizar producto: constraint" },
+        ],
+      },
+    });
+
+    render(<ProductCsvImportPanel />);
+    const csv =
+      "nombre,descripcion,precio,departamento,categoria,clave1,clave2,codigo_sat,disponible,destacado,temporada\n" +
+      '"Prod A","","50.00","Moldes","moldes","M-001","","",true,false,false';
+    const file = new File([csv], "p.csv", { type: "text/csv" });
+    await user.upload(screen.getByLabelText(/seleccionar archivo csv/i), file);
+
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: /confirmar importación/i })).toBeInTheDocument(),
+    );
+    await user.click(screen.getByRole("button", { name: /confirmar importación/i }));
+
+    await waitFor(() =>
+      expect(screen.getByText(/importación completada/i)).toBeInTheDocument(),
+    );
+
+    // Las dos métricas están separadas
+    expect(screen.getByText("Omitidos")).toBeInTheDocument();
+    expect(screen.getByText("Con error")).toBeInTheDocument();
+
+    // La tabla de incidencias muestra los 5 issues
+    expect(screen.getByText(/5 filas con incidencias/i)).toBeInTheDocument();
+  });
+
+  it("IssueCode DB_INSERT_ERROR se muestra con etiqueta legible en tabla de errores", () => {
+    render(
+      <ProductCsvPreviewTable
+        validRows={[]}
+        issues={[
+          {
+            sourceRow: 4,
+            code: "DB_INSERT_ERROR",
+            detail: "Error al insertar producto: duplicate key",
+          },
+        ]}
+      />,
+    );
+    expect(screen.getByText("Error al insertar")).toBeInTheDocument();
+    expect(screen.getByText(/Error al insertar producto: duplicate key/)).toBeInTheDocument();
+  });
+
+  it("IssueCode DB_UPDATE_ERROR se muestra con etiqueta legible en tabla de errores", () => {
+    render(
+      <ProductCsvPreviewTable
+        validRows={[]}
+        issues={[
+          {
+            sourceRow: 9,
+            code: "DB_UPDATE_ERROR",
+            detail: "Error al actualizar producto: not-null",
+          },
+        ]}
+      />,
+    );
+    expect(screen.getByText("Error al actualizar")).toBeInTheDocument();
   });
 });
 

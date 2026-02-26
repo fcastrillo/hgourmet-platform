@@ -23,6 +23,8 @@ const ISSUE_LABELS: Record<string, string> = {
   MISSING_FIELD: "Campo obligatorio vacío",
   UNMAPPED_CATEGORY: "Categoría no mapeada",
   DUPLICATE_SKU: "SKU duplicado",
+  DB_INSERT_ERROR: "Error al insertar",
+  DB_UPDATE_ERROR: "Error al actualizar",
 };
 
 export function ProductCsvPreviewTable({
