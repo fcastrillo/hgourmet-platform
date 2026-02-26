@@ -19,6 +19,20 @@
 
 ---
 
+## [2026-02-26] — ENABLER-3: Hardening del importador CSV (confiabilidad + trazabilidad)
+
+**Feature:** ENABLERS — Technical / Infrastructure
+**Benefit:** La importación masiva de productos ahora procesa en modo best-effort con trazabilidad por fila ante errores de DB, evitando fallos silenciosos y entregando un resumen matemáticamente consistente para reproceso operativo.
+**Changes:**
+- Refactor de `upsertProducts` con fallback por fila cuando falla el insert por lote, registrando errores técnicos por `sourceRow`.
+- Nuevos códigos de issue `DB_INSERT_ERROR` y `DB_UPDATE_ERROR` para auditoría en `product_import_issues`.
+- Consolidación de métricas en `importProductsCsv` para garantizar el invariante `created + updated + skipped + errored = totalRows`.
+- Separación explícita en UI entre `Omitidos` y `Con error` y actualización de etiquetas de incidencias técnicas en tabla.
+- Ajustes de pruebas de integración HU-2.3 para cubrir fallo parcial de batch, invariante de métricas y render de conteos separados.
+**Tests:** 5 nuevos tests ENABLER-3 (suite HU-2.3 en verde: 56/56)
+
+---
+
 ## [2026-02-25] — CHORE-2: Sprint de polish final pre-demo
 
 **Feature:** Chores (Technical / Visual)

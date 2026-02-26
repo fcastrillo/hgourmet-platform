@@ -106,7 +106,7 @@
 - [x] ENABLER-2: Schema Evolution + Curación de Categorías (High) ✅ (2026-02-23)
   > Estimate: S (~4h) | Migración SQL `005_enabler2_schema_evolution.sql`: `categories.image_url`, `products.barcode` + `sat_code`, tablas staging (`import_batches`, `product_import_raw`, `category_mapping_rules`, `product_import_issues`), RLS admin-only, índices de reproceso, seed de 35 reglas V1. `TECH_SPEC.md` actualizado (data model + ADR-003 revisado). Desbloquea: HU-1.5 y HU-2.3.
 
-- [ ] ENABLER-3: Hardening del importador CSV (confiabilidad + trazabilidad) (High)
+- [x] ENABLER-3: Hardening del importador CSV (confiabilidad + trazabilidad) (High) ✅ (2026-02-26)
   > Estimate: M (~1–2 días) | Prioridad actual: eliminar fallos silenciosos y asegurar trazabilidad total por fila. Implementar política **best-effort** (si falla un batch, degradar a fila individual y continuar), registrar issue técnico por fila fallida (DB insert/update), y corregir métricas reales de `created/updated/skipped/errored` para que siempre cumplan `created + updated + skipped + errored = totalRows`. Mantener mejoras de throughput como secundarias/no bloqueantes.
 
 #### Decisión: 7 Categorías Curadas (2026-02-23)
