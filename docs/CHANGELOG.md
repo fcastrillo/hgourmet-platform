@@ -19,6 +19,20 @@
 
 ---
 
+## [2026-02-26] — HU-1.6: Filtros avanzados de precio y toggle de disponibilidad con feedback completo
+
+**Feature:** FEAT-1 — Catálogo Digital de Productos
+**Benefit:** Los clientes ahora pueden filtrar productos por intención real de precio (`Hasta` o `Desde`) y entender claramente el estado de disponibilidad con un switch más legible, reduciendo ambigüedad de búsqueda y mejorando confianza en los filtros.
+**Changes:**
+- Se implementó selector explícito de modo de precio (`Hasta`/`Desde`) con integración a `priceMax` y `priceMin` en `searchProducts`.
+- Se agregó persistencia/restauración de filtros vía URL (`q`, `category`, `mode`, `price`, `inStock`) con parseo robusto de parámetros inválidos.
+- En modo `Desde`, el slider invierte visualmente el lado resaltado para que el énfasis quede a la derecha; en modo `Hasta`, se mantiene resaltado a la izquierda.
+- Se reforzó el control `Solo en stock` como switch clickeable completo (texto + control) con desplazamiento visible del thumb y ajustes de estilo sin borde en estado activo.
+- Se añadieron pruebas HU-1.6 y se actualizó la suite HU-1.3 para cubrir el nuevo contrato de filtros.
+**Tests:** 5 nuevos tests en `hu-1.6-scenarios.test.tsx` + ajustes de regresión HU-1.3 (13/13 passing en validación focalizada)
+
+---
+
 ## [2026-02-26] — ENABLER-1: Cloudflare Tunnel para preview en desarrollo (cierre temporal)
 
 **Feature:** ENABLERS — Technical / Infrastructure

@@ -1,7 +1,7 @@
 # Product Backlog
 
 > **Project:** hgourmet-platform
-> **Last updated:** 2026-02-25
+> **Last updated:** 2026-02-26
 >
 > This is the **Single Source of Truth** for the SAFe hierarchy.
 > Structure: Epic → Feature (FEAT-N) → User Story (HU-N.M)
@@ -16,10 +16,10 @@
 
 ### FEAT-1: Catálogo Digital de Productos
 
-> Estimate: L (rollup) | 5 stories: 2×M + 3×S, esfuerzo total ~6–8 días.
+> Estimate: L (rollup) | 6 stories: 2×M + 4×S, esfuerzo total ~7–9 días.
 
 - **Hypothesis:** Si entregamos un catálogo digital navegable por categorías con fichas de producto completas (imagen, precio, disponibilidad), entonces los clientes de HGourmet podrán consultar productos de forma autónoma sin visitar la tienda física ni preguntar por WhatsApp, medido por ≥500 usuarios únicos y ≥300 productos publicados en el primer mes.
-- **Status:** Delivered (5/5 stories delivered) ✅ (2026-02-24)
+- **Status:** Delivered (6/6 stories delivered) ✅ (2026-02-26)
 - **Priority:** High
 - **Stories:**
   - [x] HU-1.1: Navegación por categorías de productos (High) ✅ (2026-02-21)
@@ -32,6 +32,8 @@
     > Estimate: S | 2 secciones con componente genérico, queries filtradas por is_featured/is_seasonal, reutiliza ProductCard. ~3–6 horas.
   - [x] HU-1.5: Categorías con imagen administrable y visual homologado (Medium) ✅ (2026-02-24)
     > Estimate: S (~4–8h) | Migración: agregar `image_url` a tabla `categories`. Nuevo bucket `category-images` en Supabase Storage. Extender `CategoryFormModal` para upload de imagen. Unificar visualización entre `CategoryShowcase` (homepage) y `CategoryCard` (catálogo) para mostrar imagen real o fallback a icono. Depende de ENABLER-2.
+  - [x] HU-1.6: Filtros avanzados de precio y toggle de disponibilidad con feedback completo (Medium) ✅ (2026-02-26)
+    > Estimate: S (~4–8h) | Evolución de HU-1.3 para soportar intención de filtro `desde/hasta` en precio (evitando comportamiento unilateral) y corregir feedback visual del switch `Solo en stock` (posición del thumb + estado). Debe mantener trazabilidad de filtros en URL (`searchParams`) y cobertura de pruebas de integración para prevenir regresiones.
 
 ---
 
@@ -166,6 +168,7 @@ Detalle de hardening/trazabilidad del importador:
   - [x] HU-1.3: Búsqueda y filtrado de productos ✅ (2026-02-22) — FEAT-1
   - [x] HU-1.4: Sección "Lo más vendido" y "Productos de temporada" ✅ (2026-02-21) — FEAT-1
   - [x] HU-1.5: Categorías con imagen administrable y visual homologado ✅ (2026-02-24) — FEAT-1
+  - [x] HU-1.6: Filtros avanzados de precio y toggle de disponibilidad con feedback completo ✅ (2026-02-26) — FEAT-1
 - FEAT-2
   - [x] HU-2.1: Autenticación de administradoras ✅ (2026-02-22) — FEAT-2
   - [x] HU-2.4: Gestión de categorías ✅ (2026-02-22) — FEAT-2

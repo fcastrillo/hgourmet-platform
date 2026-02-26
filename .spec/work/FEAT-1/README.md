@@ -17,6 +17,7 @@
 | HU-1.3 | Búsqueda y filtrado de productos | Medium | [ ] Pending |
 | HU-1.4 | Sección "Lo más vendido" y "Productos de temporada" | Medium | [ ] Pending |
 | HU-1.5 | Categorías con imagen administrable y visual homologado | Medium | [ ] Pending |
+| HU-1.6 | Filtros avanzados de precio y toggle de disponibilidad con feedback completo | Medium | [ ] Pending |
 
 ## Acceptance Criteria (Feature Level)
 
@@ -39,7 +40,6 @@
 - Carrito de compras o checkout (pedidos se gestionan vía WhatsApp — ver FEAT-3)
 - Recomendaciones personalizadas por usuario
 - Paginación infinita (se usará paginación estándar si el volumen lo requiere)
-- Filtros avanzados por rango de precio (se evaluará en iteraciones futuras)
 
 ## Supporting Artifacts
 
