@@ -47,6 +47,7 @@
     > Estimate: M | Lista con paginación/búsqueda, formulario de creación/edición con upload de imagen a Supabase Storage, slug automático, toggles de visibilidad/featured/seasonal, eliminación con confirmación. ~3–4 días.
   - [x] HU-2.3: Importación masiva de productos vía CSV (High) ✅ (2026-02-23)
     > Estimate: L (~2–3 días) | Parser client-side con mapeo `departamento+categoría CSV → categoría curada` (7 categorías). Limpieza de precios formato `$1,135.00` → `numeric`. Validación por fila con reporte de errores (duplicados SKU, precios inválidos, categoría no mapeada). Preview antes de importar. Upsert idempotente por SKU (`clave1`). Template descargable. Inventario real: 3,382 productos en 18 departamentos. Depende de ENABLER-2. Ver ADR-003 actualizado.
+    > Mejora futura identificada en operación real: habilitar descarga directa del log de errores del import desde la UI admin (evitar extracción manual y mejorar trazabilidad operativa).
   - [x] HU-2.4: Gestión de categorías (Medium) ✅ (2026-02-22)
     > Estimate: S | CRUD de categorías, reordenamiento con controles ▲/▼, slug automático, protección FK contra eliminación con productos asociados. ~1 hora (AI-assisted).
   - [x] HU-2.5: Gestión de banners rotativos (Medium) ✅ (2026-02-22)
