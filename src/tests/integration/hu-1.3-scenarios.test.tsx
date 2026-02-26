@@ -147,6 +147,7 @@ describe("HU-1.3 — Búsqueda y filtrado de productos", () => {
       expect(mockSearchProducts).toHaveBeenCalledWith({
         query: "chocolate",
         categoryId: null,
+        priceMin: null,
         priceMax: null,
         availableOnly: false,
       });
@@ -165,6 +166,7 @@ describe("HU-1.3 — Búsqueda y filtrado de productos", () => {
       expect(mockSearchProducts).toHaveBeenCalledWith({
         query: undefined,
         categoryId: "c2",
+        priceMin: null,
         priceMax: null,
         availableOnly: false,
       });
@@ -176,6 +178,7 @@ describe("HU-1.3 — Búsqueda y filtrado de productos", () => {
       expect(mockSearchProducts).toHaveBeenCalledWith({
         query: "molde",
         categoryId: "c2",
+        priceMin: null,
         priceMax: null,
         availableOnly: false,
       });

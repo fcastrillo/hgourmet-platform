@@ -10,17 +10,69 @@ import type { Product, CategoryWithProductCount } from "@/types/database";
 
 interface SearchableProductCatalogProps {
   categories: CategoryWithProductCount[];
+  initialFilters?: CatalogInitialFilters;
 }
 
 const PRICE_MAX_DEFAULT = 1500;
+const PRICE_MIN_DEFAULT = 0;
+
+export type PriceMode = "max" | "min";
+
+export interface CatalogInitialFilters {
+  query?: string;
+  categoryId?: string | null;
+  price?: number;
+  priceMode?: PriceMode;
+  inStock?: boolean;
+}
+
+function clampPrice(value: number): number {
+  if (Number.isNaN(value)) {
+    return PRICE_MAX_DEFAULT;
+  }
+
+  return Math.min(Math.max(value, PRICE_MIN_DEFAULT), PRICE_MAX_DEFAULT);
+}
+
+function sanitizeInitialFilters(initialFilters?: CatalogInitialFilters) {
+  const query = initialFilters?.query?.trim() ?? "";
+  const categoryId = initialFilters?.categoryId ?? null;
+  const inStock = Boolean(initialFilters?.inStock);
+  const priceMode: PriceMode =
+    initialFilters?.priceMode === "min" ? "min" : "max";
+
+  const rawPrice =
+    typeof initialFilters?.price === "number"
+      ? clampPrice(initialFilters.price)
+      : null;
+
+  const defaultPrice =
+    priceMode === "min" ? PRICE_MIN_DEFAULT : PRICE_MAX_DEFAULT;
+
+  const price = rawPrice ?? defaultPrice;
+
+  return { query, categoryId, inStock, priceMode, price };
+}
 
 export function SearchableProductCatalog({
   categories,
+  initialFilters,
 }: SearchableProductCatalogProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [priceMax, setPriceMax] = useState<number>(PRICE_MAX_DEFAULT);
-  const [availableOnly, setAvailableOnly] = useState(false);
+  const sanitizedInitialFilters = sanitizeInitialFilters(initialFilters);
+
+  const [searchTerm, setSearchTerm] = useState(sanitizedInitialFilters.query);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    sanitizedInitialFilters.categoryId
+  );
+  const [priceMode, setPriceMode] = useState<PriceMode>(
+    sanitizedInitialFilters.priceMode
+  );
+  const [priceValue, setPriceValue] = useState<number>(
+    sanitizedInitialFilters.price
+  );
+  const [availableOnly, setAvailableOnly] = useState(
+    sanitizedInitialFilters.inStock
+  );
   const [results, setResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -33,10 +85,24 @@ export function SearchableProductCatalog({
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  useEffect(() => {
+    if (
+      selectedCategory &&
+      !categories.some((category) => category.id === selectedCategory)
+    ) {
+      setSelectedCategory(null);
+    }
+  }, [categories, selectedCategory]);
+
+  const isPriceFilterActive =
+    priceMode === "min"
+      ? priceValue > PRICE_MIN_DEFAULT
+      : priceValue < PRICE_MAX_DEFAULT;
+
   const isActive =
     searchTerm.trim().length > 0 ||
     selectedCategory !== null ||
-    priceMax < PRICE_MAX_DEFAULT ||
+    isPriceFilterActive ||
     availableOnly;
 
   const handleSearch = useCallback((term: string) => {
@@ -55,7 +121,8 @@ export function SearchableProductCatalog({
     searchProducts({
       query: searchTerm.trim() || undefined,
       categoryId: selectedCategory,
-      priceMax: priceMax < PRICE_MAX_DEFAULT ? priceMax : null,
+      priceMin: priceMode === "min" && priceValue > PRICE_MIN_DEFAULT ? priceValue : null,
+      priceMax: priceMode === "max" && priceValue < PRICE_MAX_DEFAULT ? priceValue : null,
       availableOnly,
     }).then((data) => {
       if (!cancelled) {
@@ -67,11 +134,47 @@ export function SearchableProductCatalog({
     return () => {
       cancelled = true;
     };
-  }, [searchTerm, selectedCategory, priceMax, availableOnly, isActive]);
+  }, [searchTerm, selectedCategory, priceMode, priceValue, availableOnly, isActive]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    const trimmedSearchTerm = searchTerm.trim();
+    if (trimmedSearchTerm.length > 0) {
+      params.set("q", trimmedSearchTerm);
+    }
+
+    if (selectedCategory) {
+      params.set("category", selectedCategory);
+    }
+
+    if (priceMode === "min") {
+      params.set("mode", "min");
+      if (priceValue > PRICE_MIN_DEFAULT) {
+        params.set("price", String(priceValue));
+      }
+    } else if (priceValue < PRICE_MAX_DEFAULT) {
+      params.set("mode", "max");
+      params.set("price", String(priceValue));
+    }
+
+    if (availableOnly) {
+      params.set("inStock", "1");
+    }
+
+    const nextSearch = params.toString();
+    const nextUrl = nextSearch
+      ? `${window.location.pathname}?${nextSearch}`
+      : window.location.pathname;
+
+    window.history.replaceState(null, "", nextUrl);
+  }, [searchTerm, selectedCategory, priceMode, priceValue, availableOnly]);
 
   const selectedCategoryName = selectedCategory
     ? categories.find((c) => c.id === selectedCategory)?.name
     : null;
+  const sliderValue =
+    priceMode === "min" ? PRICE_MAX_DEFAULT - priceValue : priceValue;
 
   return (
     <div
@@ -164,21 +267,75 @@ export function SearchableProductCatalog({
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
             Precio (MXN)
           </p>
+          <div className="mb-3 grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setPriceMode("max");
+                if (priceValue === PRICE_MIN_DEFAULT) {
+                  setPriceValue(PRICE_MAX_DEFAULT);
+                }
+              }}
+              className={cn(
+                "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors focus:outline-none",
+                priceMode === "max"
+                  ? "border-transparent bg-accent text-white"
+                  : "border-secondary bg-white text-text hover:bg-secondary/20"
+              )}
+              aria-pressed={priceMode === "max"}
+            >
+              Hasta
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setPriceMode("min");
+                if (priceValue === PRICE_MAX_DEFAULT) {
+                  setPriceValue(PRICE_MIN_DEFAULT);
+                }
+              }}
+              className={cn(
+                "rounded-lg border px-3 py-1.5 text-xs font-semibold transition-colors focus:outline-none",
+                priceMode === "min"
+                  ? "border-transparent bg-accent text-white"
+                  : "border-secondary bg-white text-text hover:bg-secondary/20"
+              )}
+              aria-pressed={priceMode === "min"}
+            >
+              Desde
+            </button>
+          </div>
           <input
             type="range"
             min={0}
             max={PRICE_MAX_DEFAULT}
             step={50}
-            value={priceMax}
-            onChange={(e) => setPriceMax(Number(e.target.value))}
+            value={sliderValue}
+            onChange={(e) => {
+              const rawValue = Number(e.target.value);
+              setPriceValue(
+                priceMode === "min"
+                  ? PRICE_MAX_DEFAULT - rawValue
+                  : rawValue
+              );
+            }}
             className="w-full"
-            style={{ accentColor: "#C9A84C" }}
-            aria-label="Precio máximo"
+            style={{
+              accentColor: "#C9A84C",
+              transform: priceMode === "min" ? "scaleX(-1)" : undefined,
+            }}
+            aria-label={priceMode === "min" ? "Precio mínimo" : "Precio máximo"}
           />
           <div className="mt-1 flex justify-between text-xs text-muted">
-            <span>$0</span>
             <span>
-              {priceMax < PRICE_MAX_DEFAULT ? `$${priceMax}` : `$${PRICE_MAX_DEFAULT}+`}
+              {priceMode === "min" ? `$${priceValue}` : "$0"}
+            </span>
+            <span>
+              {priceMode === "max"
+                ? priceValue < PRICE_MAX_DEFAULT
+                  ? `$${priceValue}`
+                  : `$${PRICE_MAX_DEFAULT}+`
+                : `$${PRICE_MAX_DEFAULT}+`}
             </span>
           </div>
         </div>
@@ -188,35 +345,36 @@ export function SearchableProductCatalog({
           <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
             Disponibilidad
           </p>
-          <label className="flex cursor-pointer items-center gap-3 text-sm text-text">
-            {/* ADR-010: React state-driven toggle */}
-            <button
-              type="button"
-              role="switch"
-              aria-checked={availableOnly}
-              onClick={() => setAvailableOnly((v) => !v)}
+          <button
+            type="button"
+            role="switch"
+            aria-checked={availableOnly}
+            onClick={() => setAvailableOnly((v) => !v)}
+            className="flex cursor-pointer items-center gap-3 text-sm text-text focus:outline-none"
+          >
+            <span
               className={cn(
-                  "relative inline-flex h-5 w-9 shrink-0 rounded-full border-2 border-transparent transition-colors",
-                  availableOnly ? "bg-secondary" : "bg-secondary"
-                )}
-              style={availableOnly ? { backgroundColor: "#C9A84C" } : undefined}
+                "relative inline-flex h-6 w-10 shrink-0 rounded-full transition-colors",
+                availableOnly ? "bg-accent" : "bg-secondary/50"
+              )}
+              aria-hidden="true"
             >
               <span
-                className={cn(
-                  "inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform",
-                  availableOnly ? "translate-x-4" : "translate-x-0"
-                )}
+                className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform"
+                style={{
+                  transform: availableOnly ? "translateX(16px)" : "translateX(0px)",
+                }}
               />
-            </button>
+            </span>
             Solo en stock
-          </label>
+          </button>
         </div>
       </aside>
 
       {/* ── Área principal ───────────────────────────────────── */}
       <div className="min-w-0">
         {/* Buscador */}
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar onSearch={handleSearch} initialValue={sanitizedInitialFilters.query} />
 
         {/* Resultados */}
         <div className="mt-6">
