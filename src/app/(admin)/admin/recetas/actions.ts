@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { fetchMaxRecipeDisplayOrder } from "@/lib/supabase/queries/admin-recipes";
+import { buildContentFromStructured } from "@/lib/recipe-content";
 
 type ActionResult = { success: true } | { success: false; error: string };
 
@@ -64,12 +65,15 @@ async function deleteRecipeImage(
 
 export async function createRecipe(formData: FormData): Promise<ActionResult> {
   const title = (formData.get("title") as string | null)?.trim() ?? "";
-  const content = (formData.get("content") as string | null)?.trim() ?? "";
+  const ingredients = (formData.get("ingredients") as string | null)?.trim() ?? "";
+  const preparation = (formData.get("preparation") as string | null)?.trim() ?? "";
+  const tip = (formData.get("tip") as string | null)?.trim() ?? "";
   const imageFile = formData.get("image") as File | null;
   const isPublished = formData.get("is_published") === "true";
 
   if (!title) return { success: false, error: "El título es obligatorio." };
-  if (!content) return { success: false, error: "El contenido es obligatorio." };
+  if (!ingredients) return { success: false, error: "Los ingredientes son obligatorios." };
+  if (!preparation) return { success: false, error: "La preparación es obligatoria." };
 
   const supabase = await createClient();
   let imageUrl: string | null = null;
@@ -87,11 +91,15 @@ export async function createRecipe(formData: FormData): Promise<ActionResult> {
 
   const maxOrder = await fetchMaxRecipeDisplayOrder();
   const slug = toSlug(title);
+  const content = buildContentFromStructured(ingredients, preparation, tip);
 
   const row = {
     title,
     slug,
     content,
+    ingredients_text: ingredients,
+    preparation_text: preparation,
+    tip_text: tip || null,
     image_url: imageUrl,
     is_published: isPublished,
     display_order: maxOrder + 1,
@@ -115,13 +123,16 @@ export async function updateRecipe(
   formData: FormData,
 ): Promise<ActionResult> {
   const title = (formData.get("title") as string | null)?.trim() ?? "";
-  const content = (formData.get("content") as string | null)?.trim() ?? "";
+  const ingredients = (formData.get("ingredients") as string | null)?.trim() ?? "";
+  const preparation = (formData.get("preparation") as string | null)?.trim() ?? "";
+  const tip = (formData.get("tip") as string | null)?.trim() ?? "";
   const imageFile = formData.get("image") as File | null;
   const existingImageUrl = (formData.get("existing_image_url") as string | null) || null;
   const isPublished = formData.get("is_published") === "true";
 
   if (!title) return { success: false, error: "El título es obligatorio." };
-  if (!content) return { success: false, error: "El contenido es obligatorio." };
+  if (!ingredients) return { success: false, error: "Los ingredientes son obligatorios." };
+  if (!preparation) return { success: false, error: "La preparación es obligatoria." };
 
   const supabase = await createClient();
   let imageUrl: string | null = existingImageUrl;
@@ -140,9 +151,14 @@ export async function updateRecipe(
     if (!imageUrl) return { success: false, error: "Error al subir la imagen. Intenta de nuevo." };
   }
 
+  const content = buildContentFromStructured(ingredients, preparation, tip);
+
   const changes = {
     title,
     content,
+    ingredients_text: ingredients,
+    preparation_text: preparation,
+    tip_text: tip || null,
     image_url: imageUrl,
     is_published: isPublished,
     updated_at: new Date().toISOString(),

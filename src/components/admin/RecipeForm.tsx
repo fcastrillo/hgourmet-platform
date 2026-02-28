@@ -4,6 +4,7 @@ import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createRecipe, updateRecipe } from "@/app/(admin)/admin/recetas/actions";
+import { extractFormFields } from "@/lib/recipe-content";
 import type { Recipe } from "@/types/database";
 
 interface RecipeFormProps {
@@ -12,7 +13,8 @@ interface RecipeFormProps {
 
 interface FormErrors {
   title?: string;
-  content?: string;
+  ingredients?: string;
+  preparation?: string;
 }
 
 export function RecipeForm({ recipe }: RecipeFormProps) {
@@ -24,8 +26,12 @@ export function RecipeForm({ recipe }: RecipeFormProps) {
 
   const isEditing = !!recipe;
 
+  const initialFields = recipe ? extractFormFields(recipe) : { ingredients: "", preparation: "", tip: "" };
+
   const [title, setTitle] = useState(recipe?.title ?? "");
-  const [content, setContent] = useState(recipe?.content ?? "");
+  const [ingredients, setIngredients] = useState(initialFields.ingredients);
+  const [preparation, setPreparation] = useState(initialFields.preparation);
+  const [tip, setTip] = useState(initialFields.tip);
   const [isPublished, setIsPublished] = useState(recipe?.is_published ?? false);
   const [imagePreview, setImagePreview] = useState<string | null>(
     recipe?.image_url ?? null,
@@ -35,7 +41,8 @@ export function RecipeForm({ recipe }: RecipeFormProps) {
   function validate(): boolean {
     const newErrors: FormErrors = {};
     if (!title.trim()) newErrors.title = "El título es obligatorio.";
-    if (!content.trim()) newErrors.content = "El contenido es obligatorio.";
+    if (!ingredients.trim()) newErrors.ingredients = "Los ingredientes son obligatorios.";
+    if (!preparation.trim()) newErrors.preparation = "La preparación es obligatoria.";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
@@ -62,7 +69,9 @@ export function RecipeForm({ recipe }: RecipeFormProps) {
     setServerError(null);
     const formData = new FormData();
     formData.set("title", title.trim());
-    formData.set("content", content.trim());
+    formData.set("ingredients", ingredients.trim());
+    formData.set("preparation", preparation.trim());
+    formData.set("tip", tip.trim());
     formData.set("is_published", String(isPublished));
 
     if (selectedFile) {
@@ -183,32 +192,79 @@ export function RecipeForm({ recipe }: RecipeFormProps) {
           />
         </div>
 
-        {/* Content (Markdown) */}
+        {/* Ingredientes */}
         <div>
-          <label htmlFor="content" className="mb-1 block text-sm font-medium text-text">
-            Contenido <span className="text-error">*</span>
+          <label htmlFor="ingredients" className="mb-1 block text-sm font-medium text-text">
+            Ingredientes <span className="text-error">*</span>
           </label>
           <p className="mb-2 text-xs text-muted">
-            Puedes usar Markdown para dar formato al texto.
+            Escribe un ingrediente por línea. Ej: 200g Chocolate Callebaut 70%
           </p>
           <textarea
-            id="content"
-            value={content}
+            id="ingredients"
+            value={ingredients}
             onChange={(e) => {
-              setContent(e.target.value);
-              if (errors.content) setErrors((prev) => ({ ...prev, content: undefined }));
+              setIngredients(e.target.value);
+              if (errors.ingredients) setErrors((prev) => ({ ...prev, ingredients: undefined }));
             }}
-            rows={16}
-            placeholder={`## Ingredientes\n\n- 200g Chocolate Callebaut 70%\n- 150g mantequilla sin sal\n\n## Preparación\n\n1. Precalentar el horno a 175°C.\n2. Derretir el chocolate con la mantequilla...\n\n> **Tip HGourmet:** ...`}
-            className={`w-full rounded-lg border bg-white px-4 py-2.5 font-mono text-sm text-text placeholder:text-muted/60 focus:outline-none focus:ring-1 ${
-              errors.content
+            rows={6}
+            placeholder={"200g Chocolate Callebaut 70%\n150g mantequilla sin sal\n200g azúcar moscabado\n3 huevos grandes"}
+            className={`w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-text placeholder:text-muted/60 focus:outline-none focus:ring-1 ${
+              errors.ingredients
                 ? "border-error focus:border-error focus:ring-error"
                 : "border-secondary focus:border-primary focus:ring-primary"
             }`}
           />
-          {errors.content && (
-            <p className="mt-1 text-xs text-error">{errors.content}</p>
+          {errors.ingredients && (
+            <p className="mt-1 text-xs text-error">{errors.ingredients}</p>
           )}
+        </div>
+
+        {/* Preparación */}
+        <div>
+          <label htmlFor="preparation" className="mb-1 block text-sm font-medium text-text">
+            Preparación <span className="text-error">*</span>
+          </label>
+          <p className="mb-2 text-xs text-muted">
+            Escribe un paso por línea. Se numerarán automáticamente en la receta.
+          </p>
+          <textarea
+            id="preparation"
+            value={preparation}
+            onChange={(e) => {
+              setPreparation(e.target.value);
+              if (errors.preparation) setErrors((prev) => ({ ...prev, preparation: undefined }));
+            }}
+            rows={8}
+            placeholder={"Precalentar el horno a 175°C y engrasar un molde cuadrado de 20cm.\nDerretir el chocolate Callebaut con la mantequilla a baño María.\nBatir los huevos con el azúcar hasta que la mezcla blanquee."}
+            className={`w-full rounded-lg border bg-white px-4 py-2.5 text-sm text-text placeholder:text-muted/60 focus:outline-none focus:ring-1 ${
+              errors.preparation
+                ? "border-error focus:border-error focus:ring-error"
+                : "border-secondary focus:border-primary focus:ring-primary"
+            }`}
+          />
+          {errors.preparation && (
+            <p className="mt-1 text-xs text-error">{errors.preparation}</p>
+          )}
+        </div>
+
+        {/* Tip HGourmet (opcional) */}
+        <div>
+          <label htmlFor="tip" className="mb-1 block text-sm font-medium text-text">
+            Tip HGourmet{" "}
+            <span className="text-xs font-normal text-muted">(opcional)</span>
+          </label>
+          <p className="mb-2 text-xs text-muted">
+            Un consejo especial de HGourmet para que la receta salga perfecta.
+          </p>
+          <textarea
+            id="tip"
+            value={tip}
+            onChange={(e) => setTip(e.target.value)}
+            rows={3}
+            placeholder="Para un acabado brillante, deja reposar los brownies en el refrigerador 1 hora antes de cortarlos."
+            className="w-full rounded-lg border border-secondary bg-white px-4 py-2.5 text-sm text-text placeholder:text-muted/60 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
         </div>
 
         {/* Published toggle */}

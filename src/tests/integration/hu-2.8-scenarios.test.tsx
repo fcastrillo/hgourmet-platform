@@ -30,6 +30,9 @@ const sampleRecipes: Recipe[] = [
     title: "Brownies de Chocolate Callebaut",
     slug: "brownies-de-chocolate-callebaut",
     content: "## Ingredientes\n\n- 200g Chocolate Callebaut",
+    ingredients_text: "200g Chocolate Callebaut",
+    preparation_text: "Precalentar el horno.",
+    tip_text: null,
     image_url: "https://example.com/brownies.jpg",
     is_published: true,
     display_order: 1,
@@ -41,6 +44,9 @@ const sampleRecipes: Recipe[] = [
     title: "Cupcakes de Vainilla con Fondant",
     slug: "cupcakes-de-vainilla-con-fondant",
     content: "## Ingredientes\n\n- 250g harina",
+    ingredients_text: "250g harina",
+    preparation_text: "Mezclar.",
+    tip_text: null,
     image_url: null,
     is_published: true,
     display_order: 2,
@@ -52,6 +58,9 @@ const sampleRecipes: Recipe[] = [
     title: "Mousse de Chocolate Blanco",
     slug: "mousse-de-chocolate-blanco",
     content: "## Ingredientes\n\n- 300g chocolate blanco",
+    ingredients_text: "300g chocolate blanco",
+    preparation_text: "Batir.",
+    tip_text: null,
     image_url: null,
     is_published: false,
     display_order: 3,
@@ -300,11 +309,12 @@ describe("HU-2.8 — Gestión de recetas desde el panel", () => {
   // --- Escenario 1: RecipeForm — Crear receta (BDD) ---
 
   describe("Escenario 1: RecipeForm — Crear receta exitosamente", () => {
-    it("muestra el formulario con campos título, contenido e imagen", () => {
+    it("muestra el formulario con campos título, ingredientes, preparación e imagen", () => {
       render(<RecipeForm />);
 
       expect(screen.getByLabelText(/título/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/contenido/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/ingredientes/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/preparación/i)).toBeInTheDocument();
       expect(screen.getByText("Publicada")).toBeInTheDocument();
       expect(document.getElementById("is_published")).toBeInTheDocument();
     });
@@ -328,6 +338,8 @@ describe("HU-2.8 — Gestión de recetas desde el panel", () => {
       expect(screen.getByDisplayValue(/200g Chocolate Callebaut/)).toBeInTheDocument();
     });
 
+
+
     it("muestra link 'Volver a recetas'", () => {
       render(<RecipeForm />);
 
@@ -348,14 +360,14 @@ describe("HU-2.8 — Gestión de recetas desde el panel", () => {
       expect(mockCreateRecipe).not.toHaveBeenCalled();
     });
 
-    it("muestra error 'El contenido es obligatorio.' al enviar sin contenido", async () => {
+    it("muestra error 'Los ingredientes son obligatorios.' al enviar sin ingredientes", async () => {
       const user = userEvent.setup();
       render(<RecipeForm />);
 
       await user.type(screen.getByLabelText(/título/i), "Mi receta");
       await user.click(screen.getByRole("button", { name: /crear receta/i }));
 
-      expect(screen.getByText("El contenido es obligatorio.")).toBeInTheDocument();
+      expect(screen.getByText("Los ingredientes son obligatorios.")).toBeInTheDocument();
       expect(mockCreateRecipe).not.toHaveBeenCalled();
     });
 
@@ -370,13 +382,15 @@ describe("HU-2.8 — Gestión de recetas desde el panel", () => {
       expect(screen.queryByText("El título es obligatorio.")).not.toBeInTheDocument();
     });
 
+
     it("muestra error de servidor cuando createRecipe retorna error", async () => {
       mockCreateRecipe.mockResolvedValueOnce({ success: false, error: "Ya existe una receta con ese título." });
       const user = userEvent.setup();
       render(<RecipeForm />);
 
       await user.type(screen.getByLabelText(/título/i), "Brownies");
-      await user.type(screen.getByLabelText(/contenido/i), "Contenido de prueba");
+      await user.type(screen.getByLabelText(/ingredientes/i), "200g Chocolate");
+      await user.type(screen.getByLabelText(/preparación/i), "Paso único");
       await user.click(screen.getByRole("button", { name: /crear receta/i }));
 
       await waitFor(() => {

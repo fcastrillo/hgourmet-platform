@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { fetchPublishedRecipeBySlug } from "@/lib/supabase/queries/recipes";
-import { parseRecipeContent } from "@/lib/recipe-parser";
+import { getRecipeSections } from "@/lib/recipe-content";
 import { Breadcrumb } from "@/components/storefront/Breadcrumb";
 
 interface RecetaDetailPageProps {
@@ -41,7 +41,7 @@ export default async function RecetaDetailPage({
     notFound();
   }
 
-  const sections = parseRecipeContent(recipe.content);
+  const sections = getRecipeSections(recipe);
 
   const breadcrumbItems = [
     { label: "Inicio", href: "/" },

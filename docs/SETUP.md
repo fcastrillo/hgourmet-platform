@@ -76,6 +76,7 @@ supabase/migrations/002_banners.sql
 supabase/migrations/003_brands.sql
 supabase/migrations/004_recipes.sql
 supabase/migrations/005_enabler2_schema_evolution.sql
+supabase/migrations/006_hu_6_2_recipes_structured_fields.sql
 ```
 
 This creates:
@@ -423,7 +424,7 @@ npm run dev
 ### Supabase configuration checklist
 
 - [ ] Create Supabase project and copy URL + anon key to `.env.local`
-- [ ] **Database:** Run migrations `001` → `005` in SQL Editor (including `005_enabler2_schema_evolution.sql`)
+- [ ] **Database:** Run migrations `001` → `006` in SQL Editor (including `005_enabler2_schema_evolution.sql` and `006_hu_6_2_recipes_structured_fields.sql`)
 - [ ] **Database (optional):** Run `supabase/seed.sql` for test data
 - [ ] **Auth:** Enable Email provider with Magic Link
 - [ ] **Auth:** Set Site URL to `https://www.hgourmet.com.mx`
