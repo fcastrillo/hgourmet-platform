@@ -23,7 +23,7 @@
 1) Visibilidad de métricas clave
 - **Dado que**: soy una administradora autenticada
 - **Cuando**: ingreso a `/admin`
-- **Entonces**: visualizo KPIs de productos, categorías, recetas y suscriptores con valores consistentes con la base de datos.
+- **Entonces**: visualizo KPIs de productos, categorías, recetas y marcas/banners con valores consistentes con la base de datos.
 
 2) Actividad reciente operativa
 - **Dado que**: existen altas o ediciones recientes en catálogo/contenido

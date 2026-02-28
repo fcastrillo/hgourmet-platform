@@ -163,14 +163,14 @@ Detalle de hardening/trazabilidad del importador:
 
 > Estimate: M (rollup) | 2 stories: 2×S; esfuerzo total ~1–2 días.
 
-- **Hypothesis:** Si mejoramos el dashboard administrativo con métricas accionables y simplificamos la edición de recetas con campos estructurados, entonces las administradoras podrán operar el panel con menor fricción y menor curva de aprendizaje, medido por reducción de dudas operativas en capacitación y menor tiempo promedio para actualizar contenido.
+- **Hypothesis:** Si entregamos un dashboard administrativo con métricas accionables y una edición de recetas en campos estructurados, entonces las administradoras podrán operar el panel con menor fricción y menor curva de aprendizaje, medido por reducción de dudas operativas en capacitación y menor tiempo promedio para actualizar contenido.
 - **Status:** In Progress
 - **Priority:** High
 - **Stories:**
   - [ ] HU-6.1: Dashboard administrativo completo con estado operativo del negocio
     > Como administradora, quiero ver en el dashboard tarjetas de métricas clave, actividad reciente y accesos rápidos consistentes con el prototipo validado, para poder entender el estado del catálogo y ejecutar acciones frecuentes sin navegar múltiples pantallas.
     > Criterios (resumen): (1) mostrar KPIs relevantes y confiables del panel; (2) incluir lista de actividad reciente (ej. últimos productos/recetas actualizados); (3) mantener accesos rápidos a módulos principales; (4) respetar jerarquía visual y consistencia de diseño del admin.
-    > BDD mínimo: (1) Dado que soy una administradora autenticada, cuando entro a `/admin`, entonces veo KPIs clave (productos, categorías, recetas y suscriptores) con valores consistentes con la base de datos; (2) Dado que existen altas/ediciones recientes, cuando cargo el dashboard, entonces veo una lista de últimos cambios con fecha y estado; (3) Dado que necesito una acción frecuente, cuando uso "Acciones rápidas", entonces navego al módulo destino sin fricción.
+    > BDD mínimo: (1) Dado que soy una administradora autenticada, cuando entro a `/admin`, entonces veo KPIs clave (productos, categorías, recetas y marcas/banners) con valores consistentes con la base de datos; (2) Dado que existen altas/ediciones recientes, cuando cargo el dashboard, entonces veo una lista de últimos cambios con fecha y estado; (3) Dado que necesito una acción frecuente, cuando uso "Acciones rápidas", entonces navego al módulo destino sin fricción.
     > Casos de prueba sugeridos: contrato de datos para KPIs (conteos correctos por entidad), integración de render del dashboard con estado vacío/no vacío, navegación de acciones rápidas.
   - [x] HU-6.2: Edición de recetas en campos estructurados (ingredientes, preparación, tip) ✅ (2026-02-28)
     > Como administradora, quiero editar recetas en campos separados para ingredientes, preparación y tip HGourmet, para no depender de escribir Markdown manual y reducir errores de formato.

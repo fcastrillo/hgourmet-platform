@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-02-28] — HU-6.1: Dashboard administrativo completo con estado operativo del negocio
+
+**Feature:** FEAT-6 — Evolución UX del Panel de Administración
+**Benefit:** La administradora puede conocer el estado del catálogo (productos, categorías, recetas, marcas, banners) y la actividad reciente de un solo vistazo, sin necesidad de navegar módulo por módulo.
+**Changes:**
+- Nuevo query helper `admin-dashboard.ts` con KPIs de conteo por entidad y actividad reciente ordenada por fecha (5 ítems/entidad, top 10 combinado).
+- Componentes reutilizables: `AdminKpiCards` (grilla de 5 KPIs con link a módulo), `AdminRecentActivity` (lista con badge de entidad + fecha), `AdminQuickActions` (accesos directos a creación de registros).
+- Refactor de `/admin` dashboard: Server Component que compone los 3 widgets con degradación controlada (banner ámbar en caso de error, KPIs en cero y estado vacío amigable).
+- 18 tests de integración en `hu-6.1-scenarios.test.tsx` cubriendo AC1–AC3 y acciones rápidas.
+**Tests:** 18 nuevos tests en `hu-6.1-scenarios.test.tsx` + regresión total en verde (453/453)
+
+---
+
 ## [2026-02-28] — HU-6.2: Edición de recetas en campos estructurados (ingredientes, preparación, tip)
 
 **Feature:** FEAT-6 — Evolución UX del Panel de Administración
