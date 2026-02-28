@@ -15,8 +15,8 @@
 ### HU-6.1: Dashboard administrativo completo con estado operativo del negocio
 
 - **Como**: administradora
-- **Quiero**: ver KPIs clave, actividad reciente y accesos rápidos en el dashboard
-- **Para poder**: entender el estado del negocio y ejecutar tareas frecuentes sin navegar múltiples pantallas
+- **Quiero**: ver KPIs clave y actividad reciente en el dashboard
+- **Para poder**: entender el estado del negocio sin navegar múltiples pantallas
 
 #### Acceptance Criteria (BDD)
 
@@ -33,7 +33,7 @@
 3) Escenario de excepción (estado vacío/falla de datos)
 - **Dado que**: no hay actividad reciente o falla una fuente de datos secundaria
 - **Cuando**: renderiza el dashboard
-- **Entonces**: el sistema muestra estado vacío o degradación controlada sin bloquear el acceso a acciones rápidas.
+- **Entonces**: el sistema muestra estado vacío o degradación controlada sin bloquear la visualización del dashboard.
 
 ---
 
