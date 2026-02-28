@@ -14,7 +14,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { AdminKpiCards } from "@/components/admin/AdminKpiCards";
 import { AdminRecentActivity } from "@/components/admin/AdminRecentActivity";
-import { AdminQuickActions } from "@/components/admin/AdminQuickActions";
 import type { DashboardKpis, RecentActivityItem } from "@/lib/supabase/queries/admin-dashboard";
 
 // ─── Mocks ───────────────────────────────────────────────────────────────────
@@ -220,67 +219,14 @@ describe("HU-6.1 — AC3: Estado vacío y degradación sin bloquear acciones rá
     expect(screen.getByRole("status")).toBeInTheDocument();
   });
 
-  it("las acciones rápidas se renderizan independientemente del estado de actividad", () => {
-    render(
-      <>
-        <AdminRecentActivity items={[]} />
-        <AdminQuickActions />
-      </>,
-    );
-
+  it("el estado vacío de actividad no bloquea el resto del dashboard", () => {
+    render(<AdminRecentActivity items={[]} />);
     expect(screen.getByTestId("recent-activity-empty")).toBeInTheDocument();
-    expect(screen.getByTestId("quick-actions-grid")).toBeInTheDocument();
   });
 
-  it("KPIs con ceros no rompen el layout ni el acceso a acciones rápidas", () => {
-    render(
-      <>
-        <AdminKpiCards kpis={zeroKpis} />
-        <AdminQuickActions />
-      </>,
-    );
-
+  it("KPIs con ceros no rompen el layout del dashboard", () => {
+    render(<AdminKpiCards kpis={zeroKpis} />);
     expect(screen.getByTestId("kpi-grid")).toBeInTheDocument();
-    expect(screen.getByTestId("quick-actions-grid")).toBeInTheDocument();
   });
 });
 
-// ─── Acciones rápidas ────────────────────────────────────────────────────────
-
-describe("HU-6.1 — Acciones rápidas: navegación a módulos prioritarios", () => {
-  it("muestra los 4 accesos rápidos principales", () => {
-    render(<AdminQuickActions />);
-
-    expect(screen.getByLabelText("Nuevo producto")).toBeInTheDocument();
-    expect(screen.getByLabelText("Nueva receta")).toBeInTheDocument();
-    expect(screen.getByLabelText("Nueva categoría")).toBeInTheDocument();
-    expect(screen.getByLabelText("Nueva marca")).toBeInTheDocument();
-  });
-
-  it("cada acción rápida navega al módulo correcto", () => {
-    render(<AdminQuickActions />);
-
-    expect(
-      screen.getByLabelText("Nuevo producto").closest("a"),
-    ).toHaveAttribute("href", "/admin/productos/nuevo");
-
-    expect(
-      screen.getByLabelText("Nueva receta").closest("a"),
-    ).toHaveAttribute("href", "/admin/recetas/nueva");
-
-    expect(
-      screen.getByLabelText("Nueva categoría").closest("a"),
-    ).toHaveAttribute("href", "/admin/categorias/nueva");
-
-    expect(
-      screen.getByLabelText("Nueva marca").closest("a"),
-    ).toHaveAttribute("href", "/admin/marcas/nueva");
-  });
-
-  it("la sección tiene aria-label 'Acciones rápidas'", () => {
-    render(<AdminQuickActions />);
-    expect(
-      screen.getByRole("region", { name: /acciones rápidas/i }),
-    ).toBeInTheDocument();
-  });
-});

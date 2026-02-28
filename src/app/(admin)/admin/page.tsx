@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/server";
 import { fetchDashboardData } from "@/lib/supabase/queries/admin-dashboard";
 import { AdminKpiCards } from "@/components/admin/AdminKpiCards";
 import { AdminRecentActivity } from "@/components/admin/AdminRecentActivity";
-import { AdminQuickActions } from "@/components/admin/AdminQuickActions";
 import type { DashboardData } from "@/lib/supabase/queries/admin-dashboard";
 
 const EMPTY_DASHBOARD: DashboardData = {
@@ -52,9 +51,6 @@ export default async function AdminDashboard() {
 
       {/* KPI Cards */}
       <AdminKpiCards kpis={dashboardData.kpis} />
-
-      {/* Quick Actions */}
-      <AdminQuickActions />
 
       {/* Recent Activity */}
       <AdminRecentActivity items={dashboardData.recentActivity} />
