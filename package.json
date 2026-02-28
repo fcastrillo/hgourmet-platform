@@ -9,7 +9,10 @@
     "lint": "next lint",
     "test": "vitest",
     "test:run": "vitest run",
-    "tunnel": "bash -lc 'cloudflared tunnel --config \"${TUNNEL_CONFIG:-cloudflared/config.yml}\" run \"${TUNNEL_NAME:-hgourmet-demo}\"'",
+    "dev:up": "bash ./scripts/dev-up.sh",
+    "dev:up:quick": "bash ./scripts/dev-up.sh quick",
+    "dev:down": "bash ./scripts/dev-down.sh",
+    "tunnel": "bash -lc 'cloudflared tunnel --config \"${TUNNEL_CONFIG:-cloudflared/config.yml}\" run \"${TUNNEL_NAME:-demo-hgourmet}\"'",
     "tunnel:quick": "cloudflared tunnel --url http://localhost:${TUNNEL_PORT:-3000}",
     "tunnel:check": "bash -lc 'command -v cloudflared >/dev/null 2>&1 && cloudflared --version || (echo \"cloudflared is not installed. Install it first: https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/\" && exit 1)'"
   },

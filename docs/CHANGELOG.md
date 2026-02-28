@@ -33,15 +33,15 @@
 
 ---
 
-## [2026-02-26] — ENABLER-1: Cloudflare Tunnel para preview en desarrollo (cierre temporal)
+## [2026-02-26] — ENABLER-1: Cloudflare Tunnel para preview en desarrollo
 
 **Feature:** ENABLERS — Technical / Infrastructure
-**Benefit:** El equipo ya cuenta con un flujo operativo documentado para compartir demos por túnel de forma controlada (incluyendo fallback temporal), reduciendo fricción de validación con stakeholders mientras se resuelve el acceso DNS para dominio fijo.
+**Benefit:** El equipo cuenta con un flujo operativo documentado y funcional para compartir demos desde ramas feature con dominio fijo (`demo.hgourmet.com.mx`), mientras producción se mantiene estable en `main` (`www.hgourmet.com.mx`).
 **Changes:**
 - Se agregó operación estandarizada de túnel con scripts `tunnel`, `tunnel:quick` y `tunnel:check`.
 - Se documentó el runbook de configuración/operación/recuperación en `docs/SETUP.md` y guía rápida en `README.md`.
 - Se estructuró `cloudflared/config.yml` fuera de raíz para mantener orden de infraestructura.
-- Se registró explícitamente la desviación de cierre temporal por dependencia externa de DNS (`demo.hgourmet.com.mx`).
+- Se documentó el modelo operativo vigente: demo por túnel desde ramas feature, producción desde `main`, y Vercel Preview por rama fuera del flujo por ahora.
 **Tests:** 0 tests automatizados nuevos (validaciones operativas manuales y verificación de comandos)
 
 ---

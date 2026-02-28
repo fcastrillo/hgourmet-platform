@@ -3,8 +3,8 @@
 # Replace these placeholders with your real tunnel values.
 #
 # 1) cloudflared tunnel login
-# 2) cloudflared tunnel create hgourmet-demo
-# 3) cloudflared tunnel route dns hgourmet-demo demo.hgourmet.com.mx
+# 2) cloudflared tunnel create demo-hgourmet
+# 3) cloudflared tunnel route dns demo-hgourmet demo.hgourmet.com.mx
 # 4) Set real tunnel UUID + credentials file below
 # 5) Run: npm run tunnel
 

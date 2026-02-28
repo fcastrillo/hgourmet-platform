@@ -1,7 +1,7 @@
 # Setup & Configuration Guide
 
 > **Project:** hgourmet-platform
-> **Last updated:** 2026-02-22
+> **Last updated:** 2026-02-26
 >
 > This guide covers all infrastructure prerequisites needed to run the project
 > in development and production environments.
@@ -34,6 +34,7 @@ cp .env.local.example .env.local
 |:---------|:-----|:-------------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Public | Supabase Dashboard → Settings → API → Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Supabase Dashboard → Settings → API → `anon` `public` key |
+| `CLOUDFLARE_TUNNEL_TOKEN` | Secret (local) | Cloudflare Zero Trust → Tunnel → Install and run a connector |
 
 Both variables are exposed to the browser (prefix `NEXT_PUBLIC_`). This is safe because
 RLS policies enforce access control at the database level.
@@ -205,12 +206,12 @@ The admin panel uses **Magic Link (Email OTP)** — no passwords.
 
 Go to **Authentication → URL Configuration**:
 
-| Setting | Development | Production |
-|:--------|:------------|:-----------|
-| **Site URL** | `http://localhost:3000` | `https://your-domain.com` |
-| **Redirect URLs** | `http://localhost:3000/auth/callback` | `https://your-domain.com/auth/callback` |
+| Setting | Recommended value |
+|:--------|:------------------|
+| **Site URL** | `https://www.hgourmet.com.mx` |
+| **Redirect URLs** | `http://localhost:3000/auth/callback`, `http://127.0.0.1:3000/auth/callback`, `https://demo.hgourmet.com.mx/auth/callback`, `https://www.hgourmet.com.mx/auth/callback`, `https://hgourmet.com.mx/auth/callback` |
 
-> **Important:** Add BOTH the dev and production callback URLs to the "Redirect URLs" list.
+> **Important:** Keep all local/dev/prod callback URLs in the allow-list to avoid Magic Link failures when switching environment.
 
 ### 4.3 Auth Flow Summary
 
@@ -425,9 +426,10 @@ npm run dev
 - [ ] **Database:** Run migrations `001` → `005` in SQL Editor (including `005_enabler2_schema_evolution.sql`)
 - [ ] **Database (optional):** Run `supabase/seed.sql` for test data
 - [ ] **Auth:** Enable Email provider with Magic Link
-- [ ] **Auth:** Set Site URL to `http://localhost:3000` (dev) / production URL
-- [ ] **Auth:** Add `http://localhost:3000/auth/callback` to Redirect URLs
-- [ ] **Auth:** Add production callback URL to Redirect URLs
+- [ ] **Auth:** Set Site URL to `https://www.hgourmet.com.mx`
+- [ ] **Auth:** Add local callbacks to Redirect URLs (`http://localhost:3000/auth/callback` and `http://127.0.0.1:3000/auth/callback`)
+- [ ] **Auth:** Add demo callback (`https://demo.hgourmet.com.mx/auth/callback`) to Redirect URLs
+- [ ] **Auth:** Add production callbacks (`https://www.hgourmet.com.mx/auth/callback` and `https://hgourmet.com.mx/auth/callback`) to Redirect URLs
 - [ ] **Auth:** Create at least one admin user via Dashboard → Authentication → Users
 - [ ] **Storage:** Create `product-images` bucket (public, 5 MB limit)
 - [ ] **Storage:** Create `category-images` bucket (public, 5 MB limit)
@@ -438,10 +440,36 @@ npm run dev
 
 - [ ] Connect GitHub repository to Vercel
 - [ ] Add environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
-- [ ] Update Supabase Auth Site URL to production domain
-- [ ] Add production `/auth/callback` URL to Supabase Redirect URLs
+- [ ] Configure production domain in Vercel: `www.hgourmet.com.mx`
+- [ ] Configure apex policy for `hgourmet.com.mx` (recommended: redirect apex -> `www`)
+- [ ] Update Supabase Auth Site URL to `https://www.hgourmet.com.mx`
+- [ ] Add production `/auth/callback` URL: `https://www.hgourmet.com.mx/auth/callback`
 - [ ] Update `src/lib/constants.ts` with real business data
 - [ ] Verify `next.config.ts` image hostname matches your Supabase project
+- [ ] Keep branch previews disabled in the team workflow (for now): use tunnel on feature branches instead
+
+### Current operating model (agreed)
+
+- `main` is the only production branch (auto-deploy to `www.hgourmet.com.mx`).
+- Feature branches are validated via local runtime + Cloudflare tunnel (`demo.hgourmet.com.mx`).
+- Vercel Preview per branch is intentionally not used in this stage.
+
+### Feature-branch local preview workflow
+
+```bash
+# 1) Start from main
+git checkout main
+git pull
+
+# 2) Create feature branch
+git checkout -b feature/my-change
+
+# 3) Run local app and demo tunnel
+npm run dev
+npm run tunnel
+
+# 4) After VoBo from demo, merge to main (normal PR flow)
+```
 
 ---
 
@@ -463,7 +491,10 @@ npm run tunnel:check
 
 ### 9.2 Configure named tunnel with fixed domain
 
-1. Authenticate cloudflared:
+1. Choose connector mode:
+
+- **Preferred (token mode, no local cert juggling):** create/get tunnel token in Cloudflare Zero Trust and set `CLOUDFLARE_TUNNEL_TOKEN` in `.env.local`.
+- **Alternative (named tunnel with local cert):** authenticate cloudflared:
 
 ```bash
 cloudflared tunnel login
@@ -472,13 +503,13 @@ cloudflared tunnel login
 2. Create tunnel (first time only):
 
 ```bash
-cloudflared tunnel create hgourmet-demo
+cloudflared tunnel create demo-hgourmet
 ```
 
 3. Route DNS hostname to tunnel:
 
 ```bash
-cloudflared tunnel route dns hgourmet-demo demo.hgourmet.com.mx
+cloudflared tunnel route dns demo-hgourmet demo.hgourmet.com.mx
 ```
 
 4. Update `cloudflared/config.yml`:
@@ -495,7 +526,7 @@ cloudflared tunnel route dns hgourmet-demo demo.hgourmet.com.mx
 npm run dev
 ```
 
-2. In another terminal, start the named tunnel:
+2. In another terminal, start the tunnel:
 
 ```bash
 npm run tunnel
@@ -510,6 +541,14 @@ Optional fallback (temporary URL, no fixed domain):
 ```bash
 npm run tunnel:quick
 ```
+
+If using token-based connector, prefer one-command startup:
+
+```bash
+npm run dev:up token
+```
+
+This reads `CLOUDFLARE_TUNNEL_TOKEN` from `.env.local` and avoids cert/profile coupling.
 
 ### 9.4 Operational recovery (tunnel dropped or misconfigured)
 
@@ -531,3 +570,14 @@ npm run tunnel
 - Open `https://demo.hgourmet.com.mx` in an incognito window.
 - Validate homepage + one category/product route.
 - Share the URL with clear label: `DEV PREVIEW (fixed domain)`.
+
+### 9.6 DNS propagation check
+
+Use these commands to confirm propagation before claiming final closure:
+
+```bash
+dig +short demo.hgourmet.com.mx
+curl -I https://demo.hgourmet.com.mx
+```
+
+If DNS is still propagating, keep using `npm run tunnel:quick` as temporary fallback.

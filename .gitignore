@@ -31,3 +31,6 @@ coverage/
 
 # Cursor
 .cursor/plans/
+
+# Local runtime helpers
+.run/

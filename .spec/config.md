@@ -9,7 +9,7 @@
 
 | Setting | Value | Options |
 |:--------|:------|:--------|
-| **mode** | `trunk` | `trunk` / `feature` |
+| **mode** | `feature` | `trunk` / `feature` |
 
 - **`trunk`** (default): All commits go directly to `main`. Push happens at `@finish-objective`.
   Best for pre-deployment or projects without CI/CD auto-deploy.

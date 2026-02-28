@@ -6,7 +6,7 @@
 - **Que**: necesitan revisar avances sin depender de acceso local a la laptop de desarrollo
 - **Este enabler**: habilita un endpoint público temporal/estable para el entorno local mediante Cloudflare Tunnel
 - **Esperamos**: acelerar ciclos de feedback y reducir fricción de revisión pre-deploy
-- **Sabremos que hemos tenido éxito cuando**: cada iteración tenga al menos 1 demo compartible funcional, se valide la estrategia de deployment (Railway + Cloudflare o equivalente), y se acuerde la transición de estrategia Git de `trunk` a `feature` con VoBo previo a publicar en `main`
+- **Sabremos que hemos tenido éxito cuando**: cada iteración tenga al menos 1 demo compartible funcional en `demo.hgourmet.com.mx`, y el flujo operativo quede claro: ramas feature para demo y `main` para producción (`www.hgourmet.com.mx`)
 
 ## Contexto
 
@@ -14,18 +14,18 @@ Sin túnel, la demo solo vive en `localhost`, lo que dificulta revisiones remota
 Con túnel activo, se habilita un enlace compartible (ej. `demo.hgourmet.com.mx`) para validar UX/flujo
 antes de merge a `main` y antes de exponer producción en `hgourmet.com.mx`.
 
-Este enabler también reduce riesgo en la discusión de deployment:
+Este enabler también reduce riesgo operativo al separar claramente demo y producción:
 
 1. Aísla un entorno de preview para pruebas de negocio.
-2. Permite acordar arquitectura de publicación (Railway + Cloudflare o alternativa).
-3. Habilita gobierno de cambios: trabajar por rama feature, validar en preview y promover a `main` solo con VoBo.
+2. Evita confusión entre ambiente de validación y ambiente público.
+3. Habilita gobierno de cambios: trabajar por rama feature, validar en demo y promover a `main` solo con VoBo.
 
 ## Alcance Técnico
 
 1. Instalar y verificar `cloudflared` en el entorno dev.
 2. Definir comando operativo `npm run tunnel` apuntando al puerto local del proyecto.
 3. Documentar flujo de uso y contingencia en caso de URL expirada o túnel caído.
-4. Documentar criterios de transición de estrategia Git (`trunk` -> `feature`) posterior a validación de preview/deployment.
+4. Documentar el modelo operativo vigente (`main` producción, `feature` demo con túnel).
 
 ### Comandos operativos definidos
 
@@ -47,7 +47,7 @@ Este enabler también reduce riesgo en la discusión de deployment:
 1. Existe un comando documentado que expone el entorno local en URL pública.
 2. Stakeholders pueden abrir y navegar el flujo base del storefront desde un enlace compartido.
 3. Existe guía de recuperación operativa para caída/expiración del túnel.
-4. Se documenta decisión de estrategia de deployment y su relación con el cambio futuro a Git feature mode.
+4. Se documenta y valida el modelo operativo vigente de ramas + dominios.
 
 ## BDD (Enabler)
 
@@ -66,11 +66,18 @@ Este enabler también reduce riesgo en la discusión de deployment:
 ## Dependencias
 
 - Dominio y DNS en Cloudflare para separar `demo.hgourmet.com.mx` de `hgourmet.com.mx`.
-- Definición de arquitectura de runtime (Railway + Cloudflare o alternativa compatible).
-- Alineación de estrategia Git para adopción de flujo por ramas `feature` posterior al piloto de preview.
+- Proyecto productivo en Vercel con `www.hgourmet.com.mx` validado.
+- Flujo de ramas definido: feature para demo, `main` para producción.
 
-## Estado actual (temporal)
+## Estado actual
 
-- Conector de túnel registrado y operativo.
+- Conector de túnel registrado y operativo con dominio fijo.
 - Comandos/documentación de operación y fallback completados.
-- Cierre definitivo pendiente por acceso a configuración DNS de la zona para resolver `demo.hgourmet.com.mx`.
+- DNS de demo y producción configurados para operación vigente.
+
+## Decisiones operativas vigentes
+
+- Producción se despliega desde `main` en `www.hgourmet.com.mx` (Vercel).
+- El desarrollo diario ocurre en ramas feature con preview local por túnel.
+- Vercel Preview por rama no forma parte del flujo operativo en esta etapa.
+- `npm run tunnel:quick` se mantiene como fallback temporal durante propagación DNS.
