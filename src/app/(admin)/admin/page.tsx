@@ -1,46 +1,59 @@
 import { createClient } from "@/lib/supabase/server";
+import { fetchDashboardData } from "@/lib/supabase/queries/admin-dashboard";
+import { AdminKpiCards } from "@/components/admin/AdminKpiCards";
+import { AdminRecentActivity } from "@/components/admin/AdminRecentActivity";
+import type { DashboardData } from "@/lib/supabase/queries/admin-dashboard";
+
+const EMPTY_DASHBOARD: DashboardData = {
+  kpis: { products: 0, categories: 0, recipes: 0, brands: 0, banners: 0 },
+  recentActivity: [],
+};
 
 export default async function AdminDashboard() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  const cards = [
-    { title: "Productos", description: "Gestiona el catálogo de productos", href: "/admin/productos", ready: false },
-    { title: "Categorías", description: "Organiza las categorías del catálogo", href: "/admin/categorias", ready: true },
-    { title: "Banners", description: "Administra los banners promocionales", href: "/admin/banners", ready: true },
-    { title: "Marcas", description: "Gestiona las marcas y proveedores", href: "/admin/marcas", ready: true },
-  ];
+  let dashboardData: DashboardData = EMPTY_DASHBOARD;
+  let loadError: string | null = null;
+
+  try {
+    dashboardData = await fetchDashboardData();
+  } catch {
+    loadError =
+      "No se pudo cargar la información del dashboard. Los datos se actualizarán al recargar la página.";
+  }
+
+  const displayName = user?.email ? user.email.split("@")[0] : null;
 
   return (
-    <div>
-      <div className="mb-8">
+    <div className="space-y-8">
+      {/* Header */}
+      <div>
         <h1 className="font-heading text-2xl font-bold text-text">
-          Hola{user?.email ? `, ${user.email}` : ""}
+          Hola{displayName ? `, ${displayName}` : ""}
         </h1>
         <p className="mt-1 text-sm text-muted">
           Panel de administración de HGourmet
         </p>
       </div>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {cards.map((card) => (
-          <a
-            key={card.href}
-            href={card.href}
-            className="group rounded-xl border border-secondary bg-white p-6 shadow-sm transition-all hover:border-primary/30 hover:shadow-md"
-          >
-            <h2 className="font-heading text-lg font-semibold text-text group-hover:text-primary">
-              {card.title}
-            </h2>
-            <p className="mt-1 text-sm text-muted">
-              {card.description}
-            </p>
-            <p className={`mt-4 text-xs font-medium ${card.ready ? "text-primary" : "text-muted"}`}>
-              {card.ready ? "Gestionar →" : "Próximamente →"}
-            </p>
-          </a>
-        ))}
-      </div>
+      {/* Error banner — degradación controlada */}
+      {loadError && (
+        <div
+          role="alert"
+          className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800"
+        >
+          {loadError}
+        </div>
+      )}
+
+      {/* KPI Cards */}
+      <AdminKpiCards kpis={dashboardData.kpis} />
+
+      {/* Recent Activity */}
+      <AdminRecentActivity items={dashboardData.recentActivity} />
     </div>
   );
 }
