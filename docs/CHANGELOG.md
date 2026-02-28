@@ -19,6 +19,21 @@
 
 ---
 
+## [2026-02-28] — HU-6.2: Edición de recetas en campos estructurados (ingredientes, preparación, tip)
+
+**Feature:** FEAT-6 — Evolución UX del Panel de Administración
+**Benefit:** Las administradoras ya no dependen de escribir Markdown manual para recetas: ahora capturan ingredientes, preparación y tip en campos separados, con menor fricción editorial y compatibilidad total con recetas legacy en el storefront.
+**Changes:**
+- Se incorporó contrato dual de contenido (`src/lib/recipe-content.ts`) con prioridad de lectura: campos estructurados (`ingredients_text`, `preparation_text`, `tip_text`) y fallback automático a `content` legacy.
+- Se agregó migración `006_hu_6_2_recipes_structured_fields.sql` y se actualizaron tipos de `Recipe` para soportar nuevas columnas sin romper compatibilidad.
+- Se refactorizaron Server Actions de recetas para validar secciones obligatorias, persistir los 3 campos y derivar `content` markdown para backward compatibility.
+- Se refactorizó `RecipeForm` a 3 campos independientes (ingredientes, preparación, tip opcional) con validación por campo y pre-carga automática desde recetas legacy.
+- Se actualizó el render de `/recetas/[slug]` para usar el contrato `getRecipeSections(recipe)` y mantener paridad visual en recetas nuevas y antiguas.
+- Se agregaron pruebas HU-6.2 y ajustes de regresión en HU-2.8/HU-4.3 para garantizar consistencia de formularios, fallback y tipado.
+**Tests:** 22 nuevos tests en `hu-6.2-scenarios.test.tsx` + regresión total en verde (435/435)
+
+---
+
 ## [2026-02-26] — HU-1.6: Filtros avanzados de precio y toggle de disponibilidad con feedback completo
 
 **Feature:** FEAT-1 — Catálogo Digital de Productos
