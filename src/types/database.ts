@@ -108,6 +108,9 @@ export interface Database {
           title: string;
           slug: string;
           content: string;
+          ingredients_text: string | null;  // HU-6.2: structured field; NULL = legacy recipe
+          preparation_text: string | null;  // HU-6.2: structured field; NULL = legacy recipe
+          tip_text: string | null;          // HU-6.2: optional tip; NULL = no tip
           image_url: string | null;
           is_published: boolean;
           display_order: number;
@@ -119,6 +122,9 @@ export interface Database {
           title: string;
           slug: string;
           content: string;
+          ingredients_text?: string | null;
+          preparation_text?: string | null;
+          tip_text?: string | null;
           image_url?: string | null;
           is_published?: boolean;
           display_order?: number;
@@ -130,6 +136,9 @@ export interface Database {
           title?: string;
           slug?: string;
           content?: string;
+          ingredients_text?: string | null;
+          preparation_text?: string | null;
+          tip_text?: string | null;
           image_url?: string | null;
           is_published?: boolean;
           display_order?: number;
