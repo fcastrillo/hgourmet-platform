@@ -371,8 +371,9 @@ images: {
 }
 ```
 
-No additional image configuration is needed. When deploying to Vercel, image optimization
-works automatically.
+No additional image hostname configuration is needed. In Railway production, keep `sharp`
+installed in `dependencies` and use `output: "standalone"` in `next.config.ts` for
+lightweight deployments.
 
 ### 6.2 Middleware
 
@@ -437,23 +438,42 @@ npm run dev
 - [ ] **Storage:** Add `Public read access` policy (SELECT, anon + authenticated)
 - [ ] **Storage:** Add `Authenticated full access` policy (INSERT/UPDATE/DELETE, authenticated)
 
-### Production deployment (Vercel)
+### Production deployment (Railway)
 
-- [ ] Connect GitHub repository to Vercel
-- [ ] Add environment variables (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`)
-- [ ] Configure production domain in Vercel: `www.hgourmet.com.mx`
-- [ ] Configure apex policy for `hgourmet.com.mx` (recommended: redirect apex -> `www`)
+#### Railway project setup
+
+- [ ] Create/connect a Railway project to this GitHub repository
+- [ ] Keep repository root as deploy root (this project does not use an `app/` subfolder)
+- [ ] Build command: `npm install --include=dev && npm run build`
+- [ ] Start command: `npm run start` (or `node .next/standalone/server.js` if you prefer direct standalone startup)
+- [ ] Add environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- [ ] Add custom domain in Railway: `www.hgourmet.com.mx` and enforce HTTPS
+
+#### Supabase + domain alignment
+
 - [ ] Update Supabase Auth Site URL to `https://www.hgourmet.com.mx`
 - [ ] Add production `/auth/callback` URL: `https://www.hgourmet.com.mx/auth/callback`
+- [ ] Configure apex policy for `hgourmet.com.mx` (recommended: redirect apex -> `www`)
+- [ ] Verify DNS `CNAME` for `www` points to the Railway target
+
+#### Smoke test + rollback readiness
+
+- [ ] Validate Railway generated domain (`*.railway.app`) before changing DNS
+- [ ] Validate production smoke tests after DNS cutover (home, one category, one product, `/login`, `/admin`)
+- [ ] Identify the previous successful deployment in Railway history before each release
+- [ ] If smoke tests fail, perform rollback from Railway deployment history
+
+#### Project-specific checks
+
 - [ ] Update `src/lib/constants.ts` with real business data
 - [ ] Verify `next.config.ts` image hostname matches your Supabase project
-- [ ] Keep branch previews disabled in the team workflow (for now): use tunnel on feature branches instead
+- [ ] Keep branch previews disabled in the team workflow (use tunnel on feature branches)
 
 ### Current operating model (agreed)
 
 - `main` is the only production branch (auto-deploy to `www.hgourmet.com.mx`).
 - Feature branches are validated via local runtime + Cloudflare tunnel (`demo.hgourmet.com.mx`).
-- Vercel Preview per branch is intentionally not used in this stage.
+- Railway branch previews are intentionally not used in this stage.
 
 ### Feature-branch local preview workflow
 

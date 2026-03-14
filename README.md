@@ -61,10 +61,17 @@ npm run dev:down
 
 Runtime logs are written to `.run/logs/`.
 
+## Production deployment
+
+- Production is deployed on Railway.
+- Railway auto-deploys from `main`.
+- Public production domain: `www.hgourmet.com.mx`.
+- Detailed production runbook: `docs/SETUP.md` → "Production deployment (Railway)".
+
 ## Git workflow (feature demo, production on main)
 
 - Daily development happens in feature branches (e.g. `hu/N.M` or `feature/*`).
 - Demo validation happens from feature branches using local app + tunnel (`npm run dev:up` or `npm run dev` + `npm run tunnel`).
 - Production deployment is tied to `main` only (`www.hgourmet.com.mx`).
-- Vercel branch previews are currently not part of the operating flow.
+- Railway handles production deploys from `main` (no branch previews in the current flow).
 - Merge to `main` only after VoBo on demo.
