@@ -147,7 +147,9 @@ describe("HU-7.1 — Integrar Google Analytics para tracking del storefront", ()
         />,
       );
 
-      await user.click(screen.getByRole("link", { name: /hersheys/i }));
+      const brandLink = screen.getByRole("link", { name: /ver productos de la marca hersheys/i });
+      brandLink.addEventListener("click", (event) => event.preventDefault());
+      await user.click(brandLink);
 
       expect(trackEventSpy).toHaveBeenCalledWith(
         "brand_click",

@@ -102,6 +102,47 @@ export interface Database {
           created_at?: string;
         };
       };
+      whatsapp_interactions: {
+        Row: {
+          id: string;
+          interaction_type: "contact_form" | "product_interest";
+          channel: string;
+          page_path: string | null;
+          product_id: string | null;
+          product_name: string | null;
+          customer_name: string | null;
+          customer_phone: string | null;
+          customer_email: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          interaction_type: "contact_form" | "product_interest";
+          channel?: string;
+          page_path?: string | null;
+          product_id?: string | null;
+          product_name?: string | null;
+          customer_name?: string | null;
+          customer_phone?: string | null;
+          customer_email?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          interaction_type?: "contact_form" | "product_interest";
+          channel?: string;
+          page_path?: string | null;
+          product_id?: string | null;
+          product_name?: string | null;
+          customer_name?: string | null;
+          customer_phone?: string | null;
+          customer_email?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+      };
       recipes: {
         Row: {
           id: string;
@@ -208,6 +249,8 @@ export type Brand = Database["public"]["Tables"]["brands"]["Row"];
 export type Category = Database["public"]["Tables"]["categories"]["Row"];
 export type Product = Database["public"]["Tables"]["products"]["Row"];
 export type Recipe = Database["public"]["Tables"]["recipes"]["Row"];
+export type WhatsAppInteraction =
+  Database["public"]["Tables"]["whatsapp_interactions"]["Row"];
 
 export type CategoryWithProductCount = Category & {
   product_count: number;

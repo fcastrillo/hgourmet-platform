@@ -80,6 +80,10 @@ supabase/migrations/003_brands.sql
 supabase/migrations/004_recipes.sql
 supabase/migrations/005_enabler2_schema_evolution.sql
 supabase/migrations/006_hu_6_2_recipes_structured_fields.sql
+supabase/migrations/007_hu_7_2_whatsapp_interactions.sql
+supabase/migrations/008_hu_7_2_whatsapp_interactions_authenticated_insert.sql
+supabase/migrations/009_hu_7_2_whatsapp_interactions_rls_reconcile.sql
+supabase/migrations/010_hu_7_2_whatsapp_interactions_reset_policies.sql
 ```
 
 This creates:
@@ -88,6 +92,7 @@ This creates:
 |:------|:--------|
 | `categories` | Product categories with `name` (unique), `slug` (unique), `display_order`, `is_active` |
 | `products` | Products with FK to categories, `price` (CHECK > 0), `slug` (unique), `sku` (unique), image URL, and boolean flags (`is_available`, `is_visible`, `is_featured`, `is_seasonal`) |
+| `whatsapp_interactions` | Traceability log for `contact_form` and `product_interest` interactions (HU-7.2) |
 
 ### 3.2 Schema details
 
@@ -193,6 +198,42 @@ Inserts 6 categories (1 inactive) and 15 products with various combinations of
   - Public read (`anon`) only for active mapping rules (`category_mapping_rules`)
 - Seeded mapping rules:
   - `v1` rules with priority system (10 dept-base, 20 category override, 30 exact dept+cat)
+
+### 3.9 HU-7.2 migration (WhatsApp traceability)
+
+`007_hu_7_2_whatsapp_interactions.sql` adds:
+
+- New table `whatsapp_interactions` with a unified interaction model:
+  - `interaction_type`: `contact_form` | `product_interest`
+  - optional product and customer context fields
+  - `metadata` (`jsonb`) for extensible trace data
+- Indexes for operational analysis:
+  - `interaction_type + created_at desc`
+  - `product_id`
+- RLS policies:
+  - `anon` can `INSERT` records when `channel = 'whatsapp'`
+  - `authenticated` users can `SELECT` records for admin analytics/review
+
+### 3.10 HU-7.2 follow-up migration (authenticated inserts)
+
+`008_hu_7_2_whatsapp_interactions_authenticated_insert.sql` adds:
+
+- Additional insert policy for role `authenticated` on `whatsapp_interactions`.
+- This enables owners/admins testing storefront flows while logged in to persist
+  records in the same way as anonymous users.
+
+### 3.11 HU-7.2 RLS reconciliation migration
+
+`009_hu_7_2_whatsapp_interactions_rls_reconcile.sql` performs an idempotent
+reconciliation for environments where the table exists but policies/grants are
+missing or drifted:
+
+- Re-enables RLS on `whatsapp_interactions`
+- Re-grants schema/table privileges required for inserts
+- Recreates the expected policies:
+  - `whatsapp_interactions_anon_insert`
+  - `whatsapp_interactions_auth_insert`
+  - `whatsapp_interactions_auth_select`
 
 ---
 
@@ -428,7 +469,7 @@ npm run dev
 ### Supabase configuration checklist
 
 - [ ] Create Supabase project and copy URL + anon key to `.env.local`
-- [ ] **Database:** Run migrations `001` → `006` in SQL Editor (including `005_enabler2_schema_evolution.sql` and `006_hu_6_2_recipes_structured_fields.sql`)
+- [ ] **Database:** Run migrations `001` → `010` in SQL Editor (including `005_enabler2_schema_evolution.sql`, `006_hu_6_2_recipes_structured_fields.sql`, `007_hu_7_2_whatsapp_interactions.sql`, `008_hu_7_2_whatsapp_interactions_authenticated_insert.sql`, `009_hu_7_2_whatsapp_interactions_rls_reconcile.sql` and `010_hu_7_2_whatsapp_interactions_reset_policies.sql`)
 - [ ] **Database (optional):** Run `supabase/seed.sql` for test data
 - [ ] **Auth:** Enable Email provider with Magic Link
 - [ ] **Auth:** Set Site URL to `https://www.hgourmet.com.mx`
