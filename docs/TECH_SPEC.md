@@ -106,6 +106,22 @@
 | `is_active` | `boolean` | NOT NULL, default `true` | Whether the brand is displayed |
 | `created_at` | `timestamptz` | NOT NULL, default `now()` | Creation timestamp |
 
+#### whatsapp_interactions _(HU-7.2)_
+
+| Column | Type | Constraints | Description |
+|:-------|:-----|:------------|:------------|
+| `id` | `uuid` | PK, default `gen_random_uuid()` | Primary key |
+| `interaction_type` | `text` | NOT NULL, CHECK in (`contact_form`, `product_interest`) | Trace interaction origin |
+| `channel` | `text` | NOT NULL, default `whatsapp` | Channel discriminator |
+| `page_path` | `text` | nullable | Storefront route context |
+| `product_id` | `uuid` | FK → products.id, nullable, ON DELETE SET NULL | Product reference when interaction is product-based |
+| `product_name` | `text` | nullable | Product name snapshot for analytics |
+| `customer_name` | `text` | nullable | Contact form name |
+| `customer_phone` | `text` | nullable | Contact form phone |
+| `customer_email` | `text` | nullable | Contact form email (optional) |
+| `metadata` | `jsonb` | NOT NULL, default `{}` | Extra context (user agent, custom fields) |
+| `created_at` | `timestamptz` | NOT NULL, default `now()` | Interaction timestamp |
+
 #### import_batches _(staging — ENABLER-2)_
 
 | Column | Type | Constraints | Description |
@@ -170,6 +186,8 @@
 - `products(is_featured)` — featured products section
 - `products(is_seasonal)` — seasonal products section
 - `newsletter_subscribers(email)` — unique constraint lookup
+- `whatsapp_interactions(interaction_type, created_at desc)` — recent traceability by interaction type
+- `whatsapp_interactions(product_id)` — product-interest drill down
 
 ---
 
@@ -202,6 +220,8 @@
 | newsletter_subscribers | authenticated | Yes | Yes | Yes | Yes | Full admin access |
 | brands | anon | Yes (active only) | No | No | No | `is_active = true` filter |
 | brands | authenticated | Yes | Yes | Yes | Yes | Full admin access |
+| whatsapp_interactions | anon | No | Yes | No | No | Insert-only traceability (`channel = 'whatsapp'`) |
+| whatsapp_interactions | authenticated | Yes | No | No | No | Admin read-only analytics access |
 
 ### Storage Policies
 
