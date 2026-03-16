@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/storefront/ContactForm";
-import { SOCIAL_LINKS, STORE_INFO } from "@/lib/constants";
+import { SOCIAL_LINKS, STORE_INFO, STORE_MAP } from "@/lib/constants";
 
 export const metadata: Metadata = {
   title: "Contacto | HGourmet — Mérida",
@@ -214,19 +214,33 @@ export default function ContactoPage() {
             ))}
           </ul>
 
-          {/* Map placeholder */}
-          <div
-            className="flex h-52 w-full flex-col items-center justify-center gap-3 rounded-xl border bg-muted/20 text-muted"
-            aria-label="Mapa de ubicación"
-          >
-            <span
-              className="flex h-12 w-12 items-center justify-center rounded-full text-accent"
-              style={{ backgroundColor: "rgba(201,168,76,0.2)" }}
-            >
-              <MapPinIcon large />
-            </span>
-            <p className="text-sm font-medium">Mapa de ubicación</p>
-            <p className="text-xs text-muted/70">{STORE_INFO.address}</p>
+          {/* Map embed + fallback link */}
+          <div className="space-y-3" aria-label="Mapa de ubicación">
+            <div className="overflow-hidden rounded-xl border bg-muted/20">
+              <div className="relative h-52 w-full md:h-64">
+                <iframe
+                  src={STORE_MAP.embedUrl}
+                  title="Mapa de ubicación de HGourmet en Mérida"
+                  className="h-full w-full border-0"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+            <div className="rounded-xl border border-dashed border-muted/50 bg-muted/10 p-3">
+              <p className="text-sm font-medium text-text">
+                Si no puedes ver el mapa, abre la ubicación en Google Maps.
+              </p>
+              <a
+                href={STORE_MAP.directionsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-1 inline-flex text-sm text-primary transition-colors hover:text-primary/80"
+              >
+                Abrir ubicación en Google Maps
+              </a>
+            </div>
           </div>
 
           {/* Social buttons — ADR-006: inline style for brand colors */}

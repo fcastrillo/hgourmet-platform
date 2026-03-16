@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ContactForm } from "@/components/storefront/ContactForm";
 import ContactoPage from "@/app/(storefront)/contacto/page";
-import { SOCIAL_LINKS, STORE_INFO } from "@/lib/constants";
+import { SOCIAL_LINKS, STORE_INFO, STORE_MAP } from "@/lib/constants";
 
 // ============================================================
 // HU-3.3 — Página de contacto
@@ -59,9 +59,22 @@ describe("HU-3.3 — Página de contacto", () => {
       expect(screen.getByText(STORE_INFO.hours)).toBeInTheDocument();
     });
 
-    it("muestra el bloque del mapa de ubicación", () => {
+    it("muestra un iframe de Google Maps en la sección de ubicación", () => {
       render(<ContactoPage />);
-      expect(screen.getByText("Mapa de ubicación")).toBeInTheDocument();
+      const mapIframe = screen.getByTitle(/mapa de ubicación de hgourmet/i);
+      expect(mapIframe).toBeInTheDocument();
+      expect(mapIframe).toHaveAttribute("src", STORE_MAP.embedUrl);
+      expect(mapIframe).toHaveAttribute("loading", "lazy");
+    });
+
+    it("muestra enlace de fallback para abrir la ubicación en Google Maps", () => {
+      render(<ContactoPage />);
+      const fallback = screen.getByRole("link", {
+        name: /abrir ubicación en google maps/i,
+      });
+      expect(fallback).toHaveAttribute("href", STORE_MAP.directionsUrl);
+      expect(fallback).toHaveAttribute("target", "_blank");
+      expect(fallback).toHaveAttribute("rel", "noopener noreferrer");
     });
 
     it("muestra el botón de WhatsApp con enlace correcto", () => {

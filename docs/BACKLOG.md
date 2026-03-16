@@ -1,7 +1,7 @@
 # Product Backlog
 
 > **Project:** hgourmet-platform
-> **Last updated:** 2026-02-26
+> **Last updated:** 2026-03-16
 >
 > This is the **Single Source of Truth** for the SAFe hierarchy.
 > Structure: Epic → Feature (FEAT-N) → User Story (HU-N.M)
@@ -180,6 +180,78 @@ Detalle de hardening/trazabilidad del importador:
 
 ---
 
+### FEAT-7: Analítica y Trazabilidad de Conversión
+
+> Estimate: M (rollup) | 4 stories: 3×S + 1×XS; esfuerzo total ~1.5–2.5 días.
+
+- **Para**: dueñas de HGourmet y equipo comercial
+- **Que**: buscan medir el rendimiento del storefront y rastrear mejor la intención de compra por WhatsApp
+- **Esta épica**: provee instrumentación de analítica web, registro estructurado de interacciones de WhatsApp y navegación de marcas orientada a conversión
+- **Esperamos**: mejorar visibilidad del embudo digital y reducir fricción en la exploración por marca
+- **Sabremos que hemos tenido éxito cuando**: se registren eventos clave de navegación/contacto en analítica y base de datos, y aumente la tasa de sesiones que pasan de marca a búsqueda de productos
+- **Hypothesis:** Si entregamos analítica web + trazabilidad de interacciones de WhatsApp + navegación de marcas orientada a búsqueda, entonces HGourmet podrá medir mejor el embudo y convertir más sesiones en conversaciones comerciales, medido por mayor tasa de clics a WhatsApp y sesiones con búsqueda por marca.
+- **Status:** In Progress (1/4 stories delivered) 🚧 (2026-03-16)
+- **Priority:** High
+- **Stories:**
+  - [ ] HU-7.1: Integrar Google Analytics para tracking del storefront (High)
+    > Estimate: S (~4–6h) | Instrumentar Google Analytics (GA4) en el sitio para medir pageviews y eventos clave de interacción (búsqueda, clic de WhatsApp, navegación por categorías/marcas), respetando buenas prácticas de carga y configuración por ambiente.
+    > Como: dueña de HGourmet
+    > Quiero: contar con métricas confiables del comportamiento de usuarios en el sitio
+    > Para poder: tomar decisiones de contenido, catálogo y campañas basadas en datos reales.
+    > Criterios (lista):
+    > (1) Configurar GA4 de forma centralizada y reusable.
+    > (2) Registrar pageview en todas las rutas públicas relevantes.
+    > (3) Registrar eventos de conversión clave (clic a WhatsApp, búsqueda de productos).
+    > (4) Evitar duplicidad de eventos por navegación client-side.
+    > BDD mínimo:
+    > (1) Dado que un usuario navega por el storefront, cuando cambia de página, entonces se registra un pageview en GA4 con la ruta correcta.
+    > (2) Dado que un usuario hace clic en un CTA de WhatsApp o usa la búsqueda, cuando se dispara la interacción, entonces se registra el evento correspondiente con parámetros mínimos definidos.
+    > (3) Dado que la app corre en ambiente sin clave de analítica, cuando renderiza el storefront, entonces no falla la experiencia y se registra degradación controlada.
+  - [ ] HU-7.2: Registrar interacciones de WhatsApp en tabla de trazabilidad (High)
+    > Estimate: S (~6–8h) | Crear/usar tabla de tracking para persistir interacciones originadas en formulario de contacto e interés en producto, incluyendo metadata mínima (tipo de interacción, producto opcional, timestamp, canal, contexto de página) para análisis posterior.
+    > Como: administradora de HGourmet
+    > Quiero: tener un registro histórico de las interacciones que abren conversación por WhatsApp
+    > Para poder: medir intención de compra, detectar productos de alto interés y priorizar seguimiento comercial.
+    > Criterios (lista):
+    > (1) Persistir en DB eventos de contacto desde formulario y CTA de producto.
+    > (2) Definir campos obligatorios y opcionales para trazabilidad.
+    > (3) Garantizar que el envío a WhatsApp no dependa de la persistencia (best-effort con manejo de errores).
+    > (4) Mantener cumplimiento de seguridad/acceso según lineamientos actuales del proyecto.
+    > BDD mínimo:
+    > (1) Dado que un usuario envía el formulario de contacto con datos válidos, cuando se procesa la acción, entonces se guarda un registro de interacción `contact_form` con su contexto y luego se abre WhatsApp.
+    > (2) Dado que un usuario hace clic en "Pide por WhatsApp" desde un producto, cuando se ejecuta la acción, entonces se guarda un registro `product_interest` con identificador del producto y contexto de página.
+    > (3) Dado que falla el guardado en tabla, cuando el usuario intenta contactar por WhatsApp, entonces el sistema mantiene un flujo recuperable sin bloquear la conversión.
+  - [ ] HU-7.3: Navegación por marca con búsqueda automática en catálogo (Medium)
+    > Estimate: XS (~2–4h) | Ajustar links de marcas para que apunten por defecto a `/categorias?q={nombreMarca}` sin hardcode manual por marca y sin abrir nueva ventana/pestaña, asegurando consistencia de navegación interna.
+    > Como: cliente del storefront
+    > Quiero: que al seleccionar una marca me lleve directamente a los productos filtrados por esa marca
+    > Para poder: encontrar rápido lo que busco sin pasos adicionales ni cambios de contexto.
+    > Criterios (lista):
+    > (1) Generar URL de búsqueda de marca de forma dinámica a partir del nombre de la marca.
+    > (2) Usar navegación interna del sitio (misma pestaña/ventana).
+    > (3) Codificar correctamente nombres de marca con espacios o caracteres especiales.
+    > (4) Mantener compatibilidad con comportamiento actual de listado de marcas.
+    > BDD mínimo:
+    > (1) Dado que una marca está visible en la sección de marcas, cuando hago clic en su link, entonces navego a `/categorias?q=<marca>` en la misma pestaña.
+    > (2) Dado que el nombre de la marca contiene espacios o caracteres especiales, cuando se genera el link, entonces la URL queda correctamente codificada y la búsqueda devuelve resultados esperados.
+    > (3) Dado que una marca no tiene productos asociados, cuando navego por su link, entonces veo estado vacío de búsqueda sin error de navegación.
+  - [x] HU-7.4: Mapa visible e interactivo en página de contacto (High) ✅ (2026-03-16)
+    > Estimate: S (~4–6h) | Reemplazar placeholder del mapa en `/contacto` por mapa real embebido (Google Maps), manteniendo performance, accesibilidad básica y fallback visual ante bloqueo/carga fallida.
+    > Como: cliente o visitante
+    > Quiero: visualizar la ubicación real de HGourmet en la página de contacto
+    > Para poder: ubicar el local rápidamente y decidir cómo llegar o contactar.
+    > Criterios (lista):
+    > (1) Mostrar mapa real en la sección de contacto con ubicación correcta del negocio.
+    > (2) Permitir interacción mínima esperada (zoom, paneo y apertura de ubicación en Google Maps).
+    > (3) Mantener diseño responsive sin romper layout en móvil y desktop.
+    > (4) Definir fallback legible si el mapa no carga o está bloqueado por red/política.
+    > BDD mínimo:
+    > (1) Dado que entro a `/contacto`, cuando la página termina de cargar, entonces veo un mapa real con el pin de la dirección de HGourmet.
+    > (2) Dado que estoy en un dispositivo móvil, cuando visualizo la sección del mapa, entonces el componente se adapta sin desbordes ni superposición de elementos.
+    > (3) Dado que el embed del mapa falla, cuando renderiza la sección de ubicación, entonces se muestra fallback informativo con enlace directo a Google Maps.
+
+---
+
 ## Completed
 
 > Stories and Features move here when finished via `@finish-objective`.
@@ -208,6 +280,8 @@ Detalle de hardening/trazabilidad del importador:
   - [x] HU-4.1: Página principal con banners rotativos y secciones destacadas ✅ (2026-02-25) — FEAT-4
   - [x] HU-4.3: Sección de recetas y tips ✅ (2026-02-23) — FEAT-4
   - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
+- FEAT-7
+  - [x] HU-7.4: Mapa visible e interactivo en página de contacto ✅ (2026-03-16) — FEAT-7
 - Chores (Technical / Visual)
   - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)
   - [x] CHORE-2: Sprint de polish final pre-demo ✅ (2026-02-25)
