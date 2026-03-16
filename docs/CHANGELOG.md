@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-03-16] — HU-7.3: Navegación por marca con búsqueda automática en catálogo
+
+**Feature:** FEAT-7 — Analítica y Trazabilidad de Conversión
+**Benefit:** Los clientes ahora pasan directamente de una marca en homepage a resultados filtrados en catálogo en la misma pestaña, reduciendo fricción de navegación y aumentando probabilidad de descubrimiento de productos por intención de marca.
+**Changes:**
+- Se refactorizó `BrandSection` para construir enlaces internos por defecto a `/categorias?q=<marca>` usando codificación segura de caracteres.
+- Se eliminó el patrón de apertura en nueva pestaña para navegación de marca y se mantuvo instrumentación `brand_click` para analítica.
+- Se agregó suite de integración HU-7.3 para cubrir navegación interna, encoding de nombres especiales y estado vacío sin error cuando no hay coincidencias.
+- Se ajustó regresión HU-7.1 para estabilizar validación de click de marca en entorno jsdom sin navegación real.
+**Tests:** 4 tests nuevos en `hu-7.3-scenarios.test.tsx` + regresión focal en verde (11/11)
+
+---
+
 ## [2026-03-16] — HU-7.1: Integrar Google Analytics para tracking del storefront
 
 **Feature:** FEAT-7 — Analítica y Trazabilidad de Conversión
