@@ -13,5 +13,5 @@ credentials-file: /Users/fcastrillo/.cloudflared/fe40d3ce-af37-433a-98fb-0a25833
 
 ingress:
   - hostname: demo.hgourmet.com.mx
-    service: http://localhost:3000
+    service: http://127.0.0.1:3000
   - service: http_status:404
