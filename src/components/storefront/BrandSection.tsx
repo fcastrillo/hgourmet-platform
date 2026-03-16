@@ -1,4 +1,7 @@
+"use client";
+
 import type { Brand } from "@/types/database";
+import { trackEvent } from "@/lib/analytics/ga";
 
 interface BrandSectionProps {
   brands: Brand[];
@@ -25,6 +28,12 @@ export function BrandSection({ brands }: BrandSectionProps) {
                 href={brand.website_url ?? undefined}
                 target={brand.website_url ? "_blank" : undefined}
                 rel={brand.website_url ? "noopener noreferrer" : undefined}
+                onClick={() =>
+                  trackEvent("brand_click", {
+                    brand_name: brand.name,
+                    location: "homepage_brand_section",
+                  })
+                }
                 className="flex h-20 w-20 items-center justify-center rounded-xl border border-secondary bg-white p-3 shadow-sm transition-all group-hover:shadow-md sm:h-24 sm:w-24"
               >
                 <img

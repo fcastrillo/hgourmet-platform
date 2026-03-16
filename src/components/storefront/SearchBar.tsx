@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useDebounce } from "@/lib/hooks/useDebounce";
+import { trackEvent } from "@/lib/analytics/ga";
 
 interface SearchBarProps {
   onSearch: (term: string) => void;
@@ -11,10 +12,29 @@ interface SearchBarProps {
 export function SearchBar({ onSearch, initialValue = "" }: SearchBarProps) {
   const [inputValue, setInputValue] = useState(initialValue);
   const debouncedValue = useDebounce(inputValue);
+  const previousTrackedSearchRef = useRef<string>("");
 
   useEffect(() => {
     onSearch(debouncedValue);
   }, [debouncedValue, onSearch]);
+
+  useEffect(() => {
+    const normalizedSearch = debouncedValue.trim();
+    if (normalizedSearch.length === 0) {
+      previousTrackedSearchRef.current = "";
+      return;
+    }
+
+    if (previousTrackedSearchRef.current === normalizedSearch) {
+      return;
+    }
+
+    previousTrackedSearchRef.current = normalizedSearch;
+    trackEvent("search", {
+      search_term: normalizedSearch,
+      location: "catalog_search_bar",
+    });
+  }, [debouncedValue]);
 
   return (
     <div className="relative">

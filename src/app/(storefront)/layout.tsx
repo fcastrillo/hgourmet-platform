@@ -1,6 +1,8 @@
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { WhatsAppFloatingButton } from "@/components/storefront/WhatsAppFloatingButton";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
+import { PageViewTracker } from "@/components/analytics/PageViewTracker";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function StorefrontLayout({
@@ -21,6 +23,8 @@ export default async function StorefrontLayout({
       <main className="flex-1">{children}</main>
       <Footer />
       <WhatsAppFloatingButton />
+      <GoogleAnalytics />
+      <PageViewTracker />
     </div>
   );
 }
