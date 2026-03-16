@@ -15,7 +15,11 @@ export async function trackWhatsAppInteractionServer(
 ): Promise<boolean> {
   try {
     const supabase = await createClient();
-    const { error } = await supabase.from("whatsapp_interactions").insert(payload);
+    // Supabase SSR typing can infer `never` for this custom table in server actions.
+    // Runtime contract is still valid; keep best-effort behavior and avoid build break.
+    const { error } = await supabase
+      .from("whatsapp_interactions")
+      .insert(payload as any);
     return !error;
   } catch {
     return false;

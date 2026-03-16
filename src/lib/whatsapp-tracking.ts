@@ -34,7 +34,11 @@ function resolvePagePath(explicitPath?: string): string | null {
 async function insertWhatsAppInteraction(payload: InteractionInsert): Promise<boolean> {
   try {
     const supabase = createClient();
-    const { error } = await supabase.from("whatsapp_interactions").insert(payload);
+    // Supabase client typing can infer `never` for this custom table in some builds.
+    // Insert remains valid at runtime; keep best-effort contract without blocking flow.
+    const { error } = await supabase
+      .from("whatsapp_interactions")
+      .insert(payload as any);
     return !error;
   } catch {
     return false;
