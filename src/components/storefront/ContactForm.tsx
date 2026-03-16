@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { buildContactWhatsAppUrl } from "@/lib/whatsapp";
+import { recordContactFormInteraction } from "@/lib/whatsapp-tracking";
 
 type FormState = "idle" | "sent" | "blocked";
 
@@ -107,7 +108,7 @@ export function ContactForm() {
     return <SentMessage fallbackUrl={whatsappUrl} />;
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const validationErrors = validate(name, phone, email, message);
     if (Object.keys(validationErrors).length > 0) {
@@ -123,6 +124,20 @@ export function ContactForm() {
       message,
     });
     setWhatsappUrl(url);
+
+    // Best-effort persistence: traceability cannot block WhatsApp conversion.
+    try {
+      await recordContactFormInteraction({
+        customerName: name,
+        customerPhone: phone,
+        customerEmail: email.trim() || undefined,
+        metadata: {
+          message_length: message.trim().length,
+        },
+      });
+    } catch {
+      // Best-effort contract: do not block conversion if traceability fails.
+    }
 
     const opened = window.open(url, "_blank", "noopener,noreferrer");
     if (opened === null) {
