@@ -80,6 +80,7 @@ supabase/migrations/003_brands.sql
 supabase/migrations/004_recipes.sql
 supabase/migrations/005_enabler2_schema_evolution.sql
 supabase/migrations/006_hu_6_2_recipes_structured_fields.sql
+supabase/migrations/007_hu_7_2_whatsapp_interactions.sql
 ```
 
 This creates:
@@ -88,6 +89,7 @@ This creates:
 |:------|:--------|
 | `categories` | Product categories with `name` (unique), `slug` (unique), `display_order`, `is_active` |
 | `products` | Products with FK to categories, `price` (CHECK > 0), `slug` (unique), `sku` (unique), image URL, and boolean flags (`is_available`, `is_visible`, `is_featured`, `is_seasonal`) |
+| `whatsapp_interactions` | Traceability log for `contact_form` and `product_interest` interactions (HU-7.2) |
 
 ### 3.2 Schema details
 
@@ -193,6 +195,21 @@ Inserts 6 categories (1 inactive) and 15 products with various combinations of
   - Public read (`anon`) only for active mapping rules (`category_mapping_rules`)
 - Seeded mapping rules:
   - `v1` rules with priority system (10 dept-base, 20 category override, 30 exact dept+cat)
+
+### 3.9 HU-7.2 migration (WhatsApp traceability)
+
+`007_hu_7_2_whatsapp_interactions.sql` adds:
+
+- New table `whatsapp_interactions` with a unified interaction model:
+  - `interaction_type`: `contact_form` | `product_interest`
+  - optional product and customer context fields
+  - `metadata` (`jsonb`) for extensible trace data
+- Indexes for operational analysis:
+  - `interaction_type + created_at desc`
+  - `product_id`
+- RLS policies:
+  - `anon` can `INSERT` records when `channel = 'whatsapp'`
+  - `authenticated` users can `SELECT` records for admin analytics/review
 
 ---
 
@@ -428,7 +445,7 @@ npm run dev
 ### Supabase configuration checklist
 
 - [ ] Create Supabase project and copy URL + anon key to `.env.local`
-- [ ] **Database:** Run migrations `001` → `006` in SQL Editor (including `005_enabler2_schema_evolution.sql` and `006_hu_6_2_recipes_structured_fields.sql`)
+- [ ] **Database:** Run migrations `001` → `007` in SQL Editor (including `005_enabler2_schema_evolution.sql`, `006_hu_6_2_recipes_structured_fields.sql` and `007_hu_7_2_whatsapp_interactions.sql`)
 - [ ] **Database (optional):** Run `supabase/seed.sql` for test data
 - [ ] **Auth:** Enable Email provider with Magic Link
 - [ ] **Auth:** Set Site URL to `https://www.hgourmet.com.mx`
