@@ -220,8 +220,8 @@
 | newsletter_subscribers | authenticated | Yes | Yes | Yes | Yes | Full admin access |
 | brands | anon | Yes (active only) | No | No | No | `is_active = true` filter |
 | brands | authenticated | Yes | Yes | Yes | Yes | Full admin access |
-| whatsapp_interactions | anon | No | Yes | No | No | Insert-only traceability (`channel = 'whatsapp'`) |
-| whatsapp_interactions | authenticated | Yes | No | No | No | Admin read-only analytics access |
+| whatsapp_interactions | anon | No | Yes | No | No | Insert traceability (`channel = 'whatsapp'`) |
+| whatsapp_interactions | authenticated | Yes | Yes | No | No | Admin read + insert traceability (`channel = 'whatsapp'`) |
 
 ### Storage Policies
 
