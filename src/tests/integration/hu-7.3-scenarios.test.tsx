@@ -129,11 +129,12 @@ describe("HU-7.3 — Navegación por marca con búsqueda automática en catálog
       />,
     );
 
-    await user.click(
-      screen.getByRole("link", {
-        name: /ver productos de la marca wilton/i,
-      }),
-    );
+    const brandLink = screen.getByRole("link", {
+      name: /ver productos de la marca wilton/i,
+    });
+    brandLink.addEventListener("click", (event) => event.preventDefault());
+
+    await user.click(brandLink);
 
     expect(trackEventSpy).toHaveBeenCalledWith(
       "brand_click",
