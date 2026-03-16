@@ -7,6 +7,7 @@ LOG_DIR="$RUN_DIR/logs"
 DEV_PID_FILE="$RUN_DIR/dev.pid"
 TUNNEL_PID_FILE="$RUN_DIR/tunnel.pid"
 ENV_FILE="$ROOT_DIR/.env.local"
+APP_PORT="${APP_PORT:-3000}"
 
 mkdir -p "$LOG_DIR"
 
@@ -47,12 +48,18 @@ if [[ -f "$TUNNEL_PID_FILE" ]]; then
 fi
 
 if [[ ! -f "$DEV_PID_FILE" ]]; then
+  if lsof -nP -iTCP:"$APP_PORT" -sTCP:LISTEN >/dev/null 2>&1; then
+    echo "Port $APP_PORT is already in use."
+    echo "Stop the conflicting process or run: bash ./scripts/dev-down.sh"
+    exit 1
+  fi
+
   (
     cd "$ROOT_DIR"
-    npm run dev >>"$LOG_DIR/dev.log" 2>&1
+    PORT="$APP_PORT" npm run dev >>"$LOG_DIR/dev.log" 2>&1
   ) &
   echo $! >"$DEV_PID_FILE"
-  echo "Started dev server (PID: $(<"$DEV_PID_FILE")). Log: .run/logs/dev.log"
+  echo "Started dev server on :$APP_PORT (PID: $(<"$DEV_PID_FILE")). Log: .run/logs/dev.log"
 fi
 
 if [[ "$TUNNEL_MODE" == "auto" ]]; then

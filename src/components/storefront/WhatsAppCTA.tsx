@@ -1,6 +1,7 @@
 "use client";
 
 import { WHATSAPP_NUMBER } from "@/lib/constants";
+import { trackEvent } from "@/lib/analytics/ga";
 
 interface WhatsAppCTAProps {
     productName: string;
@@ -35,6 +36,12 @@ export function WhatsAppCTA({ productName, isAvailable }: WhatsAppCTAProps) {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent("whatsapp_click", {
+                    location: "product_detail_cta",
+                    product_name: productName,
+                  })
+                }
                 className="flex w-full items-center justify-center gap-2 rounded-lg px-6 py-3 font-semibold shadow-sm transition-all hover:shadow-md active:scale-95"
                 style={{ backgroundColor: "#25D366", color: "#ffffff" }}
                 aria-label={`Pide ${productName} por WhatsApp`}

@@ -190,10 +190,10 @@ Detalle de hardening/trazabilidad del importador:
 - **Esperamos**: mejorar visibilidad del embudo digital y reducir fricción en la exploración por marca
 - **Sabremos que hemos tenido éxito cuando**: se registren eventos clave de navegación/contacto en analítica y base de datos, y aumente la tasa de sesiones que pasan de marca a búsqueda de productos
 - **Hypothesis:** Si entregamos analítica web + trazabilidad de interacciones de WhatsApp + navegación de marcas orientada a búsqueda, entonces HGourmet podrá medir mejor el embudo y convertir más sesiones en conversaciones comerciales, medido por mayor tasa de clics a WhatsApp y sesiones con búsqueda por marca.
-- **Status:** In Progress (1/4 stories delivered) 🚧 (2026-03-16)
+- **Status:** In Progress (2/4 stories delivered) 🚧 (2026-03-16)
 - **Priority:** High
 - **Stories:**
-  - [ ] HU-7.1: Integrar Google Analytics para tracking del storefront (High)
+  - [x] HU-7.1: Integrar Google Analytics para tracking del storefront (High) ✅ (2026-03-16)
     > Estimate: S (~4–6h) | Instrumentar Google Analytics (GA4) en el sitio para medir pageviews y eventos clave de interacción (búsqueda, clic de WhatsApp, navegación por categorías/marcas), respetando buenas prácticas de carga y configuración por ambiente.
     > Como: dueña de HGourmet
     > Quiero: contar con métricas confiables del comportamiento de usuarios en el sitio
@@ -281,6 +281,7 @@ Detalle de hardening/trazabilidad del importador:
   - [x] HU-4.3: Sección de recetas y tips ✅ (2026-02-23) — FEAT-4
   - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
 - FEAT-7
+  - [x] HU-7.1: Integrar Google Analytics para tracking del storefront ✅ (2026-03-16) — FEAT-7
   - [x] HU-7.4: Mapa visible e interactivo en página de contacto ✅ (2026-03-16) — FEAT-7
 - Chores (Technical / Visual)
   - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)

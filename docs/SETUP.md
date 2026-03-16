@@ -34,10 +34,13 @@ cp .env.local.example .env.local
 |:---------|:-----|:-------------|
 | `NEXT_PUBLIC_SUPABASE_URL` | Public | Supabase Dashboard → Settings → API → Project URL |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public | Supabase Dashboard → Settings → API → `anon` `public` key |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID_PRODUCTION` | Public | GA4 → Data Streams → Web stream (production `www.hgourmet.com.mx`) |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID_DEMO` | Public | GA4 → Data Streams → Web stream (demo `demo.hgourmet.com.mx` / localhost) |
+| `NEXT_PUBLIC_ANALYTICS_ENABLED` | Public | Project setting (`true`/`false`) to enable or disable tracking |
 | `CLOUDFLARE_TUNNEL_TOKEN` | Secret (local) | Cloudflare Zero Trust → Tunnel → Install and run a connector |
 
-Both variables are exposed to the browser (prefix `NEXT_PUBLIC_`). This is safe because
-RLS policies enforce access control at the database level.
+All `NEXT_PUBLIC_*` variables are exposed to the browser. This is expected for public
+keys and GA measurement IDs. Keep secrets (tokens, service-role keys) outside that prefix.
 
 > **Note:** The project does not currently use `SUPABASE_SERVICE_ROLE_KEY`. All operations
 > go through the anon key + RLS policies or through authenticated user sessions.
@@ -433,6 +436,9 @@ npm run dev
 - [ ] **Auth:** Add demo callback (`https://demo.hgourmet.com.mx/auth/callback`) to Redirect URLs
 - [ ] **Auth:** Add production callbacks (`https://www.hgourmet.com.mx/auth/callback` and `https://hgourmet.com.mx/auth/callback`) to Redirect URLs
 - [ ] **Auth:** Create at least one admin user via Dashboard → Authentication → Users
+- [ ] **Analytics:** Create GA4 web stream for production and set `NEXT_PUBLIC_GA_MEASUREMENT_ID_PRODUCTION`
+- [ ] **Analytics:** Create GA4 web stream for demo/local and set `NEXT_PUBLIC_GA_MEASUREMENT_ID_DEMO`
+- [ ] **Analytics:** Set `NEXT_PUBLIC_ANALYTICS_ENABLED=true` in environments where tracking should run
 - [ ] **Storage:** Create `product-images` bucket (public, 5 MB limit)
 - [ ] **Storage:** Create `category-images` bucket (public, 5 MB limit)
 - [ ] **Storage:** Add `Public read access` policy (SELECT, anon + authenticated)

@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-03-16] — HU-7.1: Integrar Google Analytics para tracking del storefront
+
+**Feature:** FEAT-7 — Analítica y Trazabilidad de Conversión
+**Benefit:** HGourmet ahora cuenta con medición confiable de navegación e interacciones clave del storefront (búsquedas y clics de conversión), habilitando decisiones de contenido y campañas basadas en datos por ambiente (demo y producción).
+**Changes:**
+- Se incorporó integración centralizada de GA4 con helper reusable (`trackPageView`, `trackEvent`) y degradación controlada cuando no hay configuración de analítica.
+- Se añadió instrumentación de `page_view` en navegación App Router y eventos de conversión (`search`, `whatsapp_click`, `brand_click`) en componentes críticos del storefront.
+- Se configuró resolución de Measurement ID por host (`production`/`demo`) y `debug_mode` automático en localhost/demo para facilitar validación en DebugView.
+- Se actualizó la documentación de setup y variables públicas requeridas para streams GA4 por ambiente.
+**Tests:** 7 tests nuevos en `hu-7.1-scenarios.test.tsx` + regresión focalizada en verde (31/31)
+
+---
+
 ## [2026-03-16] — HU-7.4: Mapa visible e interactivo en página de contacto
 
 **Feature:** FEAT-7 — Analítica y Trazabilidad de Conversión
