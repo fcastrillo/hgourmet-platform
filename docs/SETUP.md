@@ -492,7 +492,7 @@ npm run dev
 - [ ] Create/connect a Railway project to this GitHub repository
 - [ ] Keep repository root as deploy root (this project does not use an `app/` subfolder)
 - [ ] Build command: `npm install --include=dev && npm run build`
-- [ ] Start command: `npm run start` (or `node .next/standalone/server.js` if you prefer direct standalone startup)
+- [ ] Start command: `npm run start` (this runs `node .next/standalone/server.js`, required when `output: "standalone"` is enabled)
 - [ ] Add environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - [ ] Add custom domain in Railway: `www.hgourmet.com.mx` and enforce HTTPS
 
