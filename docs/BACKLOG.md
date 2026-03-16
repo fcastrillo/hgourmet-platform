@@ -190,7 +190,7 @@ Detalle de hardening/trazabilidad del importador:
 - **Esperamos**: mejorar visibilidad del embudo digital y reducir fricción en la exploración por marca
 - **Sabremos que hemos tenido éxito cuando**: se registren eventos clave de navegación/contacto en analítica y base de datos, y aumente la tasa de sesiones que pasan de marca a búsqueda de productos
 - **Hypothesis:** Si entregamos analítica web + trazabilidad de interacciones de WhatsApp + navegación de marcas orientada a búsqueda, entonces HGourmet podrá medir mejor el embudo y convertir más sesiones en conversaciones comerciales, medido por mayor tasa de clics a WhatsApp y sesiones con búsqueda por marca.
-- **Status:** In Progress (2/4 stories delivered) 🚧 (2026-03-16)
+- **Status:** In Progress (3/4 stories delivered) 🚧 (2026-03-16)
 - **Priority:** High
 - **Stories:**
   - [x] HU-7.1: Integrar Google Analytics para tracking del storefront (High) ✅ (2026-03-16)
@@ -221,7 +221,7 @@ Detalle de hardening/trazabilidad del importador:
     > (1) Dado que un usuario envía el formulario de contacto con datos válidos, cuando se procesa la acción, entonces se guarda un registro de interacción `contact_form` con su contexto y luego se abre WhatsApp.
     > (2) Dado que un usuario hace clic en "Pide por WhatsApp" desde un producto, cuando se ejecuta la acción, entonces se guarda un registro `product_interest` con identificador del producto y contexto de página.
     > (3) Dado que falla el guardado en tabla, cuando el usuario intenta contactar por WhatsApp, entonces el sistema mantiene un flujo recuperable sin bloquear la conversión.
-  - [ ] HU-7.3: Navegación por marca con búsqueda automática en catálogo (Medium)
+  - [x] HU-7.3: Navegación por marca con búsqueda automática en catálogo (Medium) ✅ (2026-03-16)
     > Estimate: XS (~2–4h) | Ajustar links de marcas para que apunten por defecto a `/categorias?q={nombreMarca}` sin hardcode manual por marca y sin abrir nueva ventana/pestaña, asegurando consistencia de navegación interna.
     > Como: cliente del storefront
     > Quiero: que al seleccionar una marca me lleve directamente a los productos filtrados por esa marca
@@ -282,6 +282,7 @@ Detalle de hardening/trazabilidad del importador:
   - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
 - FEAT-7
   - [x] HU-7.1: Integrar Google Analytics para tracking del storefront ✅ (2026-03-16) — FEAT-7
+  - [x] HU-7.3: Navegación por marca con búsqueda automática en catálogo ✅ (2026-03-16) — FEAT-7
   - [x] HU-7.4: Mapa visible e interactivo en página de contacto ✅ (2026-03-16) — FEAT-7
 - Chores (Technical / Visual)
   - [x] CHORE-1: Sprint cosmético del storefront ✅ (2026-02-23)
