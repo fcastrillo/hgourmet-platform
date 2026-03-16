@@ -19,6 +19,19 @@
 
 ---
 
+## [2026-03-16] — HU-7.4: Mapa visible e interactivo en página de contacto
+
+**Feature:** FEAT-7 — Analítica y Trazabilidad de Conversión
+**Benefit:** Los clientes ahora visualizan la ubicación real de HGourmet directamente en `/contacto` y cuentan con un enlace de respaldo al local en Google Maps, reduciendo fricción para ubicar la tienda desde móvil o desktop.
+**Changes:**
+- Se reemplazó el placeholder de mapa por un `iframe` real de Google Maps en la página de contacto.
+- Se incorporó fallback visible con enlace directo al local de HGourmet en Google Maps para escenarios de bloqueo/carga del embed.
+- Se centralizó configuración del mapa en `STORE_MAP` (`embedUrl` y `directionsUrl`) para mantenimiento rápido de ubicación.
+- Se ajustó cobertura de integración para validar render del iframe, `loading=\"lazy\"` y enlace de fallback seguro.
+**Tests:** 2 tests nuevos en `hu-3.3-scenarios.test.tsx` y suite focalizada en verde (24/24)
+
+---
+
 ## [2026-02-28] — HU-6.1: Dashboard administrativo completo con estado operativo del negocio
 
 **Feature:** FEAT-6 — Evolución UX del Panel de Administración
