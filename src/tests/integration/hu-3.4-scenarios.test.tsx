@@ -5,6 +5,12 @@ import { ContactForm } from "@/components/storefront/ContactForm";
 import { buildContactWhatsAppUrl } from "@/lib/whatsapp";
 import { WHATSAPP_NUMBER } from "@/lib/constants";
 
+const mockRecordContactFormInteraction = vi.fn();
+vi.mock("@/lib/whatsapp-tracking", () => ({
+  recordContactFormInteraction: (...args: unknown[]) =>
+    mockRecordContactFormInteraction(...args),
+}));
+
 // ============================================================
 // HU-3.4 — Formulario de contacto con envío real vía WhatsApp
 // ============================================================
@@ -14,6 +20,7 @@ const mockOpen = vi.fn();
 beforeEach(() => {
   vi.stubGlobal("open", mockOpen);
   mockOpen.mockReturnValue({ focus: vi.fn() });
+  mockRecordContactFormInteraction.mockResolvedValue(true);
 });
 
 afterEach(() => {
