@@ -190,7 +190,7 @@ Detalle de hardening/trazabilidad del importador:
 - **Esperamos**: mejorar visibilidad del embudo digital y reducir fricción en la exploración por marca
 - **Sabremos que hemos tenido éxito cuando**: se registren eventos clave de navegación/contacto en analítica y base de datos, y aumente la tasa de sesiones que pasan de marca a búsqueda de productos
 - **Hypothesis:** Si entregamos analítica web + trazabilidad de interacciones de WhatsApp + navegación de marcas orientada a búsqueda, entonces HGourmet podrá medir mejor el embudo y convertir más sesiones en conversaciones comerciales, medido por mayor tasa de clics a WhatsApp y sesiones con búsqueda por marca.
-- **Status:** In Progress (3/4 stories delivered) 🚧 (2026-03-16)
+- **Status:** Delivered (4/4 stories delivered) ✅ (2026-03-16)
 - **Priority:** High
 - **Stories:**
   - [x] HU-7.1: Integrar Google Analytics para tracking del storefront (High) ✅ (2026-03-16)
@@ -207,7 +207,7 @@ Detalle de hardening/trazabilidad del importador:
     > (1) Dado que un usuario navega por el storefront, cuando cambia de página, entonces se registra un pageview en GA4 con la ruta correcta.
     > (2) Dado que un usuario hace clic en un CTA de WhatsApp o usa la búsqueda, cuando se dispara la interacción, entonces se registra el evento correspondiente con parámetros mínimos definidos.
     > (3) Dado que la app corre en ambiente sin clave de analítica, cuando renderiza el storefront, entonces no falla la experiencia y se registra degradación controlada.
-  - [ ] HU-7.2: Registrar interacciones de WhatsApp en tabla de trazabilidad (High)
+  - [x] HU-7.2: Registrar interacciones de WhatsApp en tabla de trazabilidad (High) ✅ (2026-03-16)
     > Estimate: S (~6–8h) | Crear/usar tabla de tracking para persistir interacciones originadas en formulario de contacto e interés en producto, incluyendo metadata mínima (tipo de interacción, producto opcional, timestamp, canal, contexto de página) para análisis posterior.
     > Como: administradora de HGourmet
     > Quiero: tener un registro histórico de las interacciones que abren conversación por WhatsApp
@@ -282,6 +282,7 @@ Detalle de hardening/trazabilidad del importador:
   - [x] HU-4.4: Sección de marcas HGourmet ✅ (2026-02-22) — FEAT-4
 - FEAT-7
   - [x] HU-7.1: Integrar Google Analytics para tracking del storefront ✅ (2026-03-16) — FEAT-7
+  - [x] HU-7.2: Registrar interacciones de WhatsApp en tabla de trazabilidad ✅ (2026-03-16) — FEAT-7
   - [x] HU-7.3: Navegación por marca con búsqueda automática en catálogo ✅ (2026-03-16) — FEAT-7
   - [x] HU-7.4: Mapa visible e interactivo en página de contacto ✅ (2026-03-16) — FEAT-7
 - Chores (Technical / Visual)
