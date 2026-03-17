@@ -416,7 +416,7 @@ images: {
 ```
 
 No additional image hostname configuration is needed. In Railway production, keep `sharp`
-installed in `dependencies` and use `output: "standalone"` in `next.config.ts` for
+installed in `dependencies` and use standard Next.js production startup (`next start`) for
 lightweight deployments.
 
 ### 6.2 Middleware
@@ -492,7 +492,7 @@ npm run dev
 - [ ] Create/connect a Railway project to this GitHub repository
 - [ ] Keep repository root as deploy root (this project does not use an `app/` subfolder)
 - [ ] Build command: `npm install --include=dev && npm run build`
-- [ ] Start command: `npm run start` (this runs `node .next/standalone/server.js`, required when `output: "standalone"` is enabled)
+- [ ] Start command: `npm run start` (runs `next start`)
 - [ ] Add environment variables: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - [ ] Add custom domain in Railway: `www.hgourmet.com.mx` and enforce HTTPS
 
